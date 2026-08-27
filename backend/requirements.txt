@@ -1,0 +1,20 @@
+# Runtime dependencies — Phase 1 (Backend Foundation)
+# Pinned to compatible-release ranges; verified on CPython 3.12.
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+pydantic>=2.7,<3.0
+pydantic-settings>=2.3,<3.0
+pandas>=2.2,<3.0
+
+# Phase 2 (Criminal Network Graph Engine)
+# NetworkX provides the graph store + native Louvain (louvain_communities);
+# no python-louvain needed. numpy backs the deterministic power-iteration
+# PageRank (kept scipy-free on purpose — numpy already ships with pandas).
+networkx>=3.1,<4.0
+numpy>=1.26,<3.0
+
+# Phase 3 (FIR Narrative NLP Intelligence) — adds NOTHING on purpose.
+# Extraction, normalization, resolution and relationship rules are pure-stdlib
+# `re` + gazetteer lookups against the already-loaded dataset. spaCy is NOT a
+# dependency: app.nlp.extractor.spacy_available() reports its absence and the
+# deterministic rule path is the only one that runs (see docs/phase3_nlp.md §3).
