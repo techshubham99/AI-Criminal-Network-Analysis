@@ -1,0 +1,1 @@
+{"error":{"code":"validation_error","message":"Request validation failed","detail":[{"type":"string_too_short","loc":["query","q"],"msg":"String should have at least 1 character","input":"","ctx":{"min_length":1}}]}}
