@@ -9,9 +9,12 @@ from app.core.errors import ServiceUnavailableError
 from app.repositories.dataset import DatasetRepository
 
 if TYPE_CHECKING:  # avoid importing graph stack at module load / for Phase 1 tests
+    from app.audit.service import AuditService
     from app.graph.analytics import GraphAnalytics
     from app.graph.service import GraphService
+    from app.ingest.pipeline import IngestPipeline
     from app.nlp.service import NlpService
+    from app.risk.service import IntelligenceService
 
 DEFAULT_PAGE_SIZE = 50
 MAX_PAGE_SIZE = 200
@@ -70,4 +73,46 @@ def get_nlp(request: Request) -> "NlpService":
     service = getattr(request.app.state, "nlp", None)
     if service is None:
         raise ServiceUnavailableError("NLP layer is not built")
+    return service
+
+
+def get_intelligence(request: Request) -> "IntelligenceService":
+    """Return the Phase 4 intelligence engine built at application startup.
+
+    Same additive contract as Phases 2 and 3: a failed Phase 4 build degrades
+    only the ``/intelligence`` routes to 503 and leaves every earlier phase
+    serving.
+    """
+    service = getattr(request.app.state, "intelligence", None)
+    if service is None:
+        raise ServiceUnavailableError("Intelligence engine is not built")
+    return service
+
+
+def get_ingest(request: Request) -> "IngestPipeline":
+    """Return the Phase 4.6 ingestion pipeline built at application startup.
+
+    Same additive contract as every phase before it: if the pipeline failed to
+    build, only ``/ingest`` and ``/entities/{id}/changes`` degrade to 503 and the
+    read-only Phase 1-4 surface keeps serving. The pipeline needs the graph, so
+    a graph that never built means no ingestion either — writing to a graph that
+    does not exist is not something to fake.
+    """
+    pipeline = getattr(request.app.state, "ingest", None)
+    if pipeline is None:
+        raise ServiceUnavailableError("Live ingestion is not available")
+    return pipeline
+
+
+def get_audit(request: Request) -> "AuditService":
+    """Return the Phase 5 audit ledger built at application startup.
+
+    Same additive contract as every phase before it. ``CNA_AUDIT_ENABLED=false``
+    or a failed build leaves ``app.state.audit`` unset, which degrades only the
+    ``/audit`` routes to 503; ingestion and every read endpoint keep serving,
+    unaudited, rather than the application refusing to start.
+    """
+    service = getattr(request.app.state, "audit", None)
+    if service is None:
+        raise ServiceUnavailableError("Audit ledger is not available")
     return service

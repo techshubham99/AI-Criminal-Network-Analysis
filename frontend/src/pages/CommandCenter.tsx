@@ -85,8 +85,7 @@ import { flattenScalars, readNumber, readRecord, readString, readStringArray } f
 const LEADS_METRIC = 'pagerank';
 const LEADS_LIMIT = 8;
 
-const PAGE_SUBTITLE =
-  'Scale, provenance and structure of the corpus this prototype can actually see. Every number below is a field of a live backend response — nothing on this page is precomputed, cached or illustrative.';
+const PAGE_SUBTITLE = 'Corpus scale, provenance and network structure.';
 
 /**
  * The one sentence that has to survive the whole demo. Structural prominence in

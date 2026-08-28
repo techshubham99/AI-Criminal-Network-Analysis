@@ -1,21 +1,27 @@
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from '@/utils/cn';
 
 /**
  * Panel — the standard bordered surface. Tight radius, hairline border, no drop
  * shadow: depth comes from the surface step, per the design tokens.
+ *
+ * Extra attributes pass through to the element, so a caller can attach an id,
+ * `aria-*` or a test hook without wrapping the panel in a spare div.
  */
 export function Panel({
   children,
   className,
   as: Tag = 'section',
+  ...rest
 }: {
   children: ReactNode;
   className?: string;
   as?: 'section' | 'div' | 'aside' | 'article';
-}) {
+} & Omit<HTMLAttributes<HTMLElement>, 'children' | 'className'>) {
   return (
-    <Tag className={cn('bg-panel border border-line rounded-lg', className)}>{children}</Tag>
+    <Tag className={cn('bg-panel border border-line rounded-lg', className)} {...rest}>
+      {children}
+    </Tag>
   );
 }
 

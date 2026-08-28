@@ -16,4 +16,5 @@ export { SectionHeading, Divider } from './SectionHeading';
 export { Skeleton, SkeletonText, SkeletonTile, SkeletonRows, Spinner } from './Skeleton';
 export { StatTile, StatInline } from './StatTile';
 export { ErrorState, EmptyState } from './StateViews';
+export { ThemeToggle } from './ThemeToggle';
 export { Tooltip, InfoHint } from './Tooltip';

@@ -17,6 +17,12 @@
      behind the graph canvas for tactical-display depth.
    - Projector-friendly: the lightest text token used at small sizes is
      --color-ink-3 (#74869C on #0B111C ~= 5.6:1), body text ~13.7:1.
+
+   TWO THEMES, ONE SET OF NAMES. Dark is the default and is defined here. Light
+   re-points the SAME tokens further down (`html[data-theme='light']`), so every
+   utility in the app switches with it and no component carries a light-mode
+   branch. Semantics are preserved across both: cyan is interaction, red is only
+   ever an alert, and the ink ramp always runs from strongest to faintest.
    =========================================================================== */
 
 @theme {
@@ -40,6 +46,7 @@
   --color-ink-4: #55677c;
 
   /* -- interaction: cyan (primary emphasis) ---------------------------- */
+  --color-cyan-200: #a5f3fc;
   --color-cyan-300: #67e8f9;
   --color-cyan-400: #22d3ee;
   --color-cyan-500: #06b6d4;
@@ -108,6 +115,102 @@
   --text-lg: 1rem;
 }
 
+/* Chrome painted in raw CSS rather than through a utility class. These are not
+   `--color-*`, so they generate no utilities — they exist purely so the two
+   themes can re-point them below instead of hardcoding a colour twice. */
+:root {
+  --scroll-thumb-hover: #3a4c63;
+  --grid-line: rgb(255 255 255 / 0.022);
+  --vignette-tint: rgb(34 211 238 / 0.045);
+}
+
+/* ===========================================================================
+   Light theme — the same token names, re-pointed.
+   ---------------------------------------------------------------------------
+   Selector specificity (0,1,1) beats the `:root` (0,1,0) that `@theme` emits,
+   so nothing here needs `!important` and no utility needs a `dark:` variant.
+
+   Two rules held to while picking values:
+   - Contrast. Accent stops used as TEXT (the -200/-300 shades) darken to
+     600/700-class colours; stops used as FILLS or BORDERS (-400/-500/-600) stay
+     mid-tone; the -900 stops flip from deep shades to pale tints, because that
+     is how the app uses them (`bg-warn-900`, `bg-alert-900`, `::selection`).
+   - Semantics. Red stays red and is still only ever an alert; cyan stays the
+     interaction colour. A light theme must not re-map meaning.
+   =========================================================================== */
+html[data-theme='light'] {
+  color-scheme: light;
+
+  /* -- surfaces (page -> elevated) ------------------------------------- */
+  --color-void: #eaeff6;
+  --color-abyss: #f4f7fb;
+  --color-panel: #ffffff;
+  --color-panel-2: #f3f7fb;
+  --color-panel-3: #e9eff7;
+  --color-inset: #f7fafd;
+
+  /* -- hairlines ------------------------------------------------------- */
+  --color-line: #d5dfea;
+  --color-line-strong: #b7c6d6;
+  --color-line-accent: #86b6d2;
+
+  /* -- typography (ramp inverted, order preserved) ---------------------- */
+  --color-ink: #0f2032;
+  --color-ink-2: #33506b;
+  --color-ink-3: #4e6883;
+  --color-ink-4: #647a94;
+
+  /* -- interaction: cyan ------------------------------------------------ */
+  --color-cyan-200: #0b6273; /* used as text on a cyan tint */
+  --color-cyan-300: #0e7490;
+  --color-cyan-400: #0891b2;
+  --color-cyan-500: #0e7490;
+  --color-cyan-600: #155e75;
+  --color-cyan-900: #d3eff7; /* tint, not a shade */
+
+  /* -- interaction: azure ----------------------------------------------- */
+  --color-azure-300: #1d4ed8;
+  --color-azure-400: #2563eb;
+  --color-azure-500: #1d4ed8;
+  --color-azure-600: #1e40af;
+  --color-azure-900: #dce7fe;
+
+  /* -- status: RED IS STILL FOR ALERTS AND WARNINGS ONLY ---------------- */
+  --color-alert-300: #b42318;
+  --color-alert-400: #dc2626;
+  --color-alert-500: #dc2626;
+  --color-alert-600: #b91c1c;
+  --color-alert-900: #fde7e5;
+
+  --color-warn-300: #8a5206;
+  --color-warn-400: #b45309;
+  --color-warn-900: #fdf1d8;
+
+  --color-ok-300: #066b41;
+  --color-ok-400: #059669;
+  --color-ok-500: #047857;
+  --color-ok-900: #d6f5e6;
+
+  /* -- entity palette: same hues, taken down for a light ground -------- */
+  --color-ent-person: #0284c7;
+  --color-ent-phone: #7c3aed;
+  --color-ent-aadhaar: #0d9488;
+  --color-ent-location: #b45309;
+  --color-ent-fir: #4f46e5;
+  --color-ent-tower: #64748b;
+  --color-ent-unknown: #475569;
+
+  /* -- provenance ------------------------------------------------------- */
+  --color-structured: #0284c7;
+  --color-narrative: #7c3aed;
+  --color-overlay: #be185d;
+
+  /* -- raw-CSS chrome --------------------------------------------------- */
+  --scroll-thumb-hover: #8496ab;
+  --grid-line: rgb(15 32 50 / 0.045);
+  --vignette-tint: rgb(8 145 178 / 0.07);
+}
+
 /* ===========================================================================
    Base layer
    =========================================================================== */
@@ -117,7 +220,7 @@
   }
 
   html {
-    color-scheme: dark;
+    color-scheme: dark; /* re-pointed by html[data-theme='light'] above */
     -webkit-text-size-adjust: 100%;
   }
 
@@ -172,7 +275,7 @@
     background-clip: content-box;
   }
   *::-webkit-scrollbar-thumb:hover {
-    background: #3a4c63;
+    background: var(--scroll-thumb-hover);
     background-clip: content-box;
   }
 
@@ -218,18 +321,14 @@
   .tactical-grid {
     background-color: var(--color-abyss);
     background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.022) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.022) 1px, transparent 1px);
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
     background-size: 28px 28px;
   }
 
   /* Subtle depth for the app shell without a drop shadow. */
   .shell-vignette {
-    background-image: radial-gradient(
-      120% 90% at 50% -10%,
-      rgb(34 211 238 / 0.045) 0%,
-      transparent 60%
-    );
+    background-image: radial-gradient(120% 90% at 50% -10%, var(--vignette-tint) 0%, transparent 60%);
   }
 
   /* Left accent bar for section headings. */

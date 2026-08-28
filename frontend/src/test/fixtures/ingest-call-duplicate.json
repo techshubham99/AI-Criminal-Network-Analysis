@@ -1,0 +1,79 @@
+{
+  "record_id": "83408ea024cda60561721fca83e4208f4b5adf2a7ce94968041a8c2e72101842",
+  "source_type": "CALL",
+  "status": "DUPLICATE",
+  "validation_status": "VALID",
+  "resolution_status": "RESOLVED",
+  "review_reason": null,
+  "reject_reason": null,
+  "reason": "Identical record already accepted on 2026-08-28T13:31:56. No graph or intelligence change.",
+  "raw_payload": {
+    "caller": {
+      "person_id": 141
+    },
+    "callee": {
+      "person_id": 21
+    },
+    "start_time": "2026-08-20T21:40",
+    "duration_sec": 415
+  },
+  "normalized_payload": {
+    "caller": {
+      "person_id": 141
+    },
+    "callee": {
+      "person_id": 21
+    },
+    "start_time": "2026-08-20T21:40:00",
+    "duration_sec": 415,
+    "cell_tower_id": null
+  },
+  "provenance": {
+    "source_type": "CALL",
+    "source_name": "station-log",
+    "submitted_by": "demo",
+    "reference": "CDR-4471",
+    "note": null
+  },
+  "ingested_at": "2026-08-28T13:31:57",
+  "matches": [
+    {
+      "field": "caller",
+      "status": "MATCHED",
+      "method": "trusted_identifier",
+      "entity_id": "person:141",
+      "label": "Yashica Borah",
+      "confidence": 1.0,
+      "candidates": [],
+      "explanation": "Matched on trusted identifier (person_id).",
+      "is_new_entity": false
+    },
+    {
+      "field": "callee",
+      "status": "MATCHED",
+      "method": "trusted_identifier",
+      "entity_id": "person:21",
+      "label": "Gunbir Sankar",
+      "confidence": 1.0,
+      "candidates": [],
+      "explanation": "Matched on trusted identifier (person_id).",
+      "is_new_entity": false
+    }
+  ],
+  "relationships": [],
+  "evidence": [
+    "calls:2001"
+  ],
+  "entity_ids": [
+    "person:141",
+    "person:21"
+  ],
+  "duplicate_of": "83408ea024cda60561721fca83e4208f4b5adf2a7ce94968041a8c2e72101842",
+  "impact": {
+    "changed": false,
+    "note": "Duplicate submission: the observation was already recorded, so nothing was added to the graph and no intelligence was recomputed.",
+    "original_status": "ACCEPTED",
+    "resubmissions": 1
+  },
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious."
+}

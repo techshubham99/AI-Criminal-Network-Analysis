@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "not_found",
+    "message": "Pattern 'bridge_entity~0000000000000000' not found",
+    "detail": {
+      "resource": "Pattern",
+      "id": "bridge_entity~0000000000000000"
+    }
+  }
+}

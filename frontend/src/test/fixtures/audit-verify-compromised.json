@@ -1,0 +1,16 @@
+{
+  "status": "INTEGRITY_COMPROMISED",
+  "events_checked": 1,
+  "chain_length": 6,
+  "genesis_previous_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "head_hash": "3ca669f4038b3756265a219e97374d90dc766110b67c3a6c157a4778f5ed5b71",
+  "backend": "local_hash_chain",
+  "persisted": false,
+  "failure": {
+    "audit_event_id": "ae-000001",
+    "reason": "hash_mismatch",
+    "expected_hash": "082868890ed7657da5afdbafd9a5bb1e271e26080402eb5c179210b9c6e8a480",
+    "actual_hash": "c46f7cb963786cad608020edf595a8a14d6436382f03773e5e8298b0f7d377e5",
+    "message": "Recomputing the hash of this event's stored fields does not reproduce its current_hash: the event was modified after it was recorded."
+  }
+}

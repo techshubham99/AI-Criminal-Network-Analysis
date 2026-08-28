@@ -14,7 +14,8 @@ import type { EdgeOut, NodeOut } from '@/types/api';
 import { entityColor, relationshipStyle } from '@/utils/entity';
 import { cn } from '@/utils/cn';
 import { formatCount } from '@/utils/format';
-import { GRAPH_BACKGROUND, buildGraphStylesheet, graphLayoutOptions } from './graphStyle';
+import { buildGraphStylesheet, graphChrome, graphLayoutOptions } from './graphStyle';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
  * The investigation network canvas.
@@ -184,6 +185,12 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(
     const layoutRef = useRef<cytoscape.Layouts | null>(null);
     const paintsRef = useRef(false);
 
+    // The canvas cannot read CSS variables, so the theme has to be threaded in.
+    // A ref as well, because the mount effect must not re-run when it changes —
+    // rebuilding the graph would throw away the layout the analyst is reading.
+    const { theme } = useTheme();
+    const themeRef = useRef(theme);
+
     const { elements, nodeMap, edgeMap, renderedEdgeCount } = useMemo(
       () => buildElements(nodes, edges),
       [nodes, edges],
@@ -198,6 +205,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(
       lookupRef.current = { nodeMap, edgeMap };
       callbacksRef.current = { onSelectNode, onSelectEdge };
       highlightRef.current = { focusEntityId, selectedNodeId, selectedEdgeId };
+      themeRef.current = theme;
     });
 
     /**
@@ -295,7 +303,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(
         // forced on because it otherwise follows the renderer.
         headless: !paints,
         styleEnabled: true,
-        style: buildGraphStylesheet(),
+        style: buildGraphStylesheet(themeRef.current),
         // Layout is run explicitly once elements are in place.
         layout: { name: 'null' },
         minZoom: MIN_ZOOM,
@@ -383,6 +391,15 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(
       applyHighlight(cy, { focusEntityId, selectedNodeId, selectedEdgeId });
     }, [focusEntityId, selectedNodeId, selectedEdgeId, applyHighlight]);
 
+    /* ------------------------------------------------------------ theme repaint */
+    useEffect(() => {
+      const cy = cyRef.current;
+      if (!cy) return;
+      // Restyle in place. Element positions and classes survive, so switching
+      // theme does not re-run the layout or drop the current selection.
+      cy.style(buildGraphStylesheet(theme));
+    }, [theme]);
+
     /* ------------------------------------------------------ imperative handle */
     useImperativeHandle(
       ref,
@@ -469,7 +486,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(
         )}
         // Token-matched ground, stated inline so the canvas area is never a
         // bright rectangle if the utility layer has not painted yet.
-        style={{ backgroundColor: GRAPH_BACKGROUND }}
+        style={{ backgroundColor: graphChrome(theme).background }}
       >
         <div
           ref={containerRef}

@@ -101,9 +101,11 @@ backend is read-only and the frontend is physically unable to mutate it.
 
 ### Deliberately not bound
 
-Risk scoring, any audit/blockchain ledger, and vehicle / organisation / event entities.
-The backend declares the latter as *future* node types; this UI never renders them as
-present, and there is no nav entry for a screen that has no backend behind it.
+Vehicle / organisation / event entities. The backend declares them as *future* node types;
+this UI never renders them as present, and there is no nav entry for a screen that has no
+backend behind it. Of the Phase 5 audit routes, only `GET /api/v1/audit/verify` is bound
+(`verifyAuditChain`) — the event list, per-resource verification and the integrity-record
+write exist on the backend but the UI shows a verdict, not a ledger browser.
 
 ### The two id forms — the single easiest thing to get wrong
 
@@ -248,5 +250,7 @@ go in lookup maps; runtime palette colours (from `entityColor()` /
   exposes.
 - **No `TRANSACTION` node type exists.** Money movement is a `TRANSACTED` *edge* between
   two persons; there is no transaction entity to click.
-- **Phase 4 is absent by design**: no risk scoring, no audit/blockchain ledger. Those
-  have no backend support yet, and the spec forbids screens that promise them.
+- **The audit ledger is a verdict, not a dashboard.** Phase 5 shipped a tamper-evident
+  audit ledger (a local hash chain — not a blockchain), and the UI surfaces exactly one
+  compact read-out on Evidence & Provenance: `VERIFIED` / `INTEGRITY COMPROMISED`, a
+  truncated head hash, one `[Verify]`. No block explorer, and no chain browsing.

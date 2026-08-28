@@ -1,0 +1,1330 @@
+{
+  "count": 10,
+  "limit": 10,
+  "band": null,
+  "persons": [
+    {
+      "person_id": 141,
+      "entity_id": "person:141",
+      "name": "Yashica Borah",
+      "city": "Bhopal",
+      "state": "Madhya Pradesh",
+      "score": 68,
+      "band": "MEDIUM",
+      "top_factors": [
+        {
+          "feature": "transaction_patterns",
+          "value": 1.0,
+          "max_contribution": 20.0,
+          "contribution": 20.0,
+          "pattern_ids": [
+            "transaction_cycle~b8c6335664e92119",
+            "transaction_cycle~e0d845d62dc561cf",
+            "transaction_fan_in~9cacbe73c2d87922",
+            "transaction_fan_in~aca85325a6755066",
+            "transaction_fan_in~dd3c5a0c5ba709d7",
+            "transaction_fan_out~21e38afcfc967eee",
+            "transaction_fan_out~2cb4c5ad0a624ad5",
+            "transaction_fan_out~e09d22cf4ffd3385"
+          ],
+          "evidence_ids": [
+            "transactions:1013",
+            "transactions:1150",
+            "transactions:1161",
+            "transactions:1180",
+            "transactions:1214",
+            "transactions:1216",
+            "transactions:123",
+            "transactions:1259",
+            "transactions:1263",
+            "transactions:1298",
+            "transactions:1350",
+            "transactions:1463",
+            "transactions:1481",
+            "transactions:149",
+            "transactions:178",
+            "transactions:221",
+            "transactions:27",
+            "transactions:285",
+            "transactions:296",
+            "transactions:313",
+            "transactions:330",
+            "transactions:341",
+            "transactions:354",
+            "transactions:355",
+            "transactions:37",
+            "transactions:41",
+            "transactions:421",
+            "transactions:429",
+            "transactions:480",
+            "transactions:483",
+            "transactions:497",
+            "transactions:563",
+            "transactions:616",
+            "transactions:642",
+            "transactions:662",
+            "transactions:69",
+            "transactions:852",
+            "transactions:894",
+            "transactions:925"
+          ],
+          "explanation": "Potential transaction pattern(s) requiring review: cycle, fan_in, fan_out. The strongest of them scores 1.0 on the 0-1 severity scale (a closed circuit of 4 persons). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+          "detail": {
+            "pattern_types": [
+              "TRANSACTION_CYCLE",
+              "TRANSACTION_FAN_IN",
+              "TRANSACTION_FAN_OUT"
+            ],
+            "pattern_count": 8,
+            "top_severity": 1.0,
+            "top_pattern_id": "transaction_cycle~e0d845d62dc561cf",
+            "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+            "review_label": "Potential transaction pattern requiring review"
+          }
+        },
+        {
+          "feature": "network_importance",
+          "value": 0.889,
+          "max_contribution": 20.0,
+          "contribution": 17.78,
+          "pattern_ids": [],
+          "evidence_ids": [],
+          "explanation": "Observed degree 27.0 sits at the 99.4th percentile and PageRank at the 78.4th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here \u2014 it is scored once, under the bridge feature.",
+          "detail": {
+            "in_projection": true,
+            "degree": 27.0,
+            "degree_percentile": 99.4,
+            "pagerank": 0.00248515,
+            "pagerank_percentile": 78.4,
+            "metrics_used": [
+              "degree",
+              "pagerank"
+            ],
+            "note": "betweenness is excluded here and scored once under the bridge feature"
+          }
+        },
+        {
+          "feature": "communication_anomaly",
+          "value": 1.0,
+          "max_contribution": 15.0,
+          "contribution": 15.0,
+          "pattern_ids": [
+            "communication_anomaly~8f5a0234db556809"
+          ],
+          "evidence_ids": [
+            "calls:1626",
+            "calls:1649",
+            "calls:1652",
+            "calls:213"
+          ],
+          "explanation": "Unusually high activity: 4 call(s) on 2026-08-13 against this person's own baseline of 1.375 per observed day (z = 2.4749). The excess of 2.625 call(s) is materially significant in absolute terms.",
+          "detail": {
+            "baseline": {
+              "person_id": 141,
+              "anomaly_status": "high_activity_anomaly",
+              "observed_count": 4,
+              "peak_date": "2026-08-13",
+              "z_score": 2.4749,
+              "excess_over_baseline": 2.625,
+              "materially_significant": true,
+              "baseline": {
+                "observation_days": 8,
+                "total_calls": 11,
+                "mean_calls_per_active_day": 1.375,
+                "stdev_calls_per_active_day": 1.0607,
+                "min_calls_per_active_day": 1,
+                "max_calls_per_active_day": 4
+              },
+              "supporting_call_ids": [
+                213,
+                1626,
+                1649,
+                1652
+              ]
+            },
+            "formula": "absolute excess over baseline / configured material excess, capped at 1.0; the z-test decides whether the anomaly is flagged at all"
+          }
+        }
+      ],
+      "pattern_count": 11,
+      "structured_evidence_count": 56,
+      "nlp_evidence_count": 0,
+      "explanation": "Investigation priority score 68 of 100 (MEDIUM) for person:141, summed from 5 contributing feature(s): Transaction patterns 20.0 of 20.0, Network importance 17.78 of 20.0, Communication anomaly 15.0 of 15.0, Bridge / network structure 8.9 of 10.0, Location patterns 6.0 of 15.0. MEDIUM \u2014 one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 56 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing."
+    },
+    {
+      "person_id": 212,
+      "entity_id": "person:212",
+      "name": "Leela Keer",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "score": 64,
+      "band": "MEDIUM",
+      "top_factors": [
+        {
+          "feature": "transaction_patterns",
+          "value": 1.0,
+          "max_contribution": 20.0,
+          "contribution": 20.0,
+          "pattern_ids": [
+            "transaction_cycle~fa09a8c60ebff4b6",
+            "transaction_fan_in~7b2179ef11c93cc2",
+            "transaction_fan_out~0db5b6f6a7a5c57f"
+          ],
+          "evidence_ids": [
+            "transactions:1004",
+            "transactions:1080",
+            "transactions:1149",
+            "transactions:1238",
+            "transactions:1407",
+            "transactions:362",
+            "transactions:476",
+            "transactions:625",
+            "transactions:793",
+            "transactions:846",
+            "transactions:896",
+            "transactions:904"
+          ],
+          "explanation": "Potential transaction pattern(s) requiring review: cycle, fan_in, fan_out. The strongest of them scores 1.0 on the 0-1 severity scale (a closed circuit of 4 persons). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+          "detail": {
+            "pattern_types": [
+              "TRANSACTION_CYCLE",
+              "TRANSACTION_FAN_IN",
+              "TRANSACTION_FAN_OUT"
+            ],
+            "pattern_count": 3,
+            "top_severity": 1.0,
+            "top_pattern_id": "transaction_cycle~fa09a8c60ebff4b6",
+            "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+            "review_label": "Potential transaction pattern requiring review"
+          }
+        },
+        {
+          "feature": "network_importance",
+          "value": 0.913,
+          "max_contribution": 20.0,
+          "contribution": 18.26,
+          "pattern_ids": [],
+          "evidence_ids": [],
+          "explanation": "Observed degree 25.0 sits at the 97.8th percentile and PageRank at the 84.8th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here \u2014 it is scored once, under the bridge feature.",
+          "detail": {
+            "in_projection": true,
+            "degree": 25.0,
+            "degree_percentile": 97.8,
+            "pagerank": 0.00272226,
+            "pagerank_percentile": 84.8,
+            "metrics_used": [
+              "degree",
+              "pagerank"
+            ],
+            "note": "betweenness is excluded here and scored once under the bridge feature"
+          }
+        },
+        {
+          "feature": "communication_anomaly",
+          "value": 0.9166,
+          "max_contribution": 15.0,
+          "contribution": 13.75,
+          "pattern_ids": [
+            "communication_anomaly~5899632f007dc9bb"
+          ],
+          "evidence_ids": [
+            "calls:1104",
+            "calls:160",
+            "calls:308"
+          ],
+          "explanation": "Unusually high activity: 3 call(s) on 2026-08-12 against this person's own baseline of 1.1667 per observed day (z = 3.1754). The excess of 1.8333 call(s) is small in absolute terms, so the contribution is scaled down.",
+          "detail": {
+            "baseline": {
+              "person_id": 212,
+              "anomaly_status": "high_activity_anomaly",
+              "observed_count": 3,
+              "peak_date": "2026-08-12",
+              "z_score": 3.1754,
+              "excess_over_baseline": 1.8333,
+              "materially_significant": false,
+              "baseline": {
+                "observation_days": 12,
+                "total_calls": 14,
+                "mean_calls_per_active_day": 1.1667,
+                "stdev_calls_per_active_day": 0.5774,
+                "min_calls_per_active_day": 1,
+                "max_calls_per_active_day": 3
+              },
+              "supporting_call_ids": [
+                160,
+                308,
+                1104
+              ]
+            },
+            "formula": "absolute excess over baseline / configured material excess, capped at 1.0; the z-test decides whether the anomaly is flagged at all"
+          }
+        }
+      ],
+      "pattern_count": 6,
+      "structured_evidence_count": 27,
+      "nlp_evidence_count": 0,
+      "explanation": "Investigation priority score 64 of 100 (MEDIUM) for person:212, summed from 5 contributing feature(s): Transaction patterns 20.0 of 20.0, Network importance 18.26 of 20.0, Communication anomaly 13.75 of 15.0, Bridge / network structure 8.4 of 10.0, Location patterns 3.75 of 15.0. MEDIUM \u2014 one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 27 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing."
+    },
+    {
+      "person_id": 242,
+      "entity_id": "person:242",
+      "name": "Wridesh Handa",
+      "city": "Bhopal",
+      "state": "Madhya Pradesh",
+      "score": 64,
+      "band": "MEDIUM",
+      "top_factors": [
+        {
+          "feature": "transaction_patterns",
+          "value": 1.0,
+          "max_contribution": 20.0,
+          "contribution": 20.0,
+          "pattern_ids": [
+            "transaction_cycle~551982acc4102bb5",
+            "transaction_fan_in~2e1e19a8a3a3a16b",
+            "transaction_fan_in~b3eb32a565988000",
+            "transaction_fan_in~f8da8d41a6a0818f",
+            "transaction_fan_out~2147bc8591dca8ce",
+            "transaction_fan_out~3e29fcb9a1b068de"
+          ],
+          "evidence_ids": [
+            "transactions:1005",
+            "transactions:1038",
+            "transactions:1042",
+            "transactions:112",
+            "transactions:1206",
+            "transactions:1220",
+            "transactions:1283",
+            "transactions:1296",
+            "transactions:133",
+            "transactions:1386",
+            "transactions:1407",
+            "transactions:203",
+            "transactions:224",
+            "transactions:31",
+            "transactions:417",
+            "transactions:49",
+            "transactions:526",
+            "transactions:54",
+            "transactions:540",
+            "transactions:633",
+            "transactions:648",
+            "transactions:676",
+            "transactions:721",
+            "transactions:722",
+            "transactions:768",
+            "transactions:862",
+            "transactions:962"
+          ],
+          "explanation": "Potential transaction pattern(s) requiring review: cycle, fan_in, fan_out. The strongest of them scores 0.8 on the 0-1 severity scale (a closed circuit of 3 persons). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+          "detail": {
+            "pattern_types": [
+              "TRANSACTION_CYCLE",
+              "TRANSACTION_FAN_IN",
+              "TRANSACTION_FAN_OUT"
+            ],
+            "pattern_count": 6,
+            "top_severity": 0.8,
+            "top_pattern_id": "transaction_cycle~551982acc4102bb5",
+            "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+            "review_label": "Potential transaction pattern requiring review"
+          }
+        },
+        {
+          "feature": "network_importance",
+          "value": 0.929,
+          "max_contribution": 20.0,
+          "contribution": 18.58,
+          "pattern_ids": [],
+          "evidence_ids": [],
+          "explanation": "Observed degree 27.0 sits at the 99.4th percentile and PageRank at the 86.4th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here \u2014 it is scored once, under the bridge feature.",
+          "detail": {
+            "in_projection": true,
+            "degree": 27.0,
+            "degree_percentile": 99.4,
+            "pagerank": 0.00278212,
+            "pagerank_percentile": 86.4,
+            "metrics_used": [
+              "degree",
+              "pagerank"
+            ],
+            "note": "betweenness is excluded here and scored once under the bridge feature"
+          }
+        },
+        {
+          "feature": "bridge_network_structure",
+          "value": 0.96,
+          "max_contribution": 10.0,
+          "contribution": 9.6,
+          "pattern_ids": [
+            "bridge_entity~98e70caffc389e96"
+          ],
+          "evidence_ids": [
+            "calls:1243",
+            "calls:1751",
+            "calls:176",
+            "calls:243",
+            "calls:721",
+            "calls:817",
+            "calls:916",
+            "persons:121",
+            "persons:242",
+            "persons:344",
+            "persons:435",
+            "persons:483",
+            "persons:77",
+            "transactions:1283",
+            "transactions:133",
+            "transactions:203",
+            "transactions:286",
+            "transactions:526",
+            "transactions:540"
+          ],
+          "explanation": "Bridge entity and investigation lead: betweenness at the 99.2th percentile, with relationships reaching 10 distinct detected communities. A structural position in the observed graph \u2014 not a determination of criminality or guilt.",
+          "detail": {
+            "betweenness": 0.00677986,
+            "betweenness_percentile": 99.2,
+            "percentile_floor": 90.0,
+            "community_id": 4,
+            "neighbour_communities": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ],
+            "neighbour_community_count": 10,
+            "crossing_relationship_count": 18,
+            "label": "bridge_entity",
+            "is_investigation_lead": true,
+            "metrics_used": [
+              "betweenness"
+            ],
+            "formula": "0.5 + 0.5 * (betweenness percentile - floor) / (100 - floor)"
+          }
+        }
+      ],
+      "pattern_count": 9,
+      "structured_evidence_count": 44,
+      "nlp_evidence_count": 0,
+      "explanation": "Investigation priority score 64 of 100 (MEDIUM) for person:242, summed from 5 contributing feature(s): Transaction patterns 20.0 of 20.0, Network importance 18.58 of 20.0, Bridge / network structure 9.6 of 10.0, Location patterns 9.0 of 15.0, Communication anomaly 6.82 of 15.0. MEDIUM \u2014 one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 44 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing."
+    },
+    {
+      "person_id": 350,
+      "entity_id": "person:350",
+      "name": "Brijesh Sampath",
+      "city": "Bhopal",
+      "state": "Madhya Pradesh",
+      "score": 64,
+      "band": "MEDIUM",
+      "top_factors": [
+        {
+          "feature": "transaction_patterns",
+          "value": 1.0,
+          "max_contribution": 20.0,
+          "contribution": 20.0,
+          "pattern_ids": [
+            "transaction_cycle~913c8a04834a2b81",
+            "transaction_fan_in~0d9eae72f3439f77",
+            "transaction_fan_in~fbefa788ef66424d",
+            "transaction_fan_out~1f2f08c2e3014ca0"
+          ],
+          "evidence_ids": [
+            "transactions:1031",
+            "transactions:1096",
+            "transactions:1173",
+            "transactions:1291",
+            "transactions:1308",
+            "transactions:1363",
+            "transactions:1479",
+            "transactions:176",
+            "transactions:402",
+            "transactions:454",
+            "transactions:468",
+            "transactions:547",
+            "transactions:577",
+            "transactions:647",
+            "transactions:696",
+            "transactions:723",
+            "transactions:779",
+            "transactions:815",
+            "transactions:837"
+          ],
+          "explanation": "Potential transaction pattern(s) requiring review: cycle, fan_in, fan_out. The strongest of them scores 1.0 on the 0-1 severity scale (a closed circuit of 4 persons). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+          "detail": {
+            "pattern_types": [
+              "TRANSACTION_CYCLE",
+              "TRANSACTION_FAN_IN",
+              "TRANSACTION_FAN_OUT"
+            ],
+            "pattern_count": 4,
+            "top_severity": 1.0,
+            "top_pattern_id": "transaction_cycle~913c8a04834a2b81",
+            "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+            "review_label": "Potential transaction pattern requiring review"
+          }
+        },
+        {
+          "feature": "network_importance",
+          "value": 0.927,
+          "max_contribution": 20.0,
+          "contribution": 18.54,
+          "pattern_ids": [],
+          "evidence_ids": [],
+          "explanation": "Observed degree 22.0 sits at the 87.8th percentile and PageRank at the 97.6th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here \u2014 it is scored once, under the bridge feature.",
+          "detail": {
+            "in_projection": true,
+            "degree": 22.0,
+            "degree_percentile": 87.8,
+            "pagerank": 0.00375903,
+            "pagerank_percentile": 97.6,
+            "metrics_used": [
+              "degree",
+              "pagerank"
+            ],
+            "note": "betweenness is excluded here and scored once under the bridge feature"
+          }
+        },
+        {
+          "feature": "multi_channel_relationship",
+          "value": 0.5833,
+          "max_contribution": 20.0,
+          "contribution": 11.67,
+          "pattern_ids": [
+            "multi_channel_relationship~10992c2986064eab",
+            "multi_channel_relationship~d66290ed1d25f8fc"
+          ],
+          "evidence_ids": [
+            "calls:340",
+            "persons:267",
+            "persons:350",
+            "transactions:1131",
+            "transactions:1479"
+          ],
+          "explanation": "Linked to 2 other person(s) through as many as 2 independent channels (CALL, CO_LOCATION, TRANSACTION). Channels are counted, not records: one channel with many records is still one channel.",
+          "detail": {
+            "max_channel_count": 2,
+            "partner_count": 2,
+            "partners": [
+              "person:129",
+              "person:267"
+            ],
+            "channels": [
+              "CALL",
+              "CO_LOCATION",
+              "TRANSACTION"
+            ],
+            "independent_nlp_channels_excluded_from_score": [],
+            "formula": "(max_channels - 1) / 3 + 0.25 * (partners - 1), capped at 1.0"
+          }
+        }
+      ],
+      "pattern_count": 10,
+      "structured_evidence_count": 28,
+      "nlp_evidence_count": 0,
+      "explanation": "Investigation priority score 64 of 100 (MEDIUM) for person:350, summed from 5 contributing feature(s): Transaction patterns 20.0 of 20.0, Network importance 18.54 of 20.0, Multi-channel relationships 11.67 of 20.0, Location patterns 7.5 of 15.0, Communication anomaly 6.25 of 15.0. MEDIUM \u2014 one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 28 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing."
+    },
+    {
+      "person_id": 62,
+      "entity_id": "person:62",
+      "name": "Deepa Chokshi",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "score": 62,
+      "band": "MEDIUM",
+      "top_factors": [
+        {
+          "feature": "transaction_patterns",
+          "value": 1.0,
+          "max_contribution": 20.0,
+          "contribution": 20.0,
+          "pattern_ids": [
+            "transaction_fan_in~9287f6b239026d8d",
+            "transaction_fan_in~a46c8d2aa5b33842",
+            "transaction_fan_out~51fe5428d3d7d1f9",
+            "transaction_fan_out~62c8392ea4f87376",
+            "transaction_fan_out~725fd937d3dc4005"
+          ],
+          "evidence_ids": [
+            "transactions:1001",
+            "transactions:1029",
+            "transactions:1045",
+            "transactions:1068",
+            "transactions:1113",
+            "transactions:121",
+            "transactions:1288",
+            "transactions:1289",
+            "transactions:1305",
+            "transactions:1347",
+            "transactions:187",
+            "transactions:210",
+            "transactions:321",
+            "transactions:333",
+            "transactions:334",
+            "transactions:347",
+            "transactions:470",
+            "transactions:471",
+            "transactions:590",
+            "transactions:599",
+            "transactions:6",
+            "transactions:668",
+            "transactions:774",
+            "transactions:802",
+            "transactions:879",
+            "transactions:912",
+            "transactions:937",
+            "transactions:963"
+          ],
+          "explanation": "Potential transaction pattern(s) requiring review: fan_in, fan_out. The strongest of them scores 0.9 on the 0-1 severity scale (9 counterparties). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+          "detail": {
+            "pattern_types": [
+              "TRANSACTION_FAN_IN",
+              "TRANSACTION_FAN_OUT"
+            ],
+            "pattern_count": 5,
+            "top_severity": 0.9,
+            "top_pattern_id": "transaction_fan_in~a46c8d2aa5b33842",
+            "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+            "review_label": "Potential transaction pattern requiring review"
+          }
+        },
+        {
+          "feature": "network_importance",
+          "value": 0.985,
+          "max_contribution": 20.0,
+          "contribution": 19.7,
+          "pattern_ids": [],
+          "evidence_ids": [],
+          "explanation": "Observed degree 29.0 sits at the 100.0th percentile and PageRank at the 97.0th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here \u2014 it is scored once, under the bridge feature.",
+          "detail": {
+            "in_projection": true,
+            "degree": 29.0,
+            "degree_percentile": 100.0,
+            "pagerank": 0.00366196,
+            "pagerank_percentile": 97.0,
+            "metrics_used": [
+              "degree",
+              "pagerank"
+            ],
+            "note": "betweenness is excluded here and scored once under the bridge feature"
+          }
+        },
+        {
+          "feature": "bridge_network_structure",
+          "value": 0.98,
+          "max_contribution": 10.0,
+          "contribution": 9.8,
+          "pattern_ids": [
+            "bridge_entity~65ebf812f11435cf"
+          ],
+          "evidence_ids": [
+            "calls:1003",
+            "calls:1051",
+            "calls:1197",
+            "calls:1251",
+            "calls:1650",
+            "calls:352",
+            "calls:41",
+            "calls:69",
+            "calls:889",
+            "calls:892",
+            "persons:221",
+            "persons:222",
+            "persons:370",
+            "persons:406",
+            "persons:47",
+            "persons:62",
+            "transactions:1045",
+            "transactions:1289",
+            "transactions:333",
+            "transactions:703",
+            "transactions:759",
+            "transactions:937"
+          ],
+          "explanation": "Bridge entity and investigation lead: betweenness at the 99.6th percentile, with relationships reaching 8 distinct detected communities. A structural position in the observed graph \u2014 not a determination of criminality or guilt.",
+          "detail": {
+            "betweenness": 0.00748702,
+            "betweenness_percentile": 99.6,
+            "percentile_floor": 90.0,
+            "community_id": 2,
+            "neighbour_communities": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              9
+            ],
+            "neighbour_community_count": 8,
+            "crossing_relationship_count": 21,
+            "label": "bridge_entity",
+            "is_investigation_lead": true,
+            "metrics_used": [
+              "betweenness"
+            ],
+            "formula": "0.5 + 0.5 * (betweenness percentile - floor) / (100 - floor)"
+          }
+        }
+      ],
+      "pattern_count": 8,
+      "structured_evidence_count": 47,
+      "nlp_evidence_count": 0,
+      "explanation": "Investigation priority score 62 of 100 (MEDIUM) for person:62, summed from 5 contributing feature(s): Transaction patterns 20.0 of 20.0, Network importance 19.7 of 20.0, Bridge / network structure 9.8 of 10.0, Communication anomaly 6.96 of 15.0, Location patterns 6.0 of 15.0. MEDIUM \u2014 one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 47 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing."
+    },
+    {
+      "person_id": 13,
+      "entity_id": "person:13",
+      "name": "Advay Contractor",
+      "city": "Lucknow",
+      "state": "Uttar Pradesh",
+      "score": 59,
+      "band": "MEDIUM",
+      "top_factors": [
+        {
+          "feature": "transaction_patterns",
+          "value": 1.0,
+          "max_contribution": 20.0,
+          "contribution": 20.0,
+          "pattern_ids": [
+            "transaction_cycle~a849ab37223f595c",
+            "transaction_fan_in~10ba30fc5211fab8",
+            "transaction_fan_in~9789086d4a53dd8e",
+            "transaction_fan_in~a46c8d2aa5b33842",
+            "transaction_fan_in~abe5655613b8de49",
+            "transaction_fan_out~023da894132c98fd",
+            "transaction_fan_out~725fd937d3dc4005",
+            "transaction_fan_out~e719c5487e27cabb"
+          ],
+          "evidence_ids": [
+            "transactions:1001",
+            "transactions:1007",
+            "transactions:1022",
+            "transactions:1068",
+            "transactions:1085",
+            "transactions:1113",
+            "transactions:119",
+            "transactions:121",
+            "transactions:1288",
+            "transactions:1289",
+            "transactions:1362",
+            "transactions:1489",
+            "transactions:150",
+            "transactions:209",
+            "transactions:217",
+            "transactions:234",
+            "transactions:239",
+            "transactions:250",
+            "transactions:279",
+            "transactions:303",
+            "transactions:334",
+            "transactions:470",
+            "transactions:471",
+            "transactions:581",
+            "transactions:590",
+            "transactions:6",
+            "transactions:639",
+            "transactions:670",
+            "transactions:718",
+            "transactions:770",
+            "transactions:795",
+            "transactions:854",
+            "transactions:872",
+            "transactions:873",
+            "transactions:874",
+            "transactions:912",
+            "transactions:937",
+            "transactions:945",
+            "transactions:996"
+          ],
+          "explanation": "Potential transaction pattern(s) requiring review: cycle, fan_in, fan_out. The strongest of them scores 1.0 on the 0-1 severity scale (a closed circuit of 4 persons). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+          "detail": {
+            "pattern_types": [
+              "TRANSACTION_CYCLE",
+              "TRANSACTION_FAN_IN",
+              "TRANSACTION_FAN_OUT"
+            ],
+            "pattern_count": 8,
+            "top_severity": 1.0,
+            "top_pattern_id": "transaction_cycle~a849ab37223f595c",
+            "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+            "review_label": "Potential transaction pattern requiring review"
+          }
+        },
+        {
+          "feature": "network_importance",
+          "value": 0.942,
+          "max_contribution": 20.0,
+          "contribution": 18.84,
+          "pattern_ids": [],
+          "evidence_ids": [],
+          "explanation": "Observed degree 23.0 sits at the 93.0th percentile and PageRank at the 95.4th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here \u2014 it is scored once, under the bridge feature.",
+          "detail": {
+            "in_projection": true,
+            "degree": 23.0,
+            "degree_percentile": 93.0,
+            "pagerank": 0.00344566,
+            "pagerank_percentile": 95.4,
+            "metrics_used": [
+              "degree",
+              "pagerank"
+            ],
+            "note": "betweenness is excluded here and scored once under the bridge feature"
+          }
+        },
+        {
+          "feature": "bridge_network_structure",
+          "value": 0.73,
+          "max_contribution": 10.0,
+          "contribution": 7.3,
+          "pattern_ids": [
+            "bridge_entity~fd0c2c91cfd9fc54"
+          ],
+          "evidence_ids": [
+            "calls:1448",
+            "calls:1536",
+            "calls:1949",
+            "calls:338",
+            "calls:751",
+            "calls:850",
+            "firs:192",
+            "transactions:1068",
+            "transactions:1288",
+            "transactions:471",
+            "transactions:590",
+            "transactions:795",
+            "transactions:912",
+            "transactions:945"
+          ],
+          "explanation": "Bridge entity and investigation lead: betweenness at the 94.6th percentile, with relationships reaching 8 distinct detected communities. A structural position in the observed graph \u2014 not a determination of criminality or guilt.",
+          "detail": {
+            "betweenness": 0.00549414,
+            "betweenness_percentile": 94.6,
+            "percentile_floor": 90.0,
+            "community_id": 2,
+            "neighbour_communities": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              9
+            ],
+            "neighbour_community_count": 8,
+            "crossing_relationship_count": 14,
+            "label": "bridge_entity",
+            "is_investigation_lead": true,
+            "metrics_used": [
+              "betweenness"
+            ],
+            "formula": "0.5 + 0.5 * (betweenness percentile - floor) / (100 - floor)"
+          }
+        }
+      ],
+      "pattern_count": 11,
+      "structured_evidence_count": 48,
+      "nlp_evidence_count": 0,
+      "explanation": "Investigation priority score 59 of 100 (MEDIUM) for person:13, summed from 5 contributing feature(s): Transaction patterns 20.0 of 20.0, Network importance 18.84 of 20.0, Bridge / network structure 7.3 of 10.0, Multi-channel relationships 6.67 of 20.0, Communication anomaly 6.25 of 15.0. MEDIUM \u2014 one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 48 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing."
+    },
+    {
+      "person_id": 445,
+      "entity_id": "person:445",
+      "name": "Ojas Kuruvilla",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "score": 58,
+      "band": "MEDIUM",
+      "top_factors": [
+        {
+          "feature": "network_importance",
+          "value": 1.0,
+          "max_contribution": 20.0,
+          "contribution": 20.0,
+          "pattern_ids": [],
+          "evidence_ids": [],
+          "explanation": "Observed degree 29.0 sits at the 100.0th percentile and PageRank at the 100.0th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here \u2014 it is scored once, under the bridge feature.",
+          "detail": {
+            "in_projection": true,
+            "degree": 29.0,
+            "degree_percentile": 100.0,
+            "pagerank": 0.00473123,
+            "pagerank_percentile": 100.0,
+            "metrics_used": [
+              "degree",
+              "pagerank"
+            ],
+            "note": "betweenness is excluded here and scored once under the bridge feature"
+          }
+        },
+        {
+          "feature": "communication_anomaly",
+          "value": 0.8182,
+          "max_contribution": 15.0,
+          "contribution": 12.27,
+          "pattern_ids": [
+            "communication_anomaly~bc0e6bef2398b501"
+          ],
+          "evidence_ids": [
+            "calls:1513",
+            "calls:1581",
+            "calls:54"
+          ],
+          "explanation": "Unusually high activity: 3 call(s) on 2026-08-11 against this person's own baseline of 1.3636 per observed day (z = 2.4271). The excess of 1.6364 call(s) is small in absolute terms, so the contribution is scaled down.",
+          "detail": {
+            "baseline": {
+              "person_id": 445,
+              "anomaly_status": "high_activity_anomaly",
+              "observed_count": 3,
+              "peak_date": "2026-08-11",
+              "z_score": 2.4271,
+              "excess_over_baseline": 1.6364,
+              "materially_significant": false,
+              "baseline": {
+                "observation_days": 11,
+                "total_calls": 15,
+                "mean_calls_per_active_day": 1.3636,
+                "stdev_calls_per_active_day": 0.6742,
+                "min_calls_per_active_day": 1,
+                "max_calls_per_active_day": 3
+              },
+              "supporting_call_ids": [
+                54,
+                1513,
+                1581
+              ]
+            },
+            "formula": "absolute excess over baseline / configured material excess, capped at 1.0; the z-test decides whether the anomaly is flagged at all"
+          }
+        },
+        {
+          "feature": "transaction_patterns",
+          "value": 0.5,
+          "max_contribution": 20.0,
+          "contribution": 10.0,
+          "pattern_ids": [
+            "transaction_fan_in~f215598a384c4f17"
+          ],
+          "evidence_ids": [
+            "transactions:1098",
+            "transactions:1258",
+            "transactions:1417",
+            "transactions:461",
+            "transactions:915"
+          ],
+          "explanation": "Potential transaction pattern(s) requiring review: fan_in. The strongest of them scores 0.5 on the 0-1 severity scale (5 counterparties). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+          "detail": {
+            "pattern_types": [
+              "TRANSACTION_FAN_IN"
+            ],
+            "pattern_count": 1,
+            "top_severity": 0.5,
+            "top_pattern_id": "transaction_fan_in~f215598a384c4f17",
+            "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+            "review_label": "Potential transaction pattern requiring review"
+          }
+        }
+      ],
+      "pattern_count": 4,
+      "structured_evidence_count": 29,
+      "nlp_evidence_count": 0,
+      "explanation": "Investigation priority score 58 of 100 (MEDIUM) for person:445, summed from 5 contributing feature(s): Network importance 20.0 of 20.0, Communication anomaly 12.27 of 15.0, Transaction patterns 10.0 of 20.0, Bridge / network structure 9.9 of 10.0, Location patterns 6.0 of 15.0. MEDIUM \u2014 one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 29 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing."
+    },
+    {
+      "person_id": 34,
+      "entity_id": "person:34",
+      "name": "Pallavi Malhotra",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "score": 57,
+      "band": "MEDIUM",
+      "top_factors": [
+        {
+          "feature": "network_importance",
+          "value": 0.949,
+          "max_contribution": 20.0,
+          "contribution": 18.98,
+          "pattern_ids": [],
+          "evidence_ids": [],
+          "explanation": "Observed degree 24.0 sits at the 95.8th percentile and PageRank at the 94.0th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here \u2014 it is scored once, under the bridge feature.",
+          "detail": {
+            "in_projection": true,
+            "degree": 24.0,
+            "degree_percentile": 95.8,
+            "pagerank": 0.00329783,
+            "pagerank_percentile": 94.0,
+            "metrics_used": [
+              "degree",
+              "pagerank"
+            ],
+            "note": "betweenness is excluded here and scored once under the bridge feature"
+          }
+        },
+        {
+          "feature": "transaction_patterns",
+          "value": 0.85,
+          "max_contribution": 20.0,
+          "contribution": 17.0,
+          "pattern_ids": [
+            "transaction_fan_in~5605c77553d7f45e",
+            "transaction_fan_in~67a1e7a71f928494",
+            "transaction_fan_out~47f2e68d3ebb5d1f",
+            "transaction_fan_out~7c020dae32c64c0e",
+            "transaction_fan_out~eaf791214a2a2651",
+            "transaction_fan_out~ffb1ddf924b152fc"
+          ],
+          "evidence_ids": [
+            "transactions:1017",
+            "transactions:1065",
+            "transactions:1086",
+            "transactions:1124",
+            "transactions:1125",
+            "transactions:1138",
+            "transactions:1160",
+            "transactions:1168",
+            "transactions:1223",
+            "transactions:1311",
+            "transactions:1342",
+            "transactions:1385",
+            "transactions:186",
+            "transactions:215",
+            "transactions:255",
+            "transactions:260",
+            "transactions:276",
+            "transactions:346",
+            "transactions:466",
+            "transactions:523",
+            "transactions:572",
+            "transactions:580",
+            "transactions:594",
+            "transactions:645",
+            "transactions:651",
+            "transactions:658",
+            "transactions:699",
+            "transactions:875",
+            "transactions:931",
+            "transactions:941",
+            "transactions:984"
+          ],
+          "explanation": "Potential transaction pattern(s) requiring review: fan_in, fan_out. The strongest of them scores 0.7 on the 0-1 severity scale (7 counterparties). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+          "detail": {
+            "pattern_types": [
+              "TRANSACTION_FAN_IN",
+              "TRANSACTION_FAN_OUT"
+            ],
+            "pattern_count": 6,
+            "top_severity": 0.7,
+            "top_pattern_id": "transaction_fan_out~ffb1ddf924b152fc",
+            "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+            "review_label": "Potential transaction pattern requiring review"
+          }
+        },
+        {
+          "feature": "bridge_network_structure",
+          "value": 0.76,
+          "max_contribution": 10.0,
+          "contribution": 7.6,
+          "pattern_ids": [
+            "bridge_entity~38e0232291412cab"
+          ],
+          "evidence_ids": [
+            "calls:1540",
+            "calls:1680",
+            "calls:1984",
+            "calls:209",
+            "calls:257",
+            "calls:743",
+            "calls:777",
+            "calls:994",
+            "persons:34",
+            "persons:75",
+            "transactions:1124",
+            "transactions:1125",
+            "transactions:1168",
+            "transactions:351",
+            "transactions:463",
+            "transactions:594"
+          ],
+          "explanation": "Bridge entity and investigation lead: betweenness at the 95.2th percentile, with relationships reaching 7 distinct detected communities. A structural position in the observed graph \u2014 not a determination of criminality or guilt.",
+          "detail": {
+            "betweenness": 0.00557484,
+            "betweenness_percentile": 95.2,
+            "percentile_floor": 90.0,
+            "community_id": 1,
+            "neighbour_communities": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              6,
+              7
+            ],
+            "neighbour_community_count": 7,
+            "crossing_relationship_count": 15,
+            "label": "bridge_entity",
+            "is_investigation_lead": true,
+            "metrics_used": [
+              "betweenness"
+            ],
+            "formula": "0.5 + 0.5 * (betweenness percentile - floor) / (100 - floor)"
+          }
+        }
+      ],
+      "pattern_count": 9,
+      "structured_evidence_count": 46,
+      "nlp_evidence_count": 0,
+      "explanation": "Investigation priority score 57 of 100 (MEDIUM) for person:34, summed from 5 contributing feature(s): Network importance 18.98 of 20.0, Transaction patterns 17.0 of 20.0, Bridge / network structure 7.6 of 10.0, Communication anomaly 6.82 of 15.0, Multi-channel relationships 6.67 of 20.0. MEDIUM \u2014 one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 46 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing."
+    },
+    {
+      "person_id": 96,
+      "entity_id": "person:96",
+      "name": "Harish Vora",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "score": 57,
+      "band": "MEDIUM",
+      "top_factors": [
+        {
+          "feature": "transaction_patterns",
+          "value": 1.0,
+          "max_contribution": 20.0,
+          "contribution": 20.0,
+          "pattern_ids": [
+            "transaction_cycle~913c8a04834a2b81",
+            "transaction_fan_out~12b1ffa1b5fcfb55",
+            "transaction_fan_out~1f2f08c2e3014ca0"
+          ],
+          "evidence_ids": [
+            "transactions:1213",
+            "transactions:1363",
+            "transactions:1479",
+            "transactions:176",
+            "transactions:36",
+            "transactions:402",
+            "transactions:443",
+            "transactions:454",
+            "transactions:458",
+            "transactions:468",
+            "transactions:577",
+            "transactions:624",
+            "transactions:696",
+            "transactions:723",
+            "transactions:779",
+            "transactions:837"
+          ],
+          "explanation": "Potential transaction pattern(s) requiring review: cycle, fan_out. The strongest of them scores 1.0 on the 0-1 severity scale (a closed circuit of 4 persons). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+          "detail": {
+            "pattern_types": [
+              "TRANSACTION_CYCLE",
+              "TRANSACTION_FAN_OUT"
+            ],
+            "pattern_count": 3,
+            "top_severity": 1.0,
+            "top_pattern_id": "transaction_cycle~913c8a04834a2b81",
+            "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+            "review_label": "Potential transaction pattern requiring review"
+          }
+        },
+        {
+          "feature": "network_importance",
+          "value": 0.858,
+          "max_contribution": 20.0,
+          "contribution": 17.16,
+          "pattern_ids": [],
+          "evidence_ids": [],
+          "explanation": "Observed degree 23.0 sits at the 93.0th percentile and PageRank at the 78.6th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here \u2014 it is scored once, under the bridge feature.",
+          "detail": {
+            "in_projection": true,
+            "degree": 23.0,
+            "degree_percentile": 93.0,
+            "pagerank": 0.002488,
+            "pagerank_percentile": 78.6,
+            "metrics_used": [
+              "degree",
+              "pagerank"
+            ],
+            "note": "betweenness is excluded here and scored once under the bridge feature"
+          }
+        },
+        {
+          "feature": "communication_anomaly",
+          "value": 0.4445,
+          "max_contribution": 15.0,
+          "contribution": 6.67,
+          "pattern_ids": [
+            "communication_anomaly~269dd3d6a5497e8a"
+          ],
+          "evidence_ids": [
+            "calls:659",
+            "calls:997"
+          ],
+          "explanation": "Unusually high activity: 2 call(s) on 2026-08-10 against this person's own baseline of 1.1111 per observed day (z = 2.6667). The excess of 0.8889 call(s) is small in absolute terms, so the contribution is scaled down.",
+          "detail": {
+            "baseline": {
+              "person_id": 96,
+              "anomaly_status": "high_activity_anomaly",
+              "observed_count": 2,
+              "peak_date": "2026-08-10",
+              "z_score": 2.6667,
+              "excess_over_baseline": 0.8889,
+              "materially_significant": false,
+              "baseline": {
+                "observation_days": 9,
+                "total_calls": 10,
+                "mean_calls_per_active_day": 1.1111,
+                "stdev_calls_per_active_day": 0.3333,
+                "min_calls_per_active_day": 1,
+                "max_calls_per_active_day": 2
+              },
+              "supporting_call_ids": [
+                659,
+                997
+              ]
+            },
+            "formula": "absolute excess over baseline / configured material excess, capped at 1.0; the z-test decides whether the anomaly is flagged at all"
+          }
+        }
+      ],
+      "pattern_count": 6,
+      "structured_evidence_count": 27,
+      "nlp_evidence_count": 0,
+      "explanation": "Investigation priority score 57 of 100 (MEDIUM) for person:96, summed from 5 contributing feature(s): Transaction patterns 20.0 of 20.0, Network importance 17.16 of 20.0, Communication anomaly 6.67 of 15.0, Multi-channel relationships 6.67 of 20.0, Location patterns 6.0 of 15.0. MEDIUM \u2014 one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 27 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing."
+    },
+    {
+      "person_id": 316,
+      "entity_id": "person:316",
+      "name": "Shivani Shukla",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "score": 57,
+      "band": "MEDIUM",
+      "top_factors": [
+        {
+          "feature": "transaction_patterns",
+          "value": 1.0,
+          "max_contribution": 20.0,
+          "contribution": 20.0,
+          "pattern_ids": [
+            "transaction_cycle~e0d845d62dc561cf",
+            "transaction_fan_in~113d4d58180ae76d",
+            "transaction_fan_in~aca85325a6755066",
+            "transaction_fan_out~f9687fd5543d6b32"
+          ],
+          "evidence_ids": [
+            "transactions:1054",
+            "transactions:1076",
+            "transactions:1082",
+            "transactions:1120",
+            "transactions:1180",
+            "transactions:1259",
+            "transactions:1290",
+            "transactions:1298",
+            "transactions:1436",
+            "transactions:148",
+            "transactions:178",
+            "transactions:21",
+            "transactions:221",
+            "transactions:27",
+            "transactions:354",
+            "transactions:399",
+            "transactions:480",
+            "transactions:671",
+            "transactions:894",
+            "transactions:903"
+          ],
+          "explanation": "Potential transaction pattern(s) requiring review: cycle, fan_in, fan_out. The strongest of them scores 1.0 on the 0-1 severity scale (a closed circuit of 4 persons). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+          "detail": {
+            "pattern_types": [
+              "TRANSACTION_CYCLE",
+              "TRANSACTION_FAN_IN",
+              "TRANSACTION_FAN_OUT"
+            ],
+            "pattern_count": 4,
+            "top_severity": 1.0,
+            "top_pattern_id": "transaction_cycle~e0d845d62dc561cf",
+            "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+            "review_label": "Potential transaction pattern requiring review"
+          }
+        },
+        {
+          "feature": "network_importance",
+          "value": 0.896,
+          "max_contribution": 20.0,
+          "contribution": 17.92,
+          "pattern_ids": [],
+          "evidence_ids": [],
+          "explanation": "Observed degree 24.0 sits at the 95.8th percentile and PageRank at the 83.4th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here \u2014 it is scored once, under the bridge feature.",
+          "detail": {
+            "in_projection": true,
+            "degree": 24.0,
+            "degree_percentile": 95.8,
+            "pagerank": 0.0026644,
+            "pagerank_percentile": 83.4,
+            "metrics_used": [
+              "degree",
+              "pagerank"
+            ],
+            "note": "betweenness is excluded here and scored once under the bridge feature"
+          }
+        },
+        {
+          "feature": "communication_anomaly",
+          "value": 0.4445,
+          "max_contribution": 15.0,
+          "contribution": 6.67,
+          "pattern_ids": [
+            "communication_anomaly~4465ba5aad3cba54"
+          ],
+          "evidence_ids": [
+            "calls:1940",
+            "calls:769"
+          ],
+          "explanation": "Unusually high activity: 2 call(s) on 2026-08-12 against this person's own baseline of 1.1111 per observed day (z = 2.6667). The excess of 0.8889 call(s) is small in absolute terms, so the contribution is scaled down.",
+          "detail": {
+            "baseline": {
+              "person_id": 316,
+              "anomaly_status": "high_activity_anomaly",
+              "observed_count": 2,
+              "peak_date": "2026-08-12",
+              "z_score": 2.6667,
+              "excess_over_baseline": 0.8889,
+              "materially_significant": false,
+              "baseline": {
+                "observation_days": 9,
+                "total_calls": 10,
+                "mean_calls_per_active_day": 1.1111,
+                "stdev_calls_per_active_day": 0.3333,
+                "min_calls_per_active_day": 1,
+                "max_calls_per_active_day": 2
+              },
+              "supporting_call_ids": [
+                769,
+                1940
+              ]
+            },
+            "formula": "absolute excess over baseline / configured material excess, capped at 1.0; the z-test decides whether the anomaly is flagged at all"
+          }
+        }
+      ],
+      "pattern_count": 7,
+      "structured_evidence_count": 39,
+      "nlp_evidence_count": 0,
+      "explanation": "Investigation priority score 57 of 100 (MEDIUM) for person:316, summed from 5 contributing feature(s): Transaction patterns 20.0 of 20.0, Network importance 17.92 of 20.0, Communication anomaly 6.67 of 15.0, Bridge / network structure 6.1 of 10.0, Location patterns 6.0 of 15.0. MEDIUM \u2014 one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 39 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing."
+    }
+  ],
+  "band_boundaries": {
+    "LOW": "0-39",
+    "MEDIUM": "40-69",
+    "HIGH": "70-100"
+  },
+  "note": "Investigation-priority ranking from the Phase 4 explainable 0-100 score. This is NOT the Phase 2 graph-based network importance ranking served by /api/v1/analytics/persons/top; the two rank different things and are not interchangeable.",
+  "disclaimer": "Investigation-prioritization signal computed from observed synthetic records only. It is NOT a probability of guilt, NOT a probability of criminality, and NOT proof of wrongdoing."
+}

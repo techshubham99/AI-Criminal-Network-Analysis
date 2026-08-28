@@ -1,0 +1,87 @@
+[
+  {
+    "event_id": 22,
+    "event_type": "relationship_added",
+    "at": "2026-08-28T13:33:34",
+    "data": {
+      "record_id": "fcb34877327cf170c0dc5320f0e9e0b995f9347bc982d226c654a055f779f36e",
+      "source_type": "TRANSACTION",
+      "relationship_ids": [
+        "TRANSACTED~person:141~person:21"
+      ],
+      "new_edges": 1,
+      "updated_edges": 0
+    }
+  },
+  {
+    "event_id": 23,
+    "event_type": "entity_updated",
+    "at": "2026-08-28T13:33:34",
+    "data": {
+      "record_id": "fcb34877327cf170c0dc5320f0e9e0b995f9347bc982d226c654a055f779f36e",
+      "source_type": "TRANSACTION",
+      "entity_ids": [
+        "person:141",
+        "person:21"
+      ]
+    }
+  },
+  {
+    "event_id": 24,
+    "event_type": "pattern_detected",
+    "at": "2026-08-28T13:33:34",
+    "data": {
+      "record_id": "fcb34877327cf170c0dc5320f0e9e0b995f9347bc982d226c654a055f779f36e",
+      "source_type": "TRANSACTION",
+      "pattern_ids": [
+        "transaction_fan_in~005c570dee194582",
+        "transaction_fan_out~1ecf37201e2fde0b"
+      ],
+      "count": 2
+    }
+  },
+  {
+    "event_id": 25,
+    "event_type": "priority_changed",
+    "at": "2026-08-28T13:33:34",
+    "data": {
+      "record_id": "fcb34877327cf170c0dc5320f0e9e0b995f9347bc982d226c654a055f779f36e",
+      "source_type": "TRANSACTION",
+      "changes": [
+        {
+          "person_id": 21,
+          "entity_id": "person:21",
+          "score_before": 47,
+          "score_after": 54,
+          "band_before": "MEDIUM",
+          "band_after": "MEDIUM"
+        },
+        {
+          "person_id": 141,
+          "entity_id": "person:141",
+          "score_before": 76,
+          "score_after": 83,
+          "band_before": "HIGH",
+          "band_after": "HIGH"
+        }
+      ]
+    }
+  },
+  {
+    "event_id": 26,
+    "event_type": "new_intelligence",
+    "at": "2026-08-28T13:33:34",
+    "data": {
+      "record_id": "fcb34877327cf170c0dc5320f0e9e0b995f9347bc982d226c654a055f779f36e",
+      "source_type": "TRANSACTION",
+      "status": "ACCEPTED",
+      "entity_ids": [
+        "person:141",
+        "person:21"
+      ],
+      "new_patterns": 2,
+      "priority_changes": 2,
+      "recompute_cost_ms": 1679.8
+    }
+  }
+]

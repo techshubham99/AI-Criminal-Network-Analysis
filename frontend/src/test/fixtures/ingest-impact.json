@@ -1,0 +1,133 @@
+{
+  "record_id": "83408ea024cda60561721fca83e4208f4b5adf2a7ce94968041a8c2e72101842",
+  "source_type": "CALL",
+  "status": "ACCEPTED",
+  "reason": "1 relationship(s) accepted; 1 new edge(s); 1 priority change(s).",
+  "impact": {
+    "changed": true,
+    "graph": {
+      "nodes_added": [],
+      "edges_added": [
+        "CALLED~person:141~person:21"
+      ],
+      "edges_updated": []
+    },
+    "graph_totals": {
+      "nodes": 3803,
+      "edges": 10803
+    },
+    "live_rows": {
+      "calls": 1,
+      "transactions": 0,
+      "firs": 0,
+      "location_observations": 0
+    },
+    "relationships_accepted": 1,
+    "relationships_rejected": 0,
+    "recompute_cost_ms": {
+      "analytics_ms": 1518.1,
+      "intelligence_ms": 227.1,
+      "total_ms": 1745.2
+    },
+    "new_pattern_ids": [],
+    "cleared_pattern_ids": [],
+    "reidentified_pattern_count": 50,
+    "reidentified_note": "Patterns whose deterministic id changed because community labels shifted, while the pattern still asserts the same thing about the same entities. Not new detections.",
+    "priority_changes": [
+      {
+        "person_id": 21,
+        "entity_id": "person:21",
+        "score_before": 39,
+        "score_after": 41,
+        "band_before": "LOW",
+        "band_after": "MEDIUM"
+      }
+    ],
+    "persons": [
+      {
+        "before": {
+          "person_id": 21,
+          "score": 39,
+          "band": "LOW",
+          "pattern_count": 7,
+          "pagerank": 0.002471,
+          "betweenness": 0.003125,
+          "community_id": 3
+        },
+        "after": {
+          "person_id": 21,
+          "score": 41,
+          "band": "MEDIUM",
+          "pattern_count": 7,
+          "pagerank": 0.002634,
+          "betweenness": 0.003413,
+          "community_id": 2
+        }
+      },
+      {
+        "before": {
+          "person_id": 141,
+          "score": 68,
+          "band": "MEDIUM",
+          "pattern_count": 11,
+          "pagerank": 0.002485,
+          "betweenness": 0.006369,
+          "community_id": 3
+        },
+        "after": {
+          "person_id": 141,
+          "score": 68,
+          "band": "MEDIUM",
+          "pattern_count": 11,
+          "pagerank": 0.002485,
+          "betweenness": 0.00685,
+          "community_id": 3
+        }
+      }
+    ],
+    "patterns_before": {
+      "MULTI_CHANNEL_RELATIONSHIP": 47,
+      "COMMUNICATION_ANOMALY": 150,
+      "TRANSACTION_CYCLE": 29,
+      "TRANSACTION_FAN_IN": 91,
+      "TRANSACTION_FAN_OUT": 102,
+      "TRANSACTION_CONCENTRATION": 4,
+      "LOCATION_COHORT": 23,
+      "SHARED_LOCATION_PAIR": 5,
+      "BRIDGE_ENTITY": 51
+    },
+    "patterns_after": {
+      "MULTI_CHANNEL_RELATIONSHIP": 47,
+      "COMMUNICATION_ANOMALY": 150,
+      "TRANSACTION_CYCLE": 29,
+      "TRANSACTION_FAN_IN": 91,
+      "TRANSACTION_FAN_OUT": 102,
+      "TRANSACTION_CONCENTRATION": 4,
+      "LOCATION_COHORT": 23,
+      "SHARED_LOCATION_PAIR": 5,
+      "BRIDGE_ENTITY": 51
+    }
+  },
+  "relationships": [
+    {
+      "relationship_type": "CALLED",
+      "source_entity_id": "person:141",
+      "target_entity_id": "person:21",
+      "accepted": true,
+      "reason": "Both parties resolved to existing persons.",
+      "relationship_id": "CALLED~person:141~person:21",
+      "is_new_edge": true,
+      "is_self_reference": false,
+      "excluded_from_intelligence": false,
+      "is_narrative": false
+    }
+  ],
+  "evidence": [
+    "calls:2001"
+  ],
+  "entity_ids": [
+    "person:141",
+    "person:21"
+  ],
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious."
+}

@@ -1,0 +1,1694 @@
+{
+  "total": 502,
+  "count": 8,
+  "offset": 0,
+  "limit": 8,
+  "patterns": [
+    {
+      "pattern_id": "bridge_entity~026f8aaf3c7c9b0e",
+      "pattern_type": "BRIDGE_ENTITY",
+      "entity_ids": [
+        "person:293"
+      ],
+      "relationship_types": [
+        "CALLED",
+        "CO_LOCATED",
+        "REPORTED_AGAINST",
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "calls",
+        "firs",
+        "persons",
+        "transactions"
+      ],
+      "severity": 0.5,
+      "explanation": "person:293 is a bridge entity: its betweenness centrality of 0.004849 is at the 90.0th percentile of the observed person projection (floor 90.0), and its relationships reach 8 distinct detected communities across 17 community-crossing relationships. High network importance marks an investigation lead \u2014 a place where the observed network would come apart if this entity were removed. It is a structural position, not a determination of criminality or guilt.",
+      "structured_evidence": [
+        {
+          "evidence_id": "calls:1319",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1319",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1654",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1654",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1848",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1848",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1939",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1939",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:508",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:508",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:595",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:595",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:936",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:936",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:239",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:239",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:247",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:247",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:284",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:284",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:187",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:187",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:293",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:293",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:316",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:316",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:55",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:55",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1150",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1150",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1355",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1355",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:522",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:522",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:745",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:745",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "betweenness": 0.00484878,
+        "betweenness_percentile": 90.0,
+        "percentile_floor": 90.0,
+        "community_id": 5,
+        "neighbour_communities": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          9
+        ],
+        "neighbour_community_count": 8,
+        "crossing_relationship_count": 17,
+        "label": "bridge_entity",
+        "is_investigation_lead": true
+      }
+    },
+    {
+      "pattern_id": "bridge_entity~0d6012b160ee85cb",
+      "pattern_type": "BRIDGE_ENTITY",
+      "entity_ids": [
+        "person:445"
+      ],
+      "relationship_types": [
+        "CALLED",
+        "CO_LOCATED",
+        "REPORTED_AGAINST",
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "calls",
+        "firs",
+        "persons",
+        "transactions"
+      ],
+      "severity": 0.99,
+      "explanation": "person:445 is a bridge entity: its betweenness centrality of 0.007493 is at the 99.8th percentile of the observed person projection (floor 90.0), and its relationships reach 8 distinct detected communities across 20 community-crossing relationships. High network importance marks an investigation lead \u2014 a place where the observed network would come apart if this entity were removed. It is a structural position, not a determination of criminality or guilt.",
+      "structured_evidence": [
+        {
+          "evidence_id": "calls:1513",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1513",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1876",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1876",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:197",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:197",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:204",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:204",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:208",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:208",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:296",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:296",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:437",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:437",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:54",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:54",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:584",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:584",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:647",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:647",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:816",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:816",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:210",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:210",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:292",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:292",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:6",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:6",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:170",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:170",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:263",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:263",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:269",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:269",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:445",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:445",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1258",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1258",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:156",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:156",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:514",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:514",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "betweenness": 0.00749312,
+        "betweenness_percentile": 99.8,
+        "percentile_floor": 90.0,
+        "community_id": 0,
+        "neighbour_communities": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8
+        ],
+        "neighbour_community_count": 8,
+        "crossing_relationship_count": 20,
+        "label": "bridge_entity",
+        "is_investigation_lead": true
+      }
+    },
+    {
+      "pattern_id": "bridge_entity~0d7b9c34f82c84f7",
+      "pattern_type": "BRIDGE_ENTITY",
+      "entity_ids": [
+        "person:442"
+      ],
+      "relationship_types": [
+        "CALLED",
+        "CO_LOCATED",
+        "REPORTED_AGAINST",
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "calls",
+        "firs",
+        "persons",
+        "transactions"
+      ],
+      "severity": 0.93,
+      "explanation": "person:442 is a bridge entity: its betweenness centrality of 0.006524 is at the 98.6th percentile of the observed person projection (floor 90.0), and its relationships reach 7 distinct detected communities across 15 community-crossing relationships. High network importance marks an investigation lead \u2014 a place where the observed network would come apart if this entity were removed. It is a structural position, not a determination of criminality or guilt.",
+      "structured_evidence": [
+        {
+          "evidence_id": "calls:11",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:11",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1191",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1191",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1563",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1563",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:671",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:671",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:831",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:831",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:202",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:202",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:214",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:214",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:442",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:442",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1089",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1089",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1413",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1413",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1461",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1461",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:281",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:281",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:469",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:469",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:702",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:702",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:801",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:801",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:985",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:985",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "betweenness": 0.00652431,
+        "betweenness_percentile": 98.6,
+        "percentile_floor": 90.0,
+        "community_id": 3,
+        "neighbour_communities": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "neighbour_community_count": 7,
+        "crossing_relationship_count": 15,
+        "label": "bridge_entity",
+        "is_investigation_lead": true
+      }
+    },
+    {
+      "pattern_id": "bridge_entity~0e2b06bc8b32609e",
+      "pattern_type": "BRIDGE_ENTITY",
+      "entity_ids": [
+        "person:108"
+      ],
+      "relationship_types": [
+        "CALLED",
+        "CO_LOCATED",
+        "REPORTED_AGAINST",
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "calls",
+        "firs",
+        "persons",
+        "transactions"
+      ],
+      "severity": 0.79,
+      "explanation": "person:108 is a bridge entity: its betweenness centrality of 0.005698 is at the 95.8th percentile of the observed person projection (floor 90.0), and its relationships reach 8 distinct detected communities across 16 community-crossing relationships. High network importance marks an investigation lead \u2014 a place where the observed network would come apart if this entity were removed. It is a structural position, not a determination of criminality or guilt.",
+      "structured_evidence": [
+        {
+          "evidence_id": "calls:1131",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1131",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1668",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1668",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1779",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1779",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:332",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:332",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:506",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:506",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:530",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:530",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:104",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:104",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:178",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:178",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:296",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:296",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:108",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:108",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:439",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:439",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:95",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:95",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:310",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:310",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:324",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:324",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:367",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:367",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:438",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:438",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:575",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:575",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "betweenness": 0.00569836,
+        "betweenness_percentile": 95.8,
+        "percentile_floor": 90.0,
+        "community_id": 2,
+        "neighbour_communities": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        "neighbour_community_count": 8,
+        "crossing_relationship_count": 16,
+        "label": "bridge_entity",
+        "is_investigation_lead": true
+      }
+    },
+    {
+      "pattern_id": "bridge_entity~173a3a27ca791808",
+      "pattern_type": "BRIDGE_ENTITY",
+      "entity_ids": [
+        "person:223"
+      ],
+      "relationship_types": [
+        "CALLED",
+        "CO_LOCATED",
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "calls",
+        "persons",
+        "transactions"
+      ],
+      "severity": 0.68,
+      "explanation": "person:223 is a bridge entity: its betweenness centrality of 0.005343 is at the 93.6th percentile of the observed person projection (floor 90.0), and its relationships reach 8 distinct detected communities across 17 community-crossing relationships. High network importance marks an investigation lead \u2014 a place where the observed network would come apart if this entity were removed. It is a structural position, not a determination of criminality or guilt.",
+      "structured_evidence": [
+        {
+          "evidence_id": "calls:1152",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1152",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1202",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1202",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1607",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1607",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1678",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1678",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1736",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1736",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:571",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:571",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:928",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:928",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:223",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:223",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:227",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:227",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:419",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:419",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:420",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:420",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:432",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:432",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1165",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1165",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:120",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:120",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1337",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1337",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:306",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:306",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:412",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:412",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:898",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:898",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "betweenness": 0.00534335,
+        "betweenness_percentile": 93.6,
+        "percentile_floor": 90.0,
+        "community_id": 6,
+        "neighbour_communities": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          9
+        ],
+        "neighbour_community_count": 8,
+        "crossing_relationship_count": 17,
+        "label": "bridge_entity",
+        "is_investigation_lead": true
+      }
+    },
+    {
+      "pattern_id": "bridge_entity~1c2c920336e6394c",
+      "pattern_type": "BRIDGE_ENTITY",
+      "entity_ids": [
+        "person:339"
+      ],
+      "relationship_types": [
+        "CALLED",
+        "CO_LOCATED",
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "calls",
+        "persons",
+        "transactions"
+      ],
+      "severity": 0.58,
+      "explanation": "person:339 is a bridge entity: its betweenness centrality of 0.005121 is at the 91.6th percentile of the observed person projection (floor 90.0), and its relationships reach 8 distinct detected communities across 18 community-crossing relationships. High network importance marks an investigation lead \u2014 a place where the observed network would come apart if this entity were removed. It is a structural position, not a determination of criminality or guilt.",
+      "structured_evidence": [
+        {
+          "evidence_id": "calls:1272",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1272",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:170",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:170",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1750",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1750",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:383",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:383",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:429",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:429",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:655",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:655",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:854",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:854",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:183",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:183",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:339",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:339",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:340",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:340",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:341",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:341",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:468",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:468",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:79",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:79",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1338",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1338",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1342",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1342",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:22",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:22",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:639",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:639",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:699",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:699",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:974",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:974",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "betweenness": 0.00512101,
+        "betweenness_percentile": 91.6,
+        "percentile_floor": 90.0,
+        "community_id": 5,
+        "neighbour_communities": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          9
+        ],
+        "neighbour_community_count": 8,
+        "crossing_relationship_count": 18,
+        "label": "bridge_entity",
+        "is_investigation_lead": true
+      }
+    },
+    {
+      "pattern_id": "bridge_entity~1e2f33d8967d75aa",
+      "pattern_type": "BRIDGE_ENTITY",
+      "entity_ids": [
+        "person:315"
+      ],
+      "relationship_types": [
+        "CALLED",
+        "CO_LOCATED",
+        "REPORTED_AGAINST",
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "calls",
+        "firs",
+        "persons",
+        "transactions"
+      ],
+      "severity": 0.78,
+      "explanation": "person:315 is a bridge entity: its betweenness centrality of 0.005679 is at the 95.6th percentile of the observed person projection (floor 90.0), and its relationships reach 9 distinct detected communities across 20 community-crossing relationships. High network importance marks an investigation lead \u2014 a place where the observed network would come apart if this entity were removed. It is a structural position, not a determination of criminality or guilt.",
+      "structured_evidence": [
+        {
+          "evidence_id": "calls:1332",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1332",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1366",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1366",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:166",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:166",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:444",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:444",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:494",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:494",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:522",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:522",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:861",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:861",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:221",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:221",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:107",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:107",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:169",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:169",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:315",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:315",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:423",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:423",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:493",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:493",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1018",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1018",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1152",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1152",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1177",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1177",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1275",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1275",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1415",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1415",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:348",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:348",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:677",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:677",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:984",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:984",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "betweenness": 0.00567862,
+        "betweenness_percentile": 95.6,
+        "percentile_floor": 90.0,
+        "community_id": 6,
+        "neighbour_communities": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "neighbour_community_count": 9,
+        "crossing_relationship_count": 20,
+        "label": "bridge_entity",
+        "is_investigation_lead": true
+      }
+    },
+    {
+      "pattern_id": "bridge_entity~22daabcea97f7648",
+      "pattern_type": "BRIDGE_ENTITY",
+      "entity_ids": [
+        "person:80"
+      ],
+      "relationship_types": [
+        "CALLED",
+        "CO_LOCATED",
+        "REPORTED_AGAINST",
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "calls",
+        "firs",
+        "persons",
+        "transactions"
+      ],
+      "severity": 0.55,
+      "explanation": "person:80 is a bridge entity: its betweenness centrality of 0.004966 is at the 91.0th percentile of the observed person projection (floor 90.0), and its relationships reach 9 distinct detected communities across 17 community-crossing relationships. High network importance marks an investigation lead \u2014 a place where the observed network would come apart if this entity were removed. It is a structural position, not a determination of criminality or guilt.",
+      "structured_evidence": [
+        {
+          "evidence_id": "calls:1018",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1018",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1549",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1549",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1555",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1555",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1734",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1734",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1790",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1790",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1888",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1888",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:738",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:738",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:153",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:153",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:202",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:202",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:220",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:220",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:337",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:337",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:80",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:80",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:88",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:88",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:94",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:94",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1201",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1201",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:484",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:484",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:489",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:489",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:749",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:749",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "betweenness": 0.00496585,
+        "betweenness_percentile": 91.0,
+        "percentile_floor": 90.0,
+        "community_id": 1,
+        "neighbour_communities": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ],
+        "neighbour_community_count": 9,
+        "crossing_relationship_count": 17,
+        "label": "bridge_entity",
+        "is_investigation_lead": true
+      }
+    }
+  ],
+  "filters": {
+    "pattern_type": null,
+    "entity_id": null
+  },
+  "note": "Pattern ids are content-addressed (sha256 of pattern type + sorted entity ids + sorted evidence ids) and therefore stable across restarts. A category with zero detections is reported as zero in /summary rather than filled with an example."
+}

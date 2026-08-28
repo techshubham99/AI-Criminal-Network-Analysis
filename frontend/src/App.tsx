@@ -6,14 +6,15 @@ import { CommandCenter } from '@/pages/CommandCenter';
 import { NetworkInvestigation } from '@/pages/NetworkInvestigation';
 import { FirIntelligence } from '@/pages/FirIntelligence';
 import { EvidencePage } from '@/pages/EvidencePage';
+import { AlertsPage } from '@/pages/AlertsPage';
 import { Button, EmptyState, SectionHeading } from '@/components/ui';
 
 /**
  * Routes.
  *
  * Every route here is backed by verified backend endpoints — there are no
- * placeholder screens. Risk scoring and the audit ledger belong to later phases
- * and deliberately have no nav entry.
+ * placeholder screens. The audit ledger belongs to a later phase and deliberately
+ * has no nav entry.
  *
  * The network and FIR views take an optional path parameter so an investigation
  * is deep-linkable and the browser's back button steps through the trail. Both
@@ -40,6 +41,7 @@ export function App() {
           <Route path="/fir" element={<FirIntelligence />} />
           <Route path="/fir/:firId" element={<FirIntelligence />} />
           <Route path="/evidence" element={<EvidencePage />} />
+          <Route path="/alerts" element={<AlertsPage />} />
           {/* Keep old-style singular paths working rather than 404ing a demo. */}
           <Route path="/firs" element={<Navigate to="/fir" replace />} />
           <Route path="*" element={<RouteNotFound />} />
@@ -52,13 +54,10 @@ export function App() {
 function RouteNotFound() {
   return (
     <div className="space-y-5">
-      <SectionHeading
-        title="Screen not found"
-        subtitle="That address does not correspond to a view in this prototype."
-      />
+      <SectionHeading title="Screen not found" subtitle="That address does not match any view." />
       <EmptyState
         title="No such screen"
-        description="This build exposes only the four views backed by verified backend endpoints: Command Center, Network Investigation, FIR Intelligence, and Evidence & Provenance."
+        description="Use the sidebar to reach Command Center, Network, FIR Intelligence, Evidence or Alerts."
         action={
           <Link to="/">
             <Button variant="primary">Return to Command Center</Button>

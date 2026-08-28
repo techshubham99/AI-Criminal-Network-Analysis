@@ -13,7 +13,8 @@ export type { GraphToolbarProps } from './GraphToolbar';
 export { GraphLegend } from './GraphLegend';
 export type { GraphLegendProps } from './GraphLegend';
 
-export { buildGraphStylesheet, graphLayoutOptions, GRAPH_BACKGROUND } from './graphStyle';
+export { buildGraphStylesheet, graphChrome, graphLayoutOptions } from './graphStyle';
+export type { GraphChrome, GraphTheme } from './graphStyle';
 
 export { NodeDetailsPanel } from './NodeDetailsPanel';
 export type { NodeDetailsPanelProps } from './NodeDetailsPanel';

@@ -47,6 +47,7 @@ import {
   NodeDetailsPanel,
 } from '@/components/graph';
 import type { NetworkGraphHandle } from '@/components/graph';
+import { ActivityTimeline, PersonIntelligence } from '@/components/intelligence';
 import { SearchResultList } from '@/components/search/SearchResultList';
 import {
   Badge,
@@ -265,7 +266,7 @@ function SubjectPicker(): ReactElement {
     <Panel>
       <PanelHeader
         title="Select an investigation subject"
-        subtitle="Search persons by name. Backed by GET /graph/search — nothing is matched locally."
+        subtitle="Search persons by name."
       />
       <PanelBody className="px-4 py-4">
         <label className="field-label" htmlFor="cna-network-subject-search">
@@ -619,6 +620,11 @@ function NetworkView({ personId }: { personId: number }): ReactElement {
         <SubjectHeaderSkeleton />
       )}
 
+      {/* --------------------------------------------- Phase 4 priority strip */}
+      {/* A summary above the canvas, not a replacement for it: the graph and the
+          entity/evidence panels below are untouched. */}
+      <PersonIntelligence personId={personId} />
+
       {/* --------------------------------------------------------- main layout */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_17.5rem] xl:grid-cols-[minmax(0,1fr)_21rem]">
         {/* Graph first in source order, so the stacked layout below `lg` leads
@@ -791,6 +797,18 @@ function NetworkView({ personId }: { personId: number }): ReactElement {
           </div>
         </aside>
       </div>
+
+      {/* ------------------------------------------------------------ timeline */}
+      {/* Dated relationships only, taken from the same filtered edge list the
+          canvas draws — so the timeline and the graph can never disagree, and
+          nothing is placed on it that the backend did not date. */}
+      {anchorEntityId ? (
+        <ActivityTimeline
+          edges={filteredEdges}
+          nodes={visibleNodes}
+          anchorEntityId={anchorEntityId}
+        />
+      ) : null}
     </div>
   );
 }

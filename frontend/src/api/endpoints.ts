@@ -2,14 +2,17 @@
  * Typed bindings for the backend endpoints this frontend consumes.
  *
  * ONE FUNCTION PER REAL ENDPOINT. Every path below was verified against the
- * live `GET /openapi.json` of this project's backend on 2026-08-27; the
- * inventory is reproduced in `frontend/README.md`. Nothing here is speculative
- * and nothing here is mocked — if an endpoint is not in this file, the UI has
- * no way to ask for it.
+ * live `GET /openapi.json` of this project's backend; the inventory is
+ * reproduced in `frontend/README.md`. Nothing here is speculative and nothing
+ * here is mocked — if an endpoint is not in this file, the UI has no way to ask
+ * for it.
  *
- * Endpoints deliberately NOT bound, because the backend does not provide them
- * in Phase 3.5: anything to do with risk scoring, an audit/blockchain ledger,
- * vehicle or organisation entities, or writes of any kind.
+ * Endpoints deliberately NOT bound, because the backend does not provide them:
+ * vehicle or organisation entities. The Phase 4 intelligence routes, the Phase
+ * 4.6 ingestion routes and the Phase 5 chain verification ARE bound, at the foot
+ * of this file — the `ingest/*` POSTs are the only writes in the application,
+ * and they write to the separate live store, never to the dataset. The audit
+ * ledger's own write route is not bound: this UI only ever reads a verdict.
  *
  * TWO ID FORMS — verified live, and the single easiest thing to get wrong:
  *
@@ -33,29 +36,42 @@
  * `@/utils/entity`: responses always speak `entity_id`, path params always want
  * the integer.
  */
-import { request } from './client';
+import { post, request } from './client';
 import type {
+  CallIn,
+  ChainVerificationOut,
   CommunitiesResponse,
   DataSummaryResponse,
   DemoInvestigationResponse,
   EdgeOut,
+  ExplainResponse,
   FIR,
   FirEntitiesResponse,
+  FirIn,
   FirRelationshipsResponse,
   GraphImpactResponse,
   GraphSummaryResponse,
   HealthResponse,
+  IngestRecordOut,
+  IntelligenceSummaryResponse,
+  LocationIn,
   LocationRecord,
   NetworkResponse,
   NlpSearchResponse,
   NlpSummaryResponse,
   Page,
+  PatternListResponse,
+  PatternOut,
   Person,
   PersonAnalyticsOut,
   PersonDetailResponse,
+  PersonIntelligenceResponse,
   PathResponse,
+  PriorityRankingResponse,
+  ScoreBand,
   SearchResponse,
   TopPersonsResponse,
+  TransactionIn,
 } from '@/types/api';
 
 export interface Signalled {
@@ -195,6 +211,71 @@ export const searchNlp = (q: string, page = 1, pageSize = 20, o: Signalled = {})
     signal: o.signal,
   });
 
+/* ---------------------------------------------------------- intelligence -- */
+
+/**
+ * `GET /api/v1/intelligence/summary` — engine-wide counts, band boundaries,
+ * feature weights and the published policies.
+ */
+export const getIntelligenceSummary = (o: Signalled = {}) =>
+  request<IntelligenceSummaryResponse>('intelligence/summary', { signal: o.signal });
+
+export interface PriorityRankingQuery {
+  limit?: number;
+  band?: ScoreBand;
+  min_score?: number;
+}
+
+/**
+ * `GET /api/v1/intelligence/persons/top` — the investigation-priority ranking.
+ *
+ * NOT the same list as `getTopPersons()` above. That one ranks structural
+ * importance in the observed graph; this one ranks the explainable 0-100
+ * priority score. The backend says so in the response's own `note`, which the
+ * UI shows rather than paraphrasing.
+ */
+export const getPriorityRanking = (query: PriorityRankingQuery = {}, o: Signalled = {}) =>
+  request<PriorityRankingResponse>('intelligence/persons/top', {
+    params: query,
+    signal: o.signal,
+  });
+
+/** `GET /api/v1/intelligence/persons/{person_id}` — score, patterns, evidence. */
+export const getPersonIntelligence = (personId: number, o: Signalled = {}) =>
+  request<PersonIntelligenceResponse>(`intelligence/persons/${personId}`, { signal: o.signal });
+
+/**
+ * `GET /api/v1/intelligence/persons/{person_id}/explain`
+ *
+ * The arithmetic behind one score, factor by factor. This is what the "Why?"
+ * action opens — the number is never shown without a way to reach its derivation.
+ */
+export const explainPersonPriority = (personId: number, o: Signalled = {}) =>
+  request<ExplainResponse>(`intelligence/persons/${personId}/explain`, { signal: o.signal });
+
+export interface PatternQuery {
+  pattern_type?: string;
+  entity_id?: string;
+  limit?: number;
+  offset?: number;
+}
+
+/**
+ * `GET /api/v1/intelligence/patterns` — detected patterns, paged.
+ *
+ * `entity_id` takes the PREFIXED form (`person:141`); it is a query parameter.
+ * A category with no detections answers with an empty list, and the UI reports
+ * that zero as a zero.
+ */
+export const listPatterns = (query: PatternQuery = {}, o: Signalled = {}) =>
+  request<PatternListResponse>('intelligence/patterns', { params: query, signal: o.signal });
+
+/** `GET /api/v1/intelligence/patterns/{pattern_id}` — one pattern, in full. */
+export const getPattern = (patternId: string, o: Signalled = {}) =>
+  request<PatternOut>(`intelligence/patterns/${encodeURIComponent(patternId)}`, {
+    signal: o.signal,
+  });
+
 /* ----------------------------------------------------------- misc lookups -- */
 
 /** `GET /api/v1/persons/{person_id}` — the raw structured person record. */
@@ -204,3 +285,42 @@ export const getPersonRecord = (personId: number, o: Signalled = {}) =>
 /** `GET /api/v1/locations/{location_id}` — the raw structured location record. */
 export const getLocationRecord = (locationId: number, o: Signalled = {}) =>
   request<LocationRecord>(`locations/${locationId}`, { signal: o.signal });
+
+/* ------------------------------------------- Phase 4.6 — live ingestion -- */
+/*
+ * The only writes in this application. Each POST submits ONE record and returns
+ * the pipeline's verdict: ACCEPTED, DUPLICATE, REVIEW_REQUIRED or REJECTED, with
+ * the reason and (when accepted) what actually changed.
+ *
+ * A refused record is HTTP 200 with `status: 'REJECTED'` — a verdict, not a
+ * transport failure. HTTP 422 means the submission itself was malformed.
+ */
+
+/** `POST /api/v1/ingest/fir` — a new FIR, analysed by the Phase 3 NLP pipeline. */
+export const ingestFir = (body: FirIn, o: Signalled = {}) =>
+  post<IngestRecordOut>('ingest/fir', body, { signal: o.signal });
+
+/** `POST /api/v1/ingest/call` — one call detail record. */
+export const ingestCall = (body: CallIn, o: Signalled = {}) =>
+  post<IngestRecordOut>('ingest/call', body, { signal: o.signal });
+
+/** `POST /api/v1/ingest/transaction` — one money transfer. */
+export const ingestTransaction = (body: TransactionIn, o: Signalled = {}) =>
+  post<IngestRecordOut>('ingest/transaction', body, { signal: o.signal });
+
+/** `POST /api/v1/ingest/location` — one observation of a person at a place. */
+export const ingestLocation = (body: LocationIn, o: Signalled = {}) =>
+  post<IngestRecordOut>('ingest/location', body, { signal: o.signal });
+
+/* ------------------------------------ Phase 5 — audit chain verification -- */
+
+/**
+ * `GET /api/v1/audit/verify` — recompute the audit hash chain, end to end.
+ *
+ * A read: it appends nothing. The answer is `VERIFIED` or
+ * `INTEGRITY_COMPROMISED`, and on failure it names the event and both hashes.
+ * The ledger's other routes (the event list, per-resource verification and the
+ * integrity-record write) exist on the backend but are not consumed here.
+ */
+export const verifyAuditChain = (o: Signalled = {}) =>
+  request<ChainVerificationOut>('audit/verify', { signal: o.signal });

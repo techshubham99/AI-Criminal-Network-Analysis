@@ -778,3 +778,325 @@ pagination aggregates. Phase 1 `/health` and Phase 2 `/api/v1/graph/summary` unc
 SHA-256-identical with untouched mtimes (digests recorded in `phase3_nlp.md` §13). No
 risk scoring, blockchain/audit ledger, or frontend work was started.
 
+
+---
+
+## S. As-built — Phase 4 shipped: Investigation Intelligence Engine (addendum, 2026-08-27)
+
+*Appended after Phase 4. Prior sections are unchanged; where this section refines §I's plan,
+it says so explicitly. Full pattern definitions, the anomaly method and its limitations,
+the exact score arithmetic, worked examples and the measured results live in
+[`docs/phase4_intelligence.md`](phase4_intelligence.md).*
+
+Phase 4 implements `backend/app/risk/` and serves `/api/v1/intelligence`. It reads the
+Phase 1 records, the Phase 2 structured graph and the validated Phase 3 narrative
+extractions, and emits **patterns** (evidence-backed structural observations) and an
+**Investigation Priority Score** (deterministic 0–100 per person, decomposed into six
+explainable factors). It is fully deterministic and offline: **zero new dependencies**, no
+learned parameter, no model file, no external call. Detection and scoring never write to
+the Phase 2 graph.
+
+**Naming, deliberately.** The module is `app/risk/` (folder name from §N) but every
+user-facing name is *intelligence* / *investigation priority*, never *risk of a person*:
+routes live under `/api/v1/intelligence`, and the output is an investigation-prioritization
+signal — **not** a probability of guilt, criminality, or proof of wrongdoing. That sentence
+ships in every score and pattern response.
+
+### How this refines §I
+
+| §I plan | As built | Why |
+|---|---|---|
+| Tiers `LOW / MEDIUM / HIGH / CRITICAL` | **Three** bands: `LOW 0–39`, `MEDIUM 40–69`, `HIGH 70–100` | Fixed by the Phase 4 spec; boundaries are config (`intel_band_low_max`, `intel_band_medium_max`) and were **not** moved to force demo results |
+| Feature family 2: "membership in … ground-truth ring" as a scoring factor; the explain example shows a *"Ring member … matches ground-truth ring 3"* factor worth 18 points | **Rejected.** `ring_id` / `SAME_RING` is the generator's answer key and is excluded from every detector, feature and score | Scoring on the answer key measures the generator, not the method. The overlay stays quarantined exactly as Phase 2 left it (`is_overlay=True`) |
+| Feature family 4: "criminal record — count/role in FIRs" | No standalone FIR-count feature. FIR involvement enters only as one **channel** of a multi-channel relationship, and as a relationship type behind a bridge entity | A score that rises with FIR mentions edges toward criminality labelling, and would penalise complainants for reporting crime |
+| Feature family 5: "association — risk propagation, 1 hop" | **Not implemented** | Propagating a score to neighbours is guilt by association; nothing in the corpus supports it |
+| Feature family 1: degree, PageRank, betweenness, eigenvector | `network_importance` = mean of degree and PageRank percentiles; `bridge_network_structure` = betweenness percentile + community crossing. Eigenvector not used | Reuses Phase 2 analytics unchanged; eigenvector adds no independent signal on a 500-node projection |
+| Feature family 6: call bursts, contact diversity | `communication_anomaly` (per-person daily z-test) plus the multi-channel partner count | Odd-hour still deprioritised per DQ-6 |
+| Weights in `risk_weights.yaml` | Weights in `config.py` as six `intel_weight_*` pydantic settings, `.env`-overridable, and the service **refuses to build** unless they sum to 100 | No new file format or parser; the sum invariant is enforced, not merely documented |
+| Optional IsolationForest cross-check | **Not added** | Needs scikit-learn, and an unexplainable second opinion cannot be shown to an investigator (PS req. 13) |
+| Pass-through / layering ("B forwards 92% within 48h") | **Not implemented.** Cycles, fan-in, fan-out and concentration are | Layering needs a defensible time window; Phase 4 does no temporal reasoning at all, and DQ-5 already warns amounts are uniform |
+| "Bridge transactions connecting two clusters" | Modelled at person level as `BRIDGE_ENTITY` (betweenness ≥ 90th percentile **and** ≥ 2 neighbouring communities), not at edge level | The person is the investigable unit; the community-crossing relationship count is reported in the pattern detail |
+| `/risk/{id}/explain` with `model_version` | `/api/v1/intelligence/persons/{id}/explain`, same spirit — named factors, contributions, evidence — but no `model_version` | There is no trained model to version; the response reports the config weights and the arithmetic instead (`value x max = contribution`, then the sum and the rounding rule) |
+
+Two §I commitments are kept in full: **every score decomposes into named factors with the
+evidence records that produced it**, and **each flagged pattern is a first-class object with
+type, participants, evidence ids and a severity**.
+
+### What was added
+
+* **Nine pattern types → six scoring features.** Multi-channel relationship; communication
+  anomaly; transaction cycle / fan-in / fan-out / concentration; location cohort / shared
+  location pair; bridge entity. Transaction shapes are labelled *"Potential transaction
+  pattern requiring review"* — never laundering or fraud.
+* **Deterministic pattern ids.** `sha256(pattern_type | sorted entity ids | sorted evidence
+  ids)`, first 16 hex chars, prefixed with the lowercased type. No index, no insertion
+  order, no UUID, no timestamp — so the same corpus yields the same ids after any restart,
+  and two detectors reaching the same conclusion from the same records collapse into one
+  pattern.
+* **Structured and NLP-derived evidence never merge.** Every pattern and score exposes
+  `structured_evidence` and `nlp_evidence` as two lists; there is no merged evidence field
+  anywhere in the API. Structured evidence carries a provenance 1.0; NLP-derived evidence
+  keeps its own Phase 3 extraction confidence and the text it came from. A narrative edge is
+  reported as an *independent channel* but is excluded from the channel count that drives
+  the score — measured: 1 such case in the whole corpus, and it moves no score.
+* **Self-reference exclusion.** `calls:397`, `calls:656`, `firs:162` (0 self-transfers) are
+  excluded from all detection and scoring, and remain retrievable as Phase 1 evidence.
+* **Six routes**, business logic entirely outside the router; `/persons/top` is declared
+  before `/persons/{person_id}` so the literal path wins.
+
+### §L API plan addendum — the two rankings stay separate
+
+* `GET /api/v1/analytics/persons/top` (Phase 2) — graph centrality: *who is structurally
+  central?* Live top-5: `person:445, 188, 422, 391, 355`.
+* `GET /api/v1/intelligence/persons/top` (Phase 4) — priority score: *whose records should
+  be reviewed first?* Live top-5: `person:141 (68), 212 (64), 242 (64), 350 (64), 62 (62)`.
+
+The two top-5 sets share **no** person; the Phase 4 response carries a note naming the
+Phase 2 path and stating that the two are not interchangeable. They are not merged.
+
+### Measured results
+
+**502 patterns**, 0 duplicate ids collapsed: COMMUNICATION_ANOMALY 150, TRANSACTION_FAN_OUT
+102, TRANSACTION_FAN_IN 91, BRIDGE_ENTITY 51, MULTI_CHANNEL_RELATIONSHIP 47,
+TRANSACTION_CYCLE 29, LOCATION_COHORT 23, SHARED_LOCATION_PAIR 5,
+TRANSACTION_CONCENTRATION 4. **No category is empty**, and no threshold was lowered to
+achieve that.
+
+**500 persons scored**: min 0, max 68, mean 29.91 → **LOW 399, MEDIUM 101, HIGH 0**.
+
+Two honest results are reported rather than tuned away. **The HIGH band is empty** — 70
+requires scoring on nearly all six features at once, and here the multi-channel pairs and
+the bridge entities barely overlap (the top-ranked person contributes 0.0 from
+multi-channel). And **only 1 of 150 communication flags is materially significant**: with
+2,000 calls over 500 persons and 31 days, a peak of 2 against a mean of 1.1 clears `z > 2`
+while being one extra call, so the engine keeps `z > 2` exactly as specified, reports
+`excess_over_baseline` and `materially_significant` alongside it, and scales the score
+contribution on absolute excess rather than on z.
+
+**Verification:** full suite **422 passed** (57 Phase 1 + 78 Phase 2 + 196 Phase 3 +
+**91 Phase 4**) — the 57/78/196 figures match those recorded in Q.1 and R, so **zero
+regressions**. All six `/api/v1/intelligence` endpoints verified over live HTTP (uvicorn),
+including one real fetched-and-round-tripped example for **each of the nine** pattern types
+and all nine error cases (404 `not_found`, 400 `bad_request` with allowed values, 422
+`validation_error`). Pattern ids and scores are identical across a full process restart
+(502/502 ids digest `e7581ca2…`; top-100 scores digest `1bdd8cd6…`), and an in-process test
+rebuilds repository, graph and engine from scratch with **no** narrative store and gets
+identical ids and identical scores for all 500 persons. Phase 2 graph unchanged (3,803 nodes
+/ 10,802 edges before and after; `structured_graph_mutated: false`). All seven files under
+`dataset/` are SHA-256-identical (digests recorded in `phase4_intelligence.md` §12). No
+blockchain/audit ledger, no new frontend features, and no Phase 5 work was started.
+
+---
+
+## T. As-built — Phase 4.6 shipped: Live Intelligence & New Data Ingestion (addendum, 2026-08-28)
+
+*Appended after Phase 4.6. Prior sections are unchanged. The pipeline in full — every
+validation rule, the resolution ladder, the measured recomputation cost, the demo transcript
+and the limitations — lives in
+[`docs/phase4_6_live_ingestion.md`](phase4_6_live_ingestion.md).*
+
+Phase 4.6 adds `backend/app/ingest/` and serves `/api/v1/ingest` plus
+`/api/v1/entities/{entity_id}/changes`. It is the **first and only write path in the
+project**: a FIR, call, transaction or location observation can be submitted while the
+system is running, and — *if and only if it survives validation* — it enters the Phase 2
+graph, the Phase 2 analytics and the Phase 4 intelligence engine, with the change announced
+over SSE. Zero new dependencies; still fully offline and deterministic.
+
+The governing rule: **the system never blindly adds incoming data.** A submission is
+normalized, hashed, deduplicated, resolved, relationship-checked, provenance-checked and
+only then judged — `ACCEPTED`, `DUPLICATE`, `REVIEW_REQUIRED` or `REJECTED`, always with a
+stated reason.
+
+### How this refines §D / §E / §K
+
+| Earlier plan | As built | Why |
+|---|---|---|
+| §K's ingest tables as the write target | A **separate writable store** (`app/ingest/store.py`, `backend/data/ingest`) beside the read-only CSVs. `DatasetRepository`'s own lists are never mutated | The synthetic corpus is the fixed baseline every phase was verified against; it stays byte-identical (verified by SHA-256, all 5 files) |
+| Records keyed by a database id | Keyed by `SHA-256(source_type + normalized_payload)`, **timestamp excluded** | Makes duplicate protection structural rather than a check: the same observation cannot be stored twice, so an edge cannot be double-counted |
+| §D's "real-time updates" left open between WebSocket and SSE | **SSE only** (`GET /api/v1/ingest/stream`). No WebSocket anywhere | One-directional server→client notification is the actual requirement; SSE needs no new dependency, no protocol upgrade and no reconnect logic of our own |
+| Frontend live updates via a notification layer | One shared `EventSource`, a small `LIVE` dot in the top bar, and an in-place refetch of the priority queue on `new_intelligence` | §14 of the phase spec forbids a notification framework and heavy animation; a refetch is the whole feature |
+| Graph rebuilt on data change | Graph **edited** — one call merges into one aggregate `CALLED` edge | Rebuilding 3,803 nodes to insert one record would be both slow and a different graph; the merge preserves Phase 2 aggregation, provenance and the structured/narrative split |
+| Analytics patched incrementally | PageRank, betweenness and community detection **fully recomputed** after every accepted change, with the measured cost returned in `impact.recompute_cost_ms` | They are global metrics: one edge can move the score of a person it does not touch. No partial-update shortcut was faked, and the price (~1.6–1.8 s, betweenness-dominated) is reported rather than hidden |
+| "Resolve entities on ingest" | A three-rung deterministic ladder, and **two distinct** unresolved outcomes: `AMBIGUOUS_MATCH` and `NO_MATCH_NEW_ENTITY` | Collapsing them would hide the difference between a merge risk and a new subject. Ambiguous people are never silently merged |
+| New/unconnected data as an anomaly | Held as `REVIEW_REQUIRED / NO_MATCH_NEW_ENTITY` with the verbatim sentence *"No validated connection found with existing investigation data."* | An isolated legitimate network is a supported outcome. Nothing is treated as suspicious for being new, and no edge is invented to attach it |
+| §J-adjacent audit trail | Provenance only: every live row carries its own `table:pk` evidence id and the submission's `record_id` in `attributes.ingest_record_ids` | Blockchain/audit remains out of scope, as in every prior phase |
+
+### What was added
+
+* **A nine-step gate** (`app/ingest/pipeline.py`): schema → normalization → duplicate
+  detection → entity resolution → relationship validation → provenance/evidence validation →
+  decision → persistence → graph update + recomputation. Steps 1–7 run before any write, and
+  step 9 writes *derived* rows built from the normalized payload and resolved entity ids.
+  **There is no code path from a request body to a graph node.** Ingestion is serialized by a
+  lock so record ids, live row ids and graph aggregates stay reproducible.
+* **Four POST routes** — `/api/v1/ingest/{fir,call,transaction,location}` — plus reads
+  `GET /ingest/{record_id}`, `/{record_id}/impact`, `/records`, `/summary`, the SSE
+  `/stream`, and `GET /api/v1/entities/{entity_id}/changes`. Everything under
+  `/api/v1/ingest` is a new prefix; **no existing route changed shape or behaviour**, and a
+  read route still refuses every write verb.
+* **A live overlay for Phase 4** (`app/ingest/recompute.py`): `LiveDataView` returns *base
+  rows + accepted live rows* to the existing detectors, so no threshold, weight or band was
+  altered — the same rules run over more observations. `SAME_RING` is read, written and
+  scored by nothing in this phase.
+* **`pattern_signature`**, which compares what a pattern *asserts* rather than its hash, so
+  `new_pattern_ids` means newly detected. Ids that moved because community labels shifted are
+  counted separately as `reidentified_pattern_count` (50 per accepted record here) with a
+  note — reporting them as detections would have been the easy way to fake an impressive
+  demo.
+* **An accepted FIR runs the existing Phase 3 pipeline** (`NlpService.ingest_fir`), so it is
+  queryable like any other FIR; narrative-derived edges land in the Phase 3 overlay, never in
+  the structured graph.
+* **Five SSE event types** — `relationship_added`, `entity_updated`, `pattern_detected`,
+  `priority_changed`, `new_intelligence` — as **named** frames carrying ids and counts, i.e.
+  *what to refetch*. No narrative text, no phone or Aadhaar number, no amount, no raw
+  submission.
+* **An external-source adapter interface and nothing else** (`app/ingest/external.py`).
+  There is no access to NCRB, CDR, banking, telecom or government systems, none is claimed,
+  and no adapter ships enabled.
+* **Four small frontend additions**: `AddIntelligence`, `IngestVerdict`, `LiveIndicator`,
+  and auto-refresh on the Alerts page. The client normalises nothing and decides nothing — it
+  posts what was typed and renders the backend's own `reason` verbatim. The frontend was not
+  rebuilt.
+
+### §L API plan addendum — the only write surface, kept apart
+
+`/api/v1/ingest` is its own prefix so *submitting a record* can never be confused with the
+read-only endpoints above it, in the same way Phase 4's `/intelligence` was kept apart from
+Phase 2's `/analytics`. Two consequences a client must know:
+
+* **`REJECTED` returns HTTP 200.** The submission was handled; the record was refused. A
+  `4xx` is reserved for a malformed request (schema violations → `422`). Read `status`, not
+  the HTTP code.
+* **Every ingestion response carries a `disclaimer`** stating that ingestion decisions
+  describe record validity and reference resolution, are not findings about any person, and
+  that a new or unconnected record is not treated as suspicious.
+
+### Measured results
+
+The recorded §15 demo (`backend/scripts/phase4_6_demo.py`, nine submissions over live HTTP,
+transcript in `phase4_6_live_ingestion.md` §14) produced all four statuses and both review
+reasons **without any fabricated verdict**: one `ACCEPTED` call, the identical call returned
+`DUPLICATE` in 0 ms on the same content hash, an invalid call `REJECTED` with
+`caller.phone: not a 10-digit Indian mobile number`, an unrelated pair held as
+`NO_MATCH_NEW_ENTITY`, an accepted transaction, an accepted FIR, an accepted location
+observation, and two `AMBIGUOUS_MATCH` cases that arose naturally from the corpus — a crowded
+city (*29 location records share Chennai, Tamil Nadu*) and a pair of trusted identifiers
+pointing at different people.
+
+Graph **3,803 nodes / 10,802 edges → 3,804 / 10,809** (+1 node, +7 edges: exactly the four
+accepted records, no rebuild). Patterns **502 → 504**. Modularity `0.219089 → 0.216548` — a
+different partition of the same graph, which is what a genuine community recomputation looks
+like. `person:141` moved **68 MEDIUM → 76 HIGH** and `person:21` **39 LOW → 41 MEDIUM**: real
+consequences of added observations, with the Phase 4 band boundaries untouched. Recomputation
+cost per accepted record **1,595–1,766 ms** (analytics ~1,518 ms, dominated by betweenness;
+intelligence ~227 ms). Seven records stored for nine submissions, because the duplicate is
+the same record and a rejected payload is reported without being stored as an observation.
+
+**Verification:** full backend suite **481 passed** (422 pre-existing + **59 Phase 4.6**) —
+the 422 figure matches §S, so **zero regressions**. Frontend `npm run verify`: typecheck
+clean, **431 tests / 25 files passed**, build OK. Live contract suite over real HTTP
+**32/32 passed** (20 Phase 1–4 + 12 Phase 4.6), executed *after* live ingestion had mutated
+the in-memory graph — which is also the Phase 1–4 API-compatibility check. SSE verified over
+live HTTP: correct headers, keepalive comments, named frames in publication order, and **0
+frames** carrying record content. **The original dataset is unchanged**: before/after SHA-256
+lists are identical for all five files and `git status --porcelain -- dataset/ data/` is
+empty. No blockchain/audit ledger, no external integration, no frontend rebuild, and no
+Phase 5 work was started.
+
+---
+
+## U. As-built — Phase 5 shipped: Evidence Integrity & Tamper-Evident Audit Ledger (addendum, 2026-08-28)
+
+Full detail in [`docs/phase5_audit.md`](phase5_audit.md). Sections A–T are unchanged.
+
+**What it is, precisely.** A local, append-only, hash-chained audit ledger over the decisions
+this system makes, plus content commitments that let a document be re-checked later. **It is
+not a blockchain**: no network, no consensus, no peers, no Hyperledger, no Fabric, nothing
+installed and nothing deployed. The name used in the API (`"backend": "local_hash_chain"`), the
+UI and the docs is **Tamper-Evident Audit Ledger**.
+
+**Hashing, genesis, chain.** One canonicalization, reused rather than reinvented:
+`app.ingest.models.canonical_payload` — the same function that defines a Phase 4.6 `record_id`
+(sorted keys, `None` pruned, `separators=(",",":")`, `ensure_ascii=False`). Genesis is the fixed
+published constant `SHA-256("") = e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+— not a random value, timestamp or UUID — and it is returned in every verification response so
+a verifier need not trust the server for it. Links are
+`current_hash = SHA-256(canonical_payload(content) + previous_hash)` over every field except
+`current_hash`, **including `timestamp`**: a documented strengthening of §2, since a recorded
+timestamp is data that is re-hashed from storage, so the recorded time cannot be altered without
+breaking the chain. Ids are deterministic (`ae-000001`), never UUIDs.
+
+**Structure.** `app/audit/{models,ledger,service}.py` plus
+`app/api/v1/endpoints/audit.py` and `app/schemas/audit.py`. `AuditLedger` is the abstraction;
+`LocalHashChainLedger` is the only implementation; `PermissionedBlockchainLedger` exists as a
+declared, deliberately unimplemented seam with its real requirements written down. Built in
+`main.py` **before** ingestion and handed to the pipeline, so no decision can be made by an
+unaudited pipeline — and additive/non-fatal like every phase before it: a failure or
+`CNA_AUDIT_ENABLED=false` degrades `/audit` to 503 and leaves ingestion working, loudly
+unaudited rather than unavailable. Single writer: one `threading.Lock` covers head read,
+sequence assignment, hashing, append and the JSONL write, so the chain cannot fork; metadata
+validation runs *before* the lock so a refused event never leaves a gap.
+
+**API (§10), the whole surface.** `GET /api/v1/audit/summary`, `/events`,
+`/events/{audit_event_id}`, `/verify`, `/records/{resource_type}/{resource_id}/verify`, and one
+minimal write, `POST /api/v1/audit/records`, which commits a content hash the first time and
+**re-checks without overwriting** thereafter. No report builder was built, and there is no
+`PUT`, `PATCH` or `DELETE` anywhere under `/audit`.
+
+**Audit spam suppression, measured on this corpus.** A real accepted call produced exactly three
+events — `INGEST_ACCEPTED`, `RELATIONSHIP_ADDED`, `PRIORITY_BAND_CHANGED` — while the same
+recomputation **re-identified 50–51 patterns and produced 0 events for them**, because
+`_pattern_events` reads only `new_pattern_ids`. Numeric-only score movement (`68 → 69`,
+`69 → 68`) produces nothing; only a LOW/MEDIUM/HIGH **band** change does, and its two scores go
+into `metadata_hash` rather than being published. Merged edges (`edges_updated`) produce
+nothing. A duplicate resubmission produces exactly one event.
+
+**Privacy (§1).** Metadata is built from a fixed vocabulary of statuses, reasons, counts, ids
+and band labels; `assert_safe_metadata` is the backstop (blocked key fragments, 64-character
+value ceiling, 10+ digit-run rejection with a 64-hex-digest exemption). Verified end to end: a
+submission carrying a real corpus phone number, a real Aadhaar number and a narrative sentence
+produced events whose full serialization contains none of those values **and not even the field
+names** `phone`, `aadhaar`, `note`, `caller`, `duration_sec`.
+
+**Tamper detection, both kinds.** One field of a committed evidence summary changed
+(`relationship_count 2 → 3`) → `INTEGRITY_COMPROMISED`, `content_hash_mismatch`, `bd2ced83…`
+expected vs `26c5e679…` actual, with the original commitment intact and the chain itself still
+`VERIFIED`. One recorded event's `actor` changed in memory → `INTEGRITY_COMPROMISED` at
+`ae-000001`, `hash_mismatch`, both hashes reported; restoring the field returns `VERIFIED`. The
+tamper demonstration is in-memory only — **the synthetic dataset is never modified.**
+
+**Concurrency and persistence.** 32 threads × 4 appends released from a barrier →
+**128 events, dense ids, one valid chain, `VERIFIED`, `events_checked: 128`.** With
+`CNA_AUDIT_PERSIST=true`, a real process restart restored `chain_length 3 → 3` with the
+**identical head** `1208c8cb0056647e…` and `VERIFIED`, from one JSONL file inside the existing
+Phase 4.6 persistence convention — **no new database**. `load()` restores verbatim and never
+recomputes a hash, which is what keeps an edited file detectable; the integrity index is rebuilt
+from the chain (`reindex()`), so there is no sidecar store to drift. Replaying the persisted
+ingest submission produced **no duplicate audit events**. Cost: `0.034 ms` per append, `25.3 ms`
+to verify 2,000 events — about **0.005%** of the `1,786 ms` accepted request it audits.
+
+**Frontend (§12).** One compact panel, `components/audit/LedgerIntegrity.tsx`, rendered once at
+the top of Evidence & Provenance: `✓ VERIFIED` / `⚠ INTEGRITY COMPROMISED`, events-checked
+count, truncated head hash (full value on hover), one `[Verify]`, and one muted sentence when
+the ledger is unavailable. Only `GET /audit/verify` is bound; the event list, per-resource
+verify and the write route are deliberately unbound, asserted by a test. No dashboard, no block
+explorer, no other page touched.
+
+**Verification.** Full backend suite **544 passed** (481 pre-existing + **63 Phase 5**) — the
+481 figure matches §T, so **zero regressions**. Frontend: typecheck clean, **437 tests / 26
+files passed** (§T recorded 431/25 before Phase 5; the additions are 5 integrity-view cases and
+1 endpoint-surface guard), build OK. Phase 1–4.6 endpoints re-checked through the same app that
+had just been audited — `/health`, `/data/summary`, `/persons`, `/graph/summary`,
+`/analytics/persons/top`, `/nlp/summary`, `/intelligence/{summary,persons/top,patterns}`,
+`/ingest/{summary,records}` — all 200. **The original dataset is unchanged**: SHA-256 digests of
+every dataset CSV, taken before any submission and again after auditing, are identical, and the
+one deliberate tamper in the repository is an in-memory edit inside the demo script. No
+blockchain was installed or deployed, no login system was added, and no Phase 6 work was
+started.
+
+**Honest limits.** A local chain detects modification but does not prevent it — export
+`head_hash` from `/audit/summary` to somewhere the ledger's author does not control; events are
+**not signed** and there is no login, so `actor` is `system` rather than a person; `/verify` is
+O(chain length) and reports `events_checked`; the chain is forward-only with no backfill of the
+static corpus; a rejected submission has a decision event but no verifiable record;
+`content`-type resources need the holder to present the content; persistence is off by default.

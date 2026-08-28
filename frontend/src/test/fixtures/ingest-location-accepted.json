@@ -1,0 +1,210 @@
+{
+  "record_id": "49a7b699fa46b2222d71ebc3198d3ee04cdac83973a149ecc56f2a5b8996f9dc",
+  "source_type": "LOCATION",
+  "status": "ACCEPTED",
+  "validation_status": "VALID",
+  "resolution_status": "RESOLVED",
+  "review_reason": null,
+  "reject_reason": null,
+  "reason": "1 relationship(s) accepted; 1 new edge(s).",
+  "raw_payload": {
+    "person": {
+      "person_id": 141
+    },
+    "observed_at": "2026-08-21T09:30",
+    "city": "Bhopal",
+    "state": "Madhya Pradesh"
+  },
+  "normalized_payload": {
+    "person": {
+      "person_id": 141
+    },
+    "place": {
+      "city": "Bhopal",
+      "state": "Madhya Pradesh"
+    },
+    "observed_at": "2026-08-21T09:30:00"
+  },
+  "provenance": {
+    "source_type": "LOCATION",
+    "source_name": "field-report",
+    "submitted_by": null,
+    "reference": null,
+    "note": null
+  },
+  "ingested_at": "2026-08-28T13:32:01",
+  "matches": [
+    {
+      "field": "person",
+      "status": "MATCHED",
+      "method": "trusted_identifier",
+      "entity_id": "person:141",
+      "label": "Yashica Borah",
+      "confidence": 1.0,
+      "candidates": [],
+      "explanation": "Matched on trusted identifier (person_id).",
+      "is_new_entity": false
+    },
+    {
+      "field": "place",
+      "status": "MATCHED",
+      "method": "deterministic_context",
+      "entity_id": "location:191",
+      "label": "Bhopal, Madhya Pradesh",
+      "confidence": 0.9,
+      "candidates": [
+        {
+          "entity_id": "location:5",
+          "label": "Bhopal, Madhya Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:14",
+          "label": "Bhopal, Madhya Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:25",
+          "label": "Bhopal, Madhya Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:34",
+          "label": "Bhopal, Madhya Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:47",
+          "label": "Bhopal, Madhya Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:61",
+          "label": "Bhopal, Madhya Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:79",
+          "label": "Bhopal, Madhya Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:85",
+          "label": "Bhopal, Madhya Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:86",
+          "label": "Bhopal, Madhya Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:87",
+          "label": "Bhopal, Madhya Pradesh",
+          "detail": {}
+        }
+      ],
+      "explanation": "25 location records share this city and state; the referenced person's own recorded location singles one out.",
+      "is_new_entity": false
+    }
+  ],
+  "relationships": [
+    {
+      "relationship_type": "LOCATED_AT",
+      "source_entity_id": "person:141",
+      "target_entity_id": "location:191",
+      "accepted": true,
+      "reason": "Reported presence at an existing location. Recorded as an observation; the person's address on file is not overwritten.",
+      "relationship_id": "LOCATED_AT~observed~person:141~location:191",
+      "is_new_edge": true,
+      "is_self_reference": false,
+      "excluded_from_intelligence": false,
+      "is_narrative": false
+    }
+  ],
+  "evidence": [
+    "ingest:49a7b699fa46b2222d71ebc3198d3ee04cdac83973a149ecc56f2a5b8996f9dc"
+  ],
+  "entity_ids": [
+    "location:191",
+    "person:141"
+  ],
+  "duplicate_of": null,
+  "impact": {
+    "changed": true,
+    "graph": {
+      "nodes_added": [],
+      "edges_added": [
+        "LOCATED_AT~observed~person:141~location:191"
+      ],
+      "edges_updated": []
+    },
+    "graph_totals": {
+      "nodes": 3804,
+      "edges": 10809
+    },
+    "live_rows": {
+      "calls": 1,
+      "transactions": 1,
+      "firs": 1,
+      "location_observations": 1
+    },
+    "relationships_accepted": 1,
+    "relationships_rejected": 0,
+    "recompute_cost_ms": {
+      "analytics_ms": 1378.2,
+      "intelligence_ms": 216.7,
+      "total_ms": 1594.9
+    },
+    "new_pattern_ids": [],
+    "cleared_pattern_ids": [],
+    "reidentified_pattern_count": 0,
+    "reidentified_note": "Patterns whose deterministic id changed because community labels shifted, while the pattern still asserts the same thing about the same entities. Not new detections.",
+    "priority_changes": [],
+    "persons": [
+      {
+        "before": {
+          "person_id": 141,
+          "score": 76,
+          "band": "HIGH",
+          "pattern_count": 13,
+          "pagerank": 0.002764,
+          "betweenness": 0.007416,
+          "community_id": 1
+        },
+        "after": {
+          "person_id": 141,
+          "score": 76,
+          "band": "HIGH",
+          "pattern_count": 13,
+          "pagerank": 0.002764,
+          "betweenness": 0.007416,
+          "community_id": 1
+        }
+      }
+    ],
+    "patterns_before": {
+      "MULTI_CHANNEL_RELATIONSHIP": 48,
+      "COMMUNICATION_ANOMALY": 150,
+      "TRANSACTION_CYCLE": 29,
+      "TRANSACTION_FAN_IN": 91,
+      "TRANSACTION_FAN_OUT": 103,
+      "TRANSACTION_CONCENTRATION": 4,
+      "LOCATION_COHORT": 23,
+      "SHARED_LOCATION_PAIR": 5,
+      "BRIDGE_ENTITY": 51
+    },
+    "patterns_after": {
+      "MULTI_CHANNEL_RELATIONSHIP": 48,
+      "COMMUNICATION_ANOMALY": 150,
+      "TRANSACTION_CYCLE": 29,
+      "TRANSACTION_FAN_IN": 91,
+      "TRANSACTION_FAN_OUT": 103,
+      "TRANSACTION_CONCENTRATION": 4,
+      "LOCATION_COHORT": 23,
+      "SHARED_LOCATION_PAIR": 5,
+      "BRIDGE_ENTITY": 51
+    }
+  },
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious."
+}

@@ -1,0 +1,741 @@
+{
+  "total": 29,
+  "count": 8,
+  "offset": 0,
+  "limit": 8,
+  "patterns": [
+    {
+      "pattern_id": "transaction_cycle~058d12c49b074df4",
+      "pattern_type": "TRANSACTION_CYCLE",
+      "entity_ids": [
+        "person:140",
+        "person:21",
+        "person:245",
+        "person:3"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 1.0,
+      "explanation": "Potential transaction pattern requiring review: value returns to its origin along person:3 -> person:245 -> person:21 -> person:140 -> person:3, a closed circuit of 4 persons carrying 873738.57 INR across 4 observed transactions. A circuit is a shape, not a finding; the listed transaction records are the whole of the basis.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1109",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1109",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:389",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:389",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:431",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:431",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:822",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:822",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "cycle_length": 4,
+        "cycle_path": "person:3 -> person:245 -> person:21 -> person:140 -> person:3",
+        "members": [
+          "person:3",
+          "person:245",
+          "person:21",
+          "person:140"
+        ],
+        "legs": [
+          {
+            "from": "person:3",
+            "to": "person:245",
+            "transaction_count": 1,
+            "total_amount_inr": 50046.75,
+            "evidence_ids": [
+              "transactions:389"
+            ]
+          },
+          {
+            "from": "person:245",
+            "to": "person:21",
+            "transaction_count": 1,
+            "total_amount_inr": 434327.66,
+            "evidence_ids": [
+              "transactions:1109"
+            ]
+          },
+          {
+            "from": "person:21",
+            "to": "person:140",
+            "transaction_count": 1,
+            "total_amount_inr": 379906.56,
+            "evidence_ids": [
+              "transactions:822"
+            ]
+          },
+          {
+            "from": "person:140",
+            "to": "person:3",
+            "transaction_count": 1,
+            "total_amount_inr": 9457.6,
+            "evidence_ids": [
+              "transactions:431"
+            ]
+          }
+        ],
+        "total_amount_inr": 873738.57
+      }
+    },
+    {
+      "pattern_id": "transaction_cycle~1013fced4cd65cd9",
+      "pattern_type": "TRANSACTION_CYCLE",
+      "entity_ids": [
+        "person:232",
+        "person:366"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.6,
+      "explanation": "Potential transaction pattern requiring review: value returns to its origin along person:232 -> person:366 -> person:232, a closed circuit of 2 persons carrying 485987.31 INR across 2 observed transactions. A circuit is a shape, not a finding; the listed transaction records are the whole of the basis.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1069",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1069",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1419",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1419",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "cycle_length": 2,
+        "cycle_path": "person:232 -> person:366 -> person:232",
+        "members": [
+          "person:232",
+          "person:366"
+        ],
+        "legs": [
+          {
+            "from": "person:232",
+            "to": "person:366",
+            "transaction_count": 1,
+            "total_amount_inr": 194496.05,
+            "evidence_ids": [
+              "transactions:1069"
+            ]
+          },
+          {
+            "from": "person:366",
+            "to": "person:232",
+            "transaction_count": 1,
+            "total_amount_inr": 291491.26,
+            "evidence_ids": [
+              "transactions:1419"
+            ]
+          }
+        ],
+        "total_amount_inr": 485987.31
+      }
+    },
+    {
+      "pattern_id": "transaction_cycle~2613f7fecd14be89",
+      "pattern_type": "TRANSACTION_CYCLE",
+      "entity_ids": [
+        "person:111",
+        "person:253",
+        "person:291",
+        "person:325"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 1.0,
+      "explanation": "Potential transaction pattern requiring review: value returns to its origin along person:111 -> person:291 -> person:325 -> person:253 -> person:111, a closed circuit of 4 persons carrying 1131336.06 INR across 4 observed transactions. A circuit is a shape, not a finding; the listed transaction records are the whole of the basis.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1377",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1377",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:419",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:419",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:483",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:483",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:658",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:658",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "cycle_length": 4,
+        "cycle_path": "person:111 -> person:291 -> person:325 -> person:253 -> person:111",
+        "members": [
+          "person:111",
+          "person:291",
+          "person:325",
+          "person:253"
+        ],
+        "legs": [
+          {
+            "from": "person:111",
+            "to": "person:291",
+            "transaction_count": 1,
+            "total_amount_inr": 315297.59,
+            "evidence_ids": [
+              "transactions:658"
+            ]
+          },
+          {
+            "from": "person:291",
+            "to": "person:325",
+            "transaction_count": 1,
+            "total_amount_inr": 356568.11,
+            "evidence_ids": [
+              "transactions:483"
+            ]
+          },
+          {
+            "from": "person:325",
+            "to": "person:253",
+            "transaction_count": 1,
+            "total_amount_inr": 137420.65,
+            "evidence_ids": [
+              "transactions:419"
+            ]
+          },
+          {
+            "from": "person:253",
+            "to": "person:111",
+            "transaction_count": 1,
+            "total_amount_inr": 322049.71,
+            "evidence_ids": [
+              "transactions:1377"
+            ]
+          }
+        ],
+        "total_amount_inr": 1131336.06
+      }
+    },
+    {
+      "pattern_id": "transaction_cycle~2b95b46a55b8e854",
+      "pattern_type": "TRANSACTION_CYCLE",
+      "entity_ids": [
+        "person:126",
+        "person:260",
+        "person:351"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.8,
+      "explanation": "Potential transaction pattern requiring review: value returns to its origin along person:126 -> person:351 -> person:260 -> person:126, a closed circuit of 3 persons carrying 1281422.72 INR across 3 observed transactions. A circuit is a shape, not a finding; the listed transaction records are the whole of the basis.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:187",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:187",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:288",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:288",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:464",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:464",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "cycle_length": 3,
+        "cycle_path": "person:126 -> person:351 -> person:260 -> person:126",
+        "members": [
+          "person:126",
+          "person:351",
+          "person:260"
+        ],
+        "legs": [
+          {
+            "from": "person:126",
+            "to": "person:351",
+            "transaction_count": 1,
+            "total_amount_inr": 494857.69,
+            "evidence_ids": [
+              "transactions:464"
+            ]
+          },
+          {
+            "from": "person:351",
+            "to": "person:260",
+            "transaction_count": 1,
+            "total_amount_inr": 289987.37,
+            "evidence_ids": [
+              "transactions:187"
+            ]
+          },
+          {
+            "from": "person:260",
+            "to": "person:126",
+            "transaction_count": 1,
+            "total_amount_inr": 496577.66,
+            "evidence_ids": [
+              "transactions:288"
+            ]
+          }
+        ],
+        "total_amount_inr": 1281422.72
+      }
+    },
+    {
+      "pattern_id": "transaction_cycle~2c88098fff3d2afd",
+      "pattern_type": "TRANSACTION_CYCLE",
+      "entity_ids": [
+        "person:263",
+        "person:298",
+        "person:402",
+        "person:417"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 1.0,
+      "explanation": "Potential transaction pattern requiring review: value returns to its origin along person:263 -> person:417 -> person:402 -> person:298 -> person:263, a closed circuit of 4 persons carrying 1233198.51 INR across 4 observed transactions. A circuit is a shape, not a finding; the listed transaction records are the whole of the basis.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1087",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1087",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:198",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:198",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:280",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:280",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:78",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:78",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "cycle_length": 4,
+        "cycle_path": "person:263 -> person:417 -> person:402 -> person:298 -> person:263",
+        "members": [
+          "person:263",
+          "person:417",
+          "person:402",
+          "person:298"
+        ],
+        "legs": [
+          {
+            "from": "person:263",
+            "to": "person:417",
+            "transaction_count": 1,
+            "total_amount_inr": 252304.42,
+            "evidence_ids": [
+              "transactions:1087"
+            ]
+          },
+          {
+            "from": "person:417",
+            "to": "person:402",
+            "transaction_count": 1,
+            "total_amount_inr": 200435.39,
+            "evidence_ids": [
+              "transactions:280"
+            ]
+          },
+          {
+            "from": "person:402",
+            "to": "person:298",
+            "transaction_count": 1,
+            "total_amount_inr": 469975.92,
+            "evidence_ids": [
+              "transactions:198"
+            ]
+          },
+          {
+            "from": "person:298",
+            "to": "person:263",
+            "transaction_count": 1,
+            "total_amount_inr": 310482.78,
+            "evidence_ids": [
+              "transactions:78"
+            ]
+          }
+        ],
+        "total_amount_inr": 1233198.51
+      }
+    },
+    {
+      "pattern_id": "transaction_cycle~3c833836e84b7f6c",
+      "pattern_type": "TRANSACTION_CYCLE",
+      "entity_ids": [
+        "person:11",
+        "person:363",
+        "person:456",
+        "person:475"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 1.0,
+      "explanation": "Potential transaction pattern requiring review: value returns to its origin along person:11 -> person:363 -> person:475 -> person:456 -> person:11, a closed circuit of 4 persons carrying 1026422.59 INR across 4 observed transactions. A circuit is a shape, not a finding; the listed transaction records are the whole of the basis.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:108",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:108",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1140",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1140",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:560",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:560",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:997",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:997",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "cycle_length": 4,
+        "cycle_path": "person:11 -> person:363 -> person:475 -> person:456 -> person:11",
+        "members": [
+          "person:11",
+          "person:363",
+          "person:475",
+          "person:456"
+        ],
+        "legs": [
+          {
+            "from": "person:11",
+            "to": "person:363",
+            "transaction_count": 1,
+            "total_amount_inr": 346936.66,
+            "evidence_ids": [
+              "transactions:997"
+            ]
+          },
+          {
+            "from": "person:363",
+            "to": "person:475",
+            "transaction_count": 1,
+            "total_amount_inr": 329486.66,
+            "evidence_ids": [
+              "transactions:108"
+            ]
+          },
+          {
+            "from": "person:475",
+            "to": "person:456",
+            "transaction_count": 1,
+            "total_amount_inr": 203021.76,
+            "evidence_ids": [
+              "transactions:1140"
+            ]
+          },
+          {
+            "from": "person:456",
+            "to": "person:11",
+            "transaction_count": 1,
+            "total_amount_inr": 146977.51,
+            "evidence_ids": [
+              "transactions:560"
+            ]
+          }
+        ],
+        "total_amount_inr": 1026422.59
+      }
+    },
+    {
+      "pattern_id": "transaction_cycle~458dab150a074c87",
+      "pattern_type": "TRANSACTION_CYCLE",
+      "entity_ids": [
+        "person:414",
+        "person:54"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.6,
+      "explanation": "Potential transaction pattern requiring review: value returns to its origin along person:54 -> person:414 -> person:54, a closed circuit of 2 persons carrying 420439.13 INR across 2 observed transactions. A circuit is a shape, not a finding; the listed transaction records are the whole of the basis.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1212",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1212",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:344",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:344",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "cycle_length": 2,
+        "cycle_path": "person:54 -> person:414 -> person:54",
+        "members": [
+          "person:54",
+          "person:414"
+        ],
+        "legs": [
+          {
+            "from": "person:54",
+            "to": "person:414",
+            "transaction_count": 1,
+            "total_amount_inr": 405923.53,
+            "evidence_ids": [
+              "transactions:1212"
+            ]
+          },
+          {
+            "from": "person:414",
+            "to": "person:54",
+            "transaction_count": 1,
+            "total_amount_inr": 14515.6,
+            "evidence_ids": [
+              "transactions:344"
+            ]
+          }
+        ],
+        "total_amount_inr": 420439.13
+      }
+    },
+    {
+      "pattern_id": "transaction_cycle~551982acc4102bb5",
+      "pattern_type": "TRANSACTION_CYCLE",
+      "entity_ids": [
+        "person:183",
+        "person:242",
+        "person:479"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.8,
+      "explanation": "Potential transaction pattern requiring review: value returns to its origin along person:183 -> person:242 -> person:479 -> person:183, a closed circuit of 3 persons carrying 696356.24 INR across 3 observed transactions. A circuit is a shape, not a finding; the listed transaction records are the whole of the basis.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1283",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1283",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1296",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1296",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:526",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:526",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "cycle_length": 3,
+        "cycle_path": "person:183 -> person:242 -> person:479 -> person:183",
+        "members": [
+          "person:183",
+          "person:242",
+          "person:479"
+        ],
+        "legs": [
+          {
+            "from": "person:183",
+            "to": "person:242",
+            "transaction_count": 1,
+            "total_amount_inr": 266289.74,
+            "evidence_ids": [
+              "transactions:1283"
+            ]
+          },
+          {
+            "from": "person:242",
+            "to": "person:479",
+            "transaction_count": 1,
+            "total_amount_inr": 151878.7,
+            "evidence_ids": [
+              "transactions:526"
+            ]
+          },
+          {
+            "from": "person:479",
+            "to": "person:183",
+            "transaction_count": 1,
+            "total_amount_inr": 278187.8,
+            "evidence_ids": [
+              "transactions:1296"
+            ]
+          }
+        ],
+        "total_amount_inr": 696356.24
+      }
+    }
+  ],
+  "filters": {
+    "pattern_type": "TRANSACTION_CYCLE",
+    "entity_id": null
+  },
+  "note": "Pattern ids are content-addressed (sha256 of pattern type + sorted entity ids + sorted evidence ids) and therefore stable across restarts. A category with zero detections is reported as zero in /summary rather than filled with an example."
+}

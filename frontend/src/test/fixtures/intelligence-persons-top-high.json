@@ -1,0 +1,1 @@
+{"count":0,"limit":25,"band":"HIGH","persons":[],"band_boundaries":{"LOW":"0-39","MEDIUM":"40-69","HIGH":"70-100"},"note":"Investigation-priority ranking from the Phase 4 explainable 0-100 score. This is NOT the Phase 2 graph-based network importance ranking served by /api/v1/analytics/persons/top; the two rank different things and are not interchangeable.","disclaimer":""}

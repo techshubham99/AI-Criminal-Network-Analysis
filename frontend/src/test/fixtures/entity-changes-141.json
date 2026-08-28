@@ -1,0 +1,77 @@
+{
+  "entity_id": "person:141",
+  "count": 5,
+  "changes": [
+    {
+      "record_id": "83408ea024cda60561721fca83e4208f4b5adf2a7ce94968041a8c2e72101842",
+      "source_type": "CALL",
+      "status": "ACCEPTED",
+      "at": "2026-08-28T13:31:56",
+      "reason": "1 relationship(s) accepted; 1 new edge(s); 1 priority change(s).",
+      "relationship_ids": [
+        "CALLED~person:141~person:21"
+      ],
+      "priority_change": null
+    },
+    {
+      "record_id": "3f4735a44896bf4dd7ba9885c53037a1a143a87b6718fea26cce0ece909309ca",
+      "source_type": "TRANSACTION",
+      "status": "ACCEPTED",
+      "at": "2026-08-28T13:31:57",
+      "reason": "1 relationship(s) accepted; 1 new edge(s); 1 new pattern(s); 2 priority change(s).",
+      "relationship_ids": [
+        "TRANSACTED~person:141~person:7"
+      ],
+      "priority_change": {
+        "person_id": 141,
+        "entity_id": "person:141",
+        "score_before": 68,
+        "score_after": 69,
+        "band_before": "MEDIUM",
+        "band_after": "MEDIUM"
+      }
+    },
+    {
+      "record_id": "9300966e539fadd014561a2c250fd1daf9821de53434ecd8af0c3ada30ac5c9e",
+      "source_type": "FIR",
+      "status": "ACCEPTED",
+      "at": "2026-08-28T13:31:59",
+      "reason": "4 relationship(s) accepted; 4 new edge(s); 1 new pattern(s); 2 priority change(s).",
+      "relationship_ids": [
+        "NAMED_IN_FIR~complainant~person:21~fir:301",
+        "NAMED_IN_FIR~accused~person:141~fir:301",
+        "REPORTED_AGAINST~person:21~person:141",
+        "LOCATED_AT~fir:301~location:46"
+      ],
+      "priority_change": {
+        "person_id": 141,
+        "entity_id": "person:141",
+        "score_before": 69,
+        "score_after": 76,
+        "band_before": "MEDIUM",
+        "band_after": "HIGH"
+      }
+    },
+    {
+      "record_id": "49a7b699fa46b2222d71ebc3198d3ee04cdac83973a149ecc56f2a5b8996f9dc",
+      "source_type": "LOCATION",
+      "status": "ACCEPTED",
+      "at": "2026-08-28T13:32:01",
+      "reason": "1 relationship(s) accepted; 1 new edge(s).",
+      "relationship_ids": [
+        "LOCATED_AT~observed~person:141~location:191"
+      ],
+      "priority_change": null
+    },
+    {
+      "record_id": "5293576d0311328a977e028f064fb12278ea8aeec92011663bb7f1f0fdd3b446",
+      "source_type": "LOCATION",
+      "status": "REVIEW_REQUIRED",
+      "at": "2026-08-28T13:32:03",
+      "reason": "Cannot tell which existing record place refers to. 29 location records share Chennai, Tamil Nadu; supply a location_id to say which one.",
+      "relationship_ids": [],
+      "priority_change": null
+    }
+  ],
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious."
+}

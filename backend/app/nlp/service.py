@@ -172,6 +172,22 @@ class NlpService:
     def _ordered_analyses(self) -> list[FirAnalysis]:
         return [self._analyses[k] for k in sorted(self._analyses)]
 
+    def ingest_fir(self, fir: dict) -> FirAnalysis:
+        """Analyse and register ONE newly accepted FIR (Phase 4.6).
+
+        Runs exactly what :meth:`build` runs per FIR — extraction, resolution,
+        relation extraction, narrative integration — and adds the result to the
+        served index, so a live FIR is queryable like any other. Existing
+        analyses are never re-run, and this is only ever called for a FIR that
+        has already been accepted by the ingestion gate.
+        """
+        analysis = self._analyze(fir)
+        self._analyses[fir["fir_id"]] = analysis
+        self._index.extend(
+            SearchHit(analysis.fir_id, r, "") for r in analysis.resolved_entities
+        )
+        return analysis
+
     # -- reads ---------------------------------------------------------------
     @property
     def fir_count(self) -> int:

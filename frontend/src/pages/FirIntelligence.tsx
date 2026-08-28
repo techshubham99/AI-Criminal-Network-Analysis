@@ -109,8 +109,8 @@ export function FirIntelligence(): ReactElement {
   return (
     <div className="space-y-4">
       <SectionHeading
-        title="FIR intelligence"
-        subtitle="First Information Reports as filed, beside what deterministic narrative extraction reads out of them. Nothing on this page is a language model's interpretation, and nothing extracted here is added to the observed evidence graph."
+        title="FIR Intelligence"
+        subtitle="Reports as filed, beside what deterministic narrative extraction reads out of them."
         actions={
           firId !== null ? (
             <Badge tone="cyan" title="The FIR currently open">

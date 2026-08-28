@@ -1,0 +1,93 @@
+{
+  "record_id": "b7d67781ef116bae007ac636436b95c8d0262ed6abab1f6a3492a801dbb745cf",
+  "source_type": "CALL",
+  "status": "REVIEW_REQUIRED",
+  "validation_status": "VALID",
+  "resolution_status": "UNRESOLVED",
+  "review_reason": "AMBIGUOUS_MATCH",
+  "reject_reason": null,
+  "reason": "Cannot tell which existing record caller refers to. The identifiers on this reference match different person records; not merged without a decision.",
+  "raw_payload": {
+    "caller": {
+      "phone": "8600506062",
+      "aadhaar": "877449847333"
+    },
+    "callee": {
+      "person_id": 7
+    },
+    "start_time": "2026-08-22T08:12",
+    "duration_sec": 61
+  },
+  "normalized_payload": {
+    "caller": {
+      "phone": "8600506062",
+      "aadhaar": "877449847333"
+    },
+    "callee": {
+      "person_id": 7
+    },
+    "start_time": "2026-08-22T08:12:00",
+    "duration_sec": 61,
+    "cell_tower_id": null
+  },
+  "provenance": {
+    "source_type": "CALL",
+    "source_name": "manual-entry",
+    "submitted_by": null,
+    "reference": null,
+    "note": null
+  },
+  "ingested_at": "2026-08-28T13:32:03",
+  "matches": [
+    {
+      "field": "caller",
+      "status": "AMBIGUOUS",
+      "method": "trusted_identifier",
+      "entity_id": null,
+      "label": null,
+      "confidence": null,
+      "candidates": [
+        {
+          "entity_id": "person:21",
+          "label": "Gunbir Sankar",
+          "detail": {
+            "city": "Lucknow",
+            "state": "Uttar Pradesh"
+          }
+        },
+        {
+          "entity_id": "person:141",
+          "label": "Yashica Borah",
+          "detail": {
+            "city": "Bhopal",
+            "state": "Madhya Pradesh"
+          }
+        }
+      ],
+      "explanation": "The identifiers on this reference match different person records; not merged without a decision.",
+      "is_new_entity": false
+    },
+    {
+      "field": "callee",
+      "status": "MATCHED",
+      "method": "trusted_identifier",
+      "entity_id": "person:7",
+      "label": "Sudiksha Patla",
+      "confidence": 1.0,
+      "candidates": [],
+      "explanation": "Matched on trusted identifier (person_id).",
+      "is_new_entity": false
+    }
+  ],
+  "relationships": [],
+  "evidence": [],
+  "entity_ids": [
+    "person:7"
+  ],
+  "duplicate_of": null,
+  "impact": {
+    "changed": false,
+    "note": "Held for review: nothing was added to the graph and no intelligence was recomputed."
+  },
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious."
+}

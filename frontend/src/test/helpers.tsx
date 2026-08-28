@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ReactElement, ReactNode } from 'react';
-import { render, type RenderOptions } from '@testing-library/react';
+import { act, render, type RenderOptions } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 
@@ -30,9 +30,47 @@ import firsPage1 from './fixtures/firs-page1.json';
 import fir79 from './fixtures/fir-79.json';
 import personRecord445 from './fixtures/person-record-445.json';
 import locationRecord178 from './fixtures/location-record-178.json';
+import intelligenceSummary from './fixtures/intelligence-summary.json';
+import priorityRanking from './fixtures/intelligence-persons-top.json';
+import priorityRankingLow from './fixtures/intelligence-persons-top-low.json';
+import priorityRankingHigh from './fixtures/intelligence-persons-top-high.json';
+import personIntelligence21 from './fixtures/intelligence-person-21.json';
+import personIntelligence212 from './fixtures/intelligence-person-212.json';
+import personIntelligence141 from './fixtures/intelligence-person-141.json';
+import personExplain141 from './fixtures/intelligence-person-141-explain.json';
+import personIntelligence445 from './fixtures/intelligence-person-445.json';
+import personExplain445 from './fixtures/intelligence-person-445-explain.json';
+import patternsPage1 from './fixtures/intelligence-patterns.json';
+import patternsCycle from './fixtures/intelligence-patterns-cycle.json';
+import patternsEmpty from './fixtures/intelligence-patterns-empty.json';
+import patternDetail from './fixtures/intelligence-pattern-detail.json';
 import error404Person from './fixtures/error-404-person.json';
+import error404Pattern from './fixtures/error-404-pattern.json';
 import error400Depth from './fixtures/error-400-depth.json';
 import error422Search from './fixtures/error-422-search.json';
+// Phase 4.6 — the live-ingestion recordings. Each is a verdict the running
+// pipeline actually returned for the submission named in the file, captured by
+// `backend/scripts/phase4_6_demo.py`. The four statuses and both review reasons
+// are represented because the backend produced all six, not because a test
+// needed them to exist.
+import ingestCallAccepted from './fixtures/ingest-call-accepted.json';
+import ingestCallDuplicate from './fixtures/ingest-call-duplicate.json';
+import ingestCallRejected from './fixtures/ingest-call-rejected.json';
+import ingestCallReview from './fixtures/ingest-call-review.json';
+import ingestCallAmbiguous from './fixtures/ingest-call-ambiguous.json';
+import ingestTransactionAccepted from './fixtures/ingest-transaction-accepted.json';
+import ingestFirAccepted from './fixtures/ingest-fir-accepted.json';
+import ingestLocationAccepted from './fixtures/ingest-location-accepted.json';
+import ingestLocationAmbiguous from './fixtures/ingest-location-ambiguous.json';
+import ingestRecord from './fixtures/ingest-record.json';
+import ingestImpact from './fixtures/ingest-impact.json';
+import entityChanges141 from './fixtures/entity-changes-141.json';
+import liveEvents from './fixtures/live-events.json';
+// Phase 5 — the audit chain, recorded by `backend/scripts/phase5_audit_demo.py`.
+// The compromised recording is what the real ledger answered after one field of
+// one recorded event was changed in memory; the hashes in it are genuine.
+import auditVerify from './fixtures/audit-verify.json';
+import auditVerifyCompromised from './fixtures/audit-verify-compromised.json';
 
 /**
  * Test helpers.
@@ -69,9 +107,39 @@ export const fixtures = {
   fir79,
   personRecord445,
   locationRecord178,
+  intelligenceSummary,
+  priorityRanking,
+  priorityRankingLow,
+  priorityRankingHigh,
+  personIntelligence21,
+  personIntelligence212,
+  personIntelligence141,
+  personExplain141,
+  personIntelligence445,
+  personExplain445,
+  patternsPage1,
+  patternsCycle,
+  patternsEmpty,
+  patternDetail,
   error404Person,
+  error404Pattern,
   error400Depth,
   error422Search,
+  ingestCallAccepted,
+  ingestCallDuplicate,
+  ingestCallRejected,
+  ingestCallReview,
+  ingestCallAmbiguous,
+  ingestTransactionAccepted,
+  ingestFirAccepted,
+  ingestLocationAccepted,
+  ingestLocationAmbiguous,
+  ingestRecord,
+  ingestImpact,
+  entityChanges141,
+  liveEvents,
+  auditVerify,
+  auditVerifyCompromised,
 } as const;
 
 export type FixtureRoute = {
@@ -115,6 +183,41 @@ export function defaultRoutes(): FixtureRoute[] {
     { match: '/api/v1/firs', body: firsPage1 },
     { match: '/api/v1/persons/445', body: personRecord445 },
     { match: '/api/v1/locations/178', body: locationRecord178 },
+    // Phase 4 intelligence. Order matters twice over: `/persons/top` must be
+    // matched before the numeric person routes (it is not a person id), and
+    // `/{id}/explain` before `/{id}`. The pattern-detail route is a regex so the
+    // content-addressed id in the URL is matched rather than the list endpoint.
+    { match: '/api/v1/intelligence/summary', body: intelligenceSummary },
+    { match: /\/api\/v1\/intelligence\/persons\/top\?[^]*band=LOW/, body: priorityRankingLow },
+    // A genuinely empty answer: nothing in this corpus scores 70 or above.
+    { match: /\/api\/v1\/intelligence\/persons\/top\?[^]*band=HIGH/, body: priorityRankingHigh },
+    { match: '/api/v1/intelligence/persons/top', body: priorityRanking },
+    { match: '/api/v1/intelligence/persons/141/explain', body: personExplain141 },
+    { match: '/api/v1/intelligence/persons/445/explain', body: personExplain445 },
+    // Anchored so `/persons/21` cannot answer for `/persons/212` or `/21/explain`.
+    { match: /\/api\/v1\/intelligence\/persons\/21(?:$|\?)/, body: personIntelligence21 },
+    { match: /\/api\/v1\/intelligence\/persons\/212(?:$|\?)/, body: personIntelligence212 },
+    { match: '/api/v1/intelligence/persons/141', body: personIntelligence141 },
+    { match: '/api/v1/intelligence/persons/445', body: personIntelligence445 },
+    { match: /\/api\/v1\/intelligence\/patterns\?[^]*entity_id=person(%3A|:)999999/, body: patternsEmpty },
+    {
+      match: /\/api\/v1\/intelligence\/patterns\?[^]*pattern_type=TRANSACTION_CYCLE/,
+      body: patternsCycle,
+    },
+    { match: /\/api\/v1\/intelligence\/patterns\/[^?]+/, body: patternDetail },
+    { match: '/api/v1/intelligence/patterns', body: patternsPage1 },
+    // Phase 4.6 ingestion — the only writes in the app. `installFetch` matches on
+    // URL, not verb, so these answer the POSTs; a test that needs a different
+    // verdict for the same route passes its own table.
+    { match: '/api/v1/ingest/call', body: ingestCallAccepted },
+    { match: '/api/v1/ingest/transaction', body: ingestTransactionAccepted },
+    { match: '/api/v1/ingest/fir', body: ingestFirAccepted },
+    { match: '/api/v1/ingest/location', body: ingestLocationAccepted },
+    { match: /\/api\/v1\/ingest\/[^/?]+\/impact/, body: ingestImpact },
+    { match: /\/api\/v1\/entities\/person(%3A|:)141\/changes/, body: entityChanges141 },
+    // Phase 5 — the audit chain verdict. A VERIFIED chain by default; a test that
+    // needs the compromised recording passes its own table.
+    { match: '/api/v1/audit/verify', body: auditVerify },
   ];
 }
 
@@ -154,6 +257,94 @@ export function installErrorFetch(status: number, body: unknown) {
   const fetchMock = vi.fn(async () => jsonResponse(body, status));
   vi.stubGlobal('fetch', fetchMock);
   return fetchMock;
+}
+
+/** One stubbed SSE connection. Only what `api/live.ts` actually touches. */
+class StubEventSource {
+  static readonly CONNECTING = 0;
+  static readonly OPEN = 1;
+  static readonly CLOSED = 2;
+
+  readyState = StubEventSource.CONNECTING;
+  closed = false;
+  onopen: ((event: Event) => void) | null = null;
+  onerror: ((event: Event) => void) | null = null;
+  onmessage: ((event: any) => void) | null = null;
+  readonly named = new Map<string, Set<(event: any) => void>>();
+
+  constructor(readonly url: string) {}
+
+  addEventListener(type: string, handler: (event: any) => void) {
+    const set = this.named.get(type) ?? new Set();
+    set.add(handler);
+    this.named.set(type, set);
+  }
+
+  removeEventListener(type: string, handler: (event: any) => void) {
+    this.named.get(type)?.delete(handler);
+  }
+
+  close() {
+    this.closed = true;
+    this.readyState = StubEventSource.CLOSED;
+  }
+}
+
+/**
+ * Install a stub `EventSource`.
+ *
+ * jsdom ships none, so an un-stubbed test sees the live channel report `offline`
+ * — which is the honest answer, and is itself worth testing. With this installed
+ * a test can drive the three connection states and push recorded frames.
+ *
+ * `push` delivers to NAMED listeners only, exactly as the backend does: every
+ * frame it writes carries `event: <type>`, so a client that only wired
+ * `onmessage` would receive nothing. That failure is silent in a browser, so the
+ * stub reproduces the constraint rather than papering over it.
+ */
+export function installEventSource() {
+  const instances: StubEventSource[] = [];
+  class Stub extends StubEventSource {
+    constructor(url: string) {
+      super(url);
+      instances.push(this);
+    }
+  }
+  vi.stubGlobal('EventSource', Stub);
+
+  const latest = () => instances[instances.length - 1];
+
+  return {
+    instances,
+    latest,
+    /** The connection succeeds. */
+    open() {
+      const stream = latest();
+      stream.readyState = StubEventSource.OPEN;
+      act(() => stream.onopen?.(new Event('open')));
+    },
+    /** The connection drops. `retrying` is the browser's own reconnect state. */
+    fail({ retrying = false }: { retrying?: boolean } = {}) {
+      const stream = latest();
+      stream.readyState = retrying ? StubEventSource.CONNECTING : StubEventSource.CLOSED;
+      act(() => stream.onerror?.(new Event('error')));
+    },
+    /** Deliver one recorded event envelope as a named frame. */
+    push(event: { event_type: string; [key: string]: unknown }) {
+      const stream = latest();
+      const handlers = stream.named.get(event.event_type);
+      act(() => {
+        for (const handler of handlers ?? []) handler({ data: JSON.stringify(event) });
+      });
+    },
+  };
+}
+
+/** One recorded frame of the given type, from the captured SSE session. */
+export function liveEvent(type: string) {
+  const event = (liveEvents as Array<{ event_type: string }>).find((e) => e.event_type === type);
+  if (!event) throw new Error(`No recorded live event of type ${type}`);
+  return event as { event_type: string; [key: string]: unknown };
 }
 
 function jsonResponse(body: unknown, status: number): Response {

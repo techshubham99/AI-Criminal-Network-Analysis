@@ -1,0 +1,122 @@
+{
+  "record_id": "5293576d0311328a977e028f064fb12278ea8aeec92011663bb7f1f0fdd3b446",
+  "source_type": "LOCATION",
+  "status": "REVIEW_REQUIRED",
+  "validation_status": "VALID",
+  "resolution_status": "UNRESOLVED",
+  "review_reason": "AMBIGUOUS_MATCH",
+  "reject_reason": null,
+  "reason": "Cannot tell which existing record place refers to. 29 location records share Chennai, Tamil Nadu; supply a location_id to say which one.",
+  "raw_payload": {
+    "person": {
+      "person_id": 141
+    },
+    "observed_at": "2026-08-21T18:05",
+    "city": "Chennai",
+    "state": "Tamil Nadu"
+  },
+  "normalized_payload": {
+    "person": {
+      "person_id": 141
+    },
+    "place": {
+      "city": "Chennai",
+      "state": "Tamil Nadu"
+    },
+    "observed_at": "2026-08-21T18:05:00"
+  },
+  "provenance": {
+    "source_type": "LOCATION",
+    "source_name": "field-report",
+    "submitted_by": null,
+    "reference": null,
+    "note": null
+  },
+  "ingested_at": "2026-08-28T13:32:03",
+  "matches": [
+    {
+      "field": "person",
+      "status": "MATCHED",
+      "method": "trusted_identifier",
+      "entity_id": "person:141",
+      "label": "Yashica Borah",
+      "confidence": 1.0,
+      "candidates": [],
+      "explanation": "Matched on trusted identifier (person_id).",
+      "is_new_entity": false
+    },
+    {
+      "field": "place",
+      "status": "AMBIGUOUS",
+      "method": "normalized_exact",
+      "entity_id": null,
+      "label": null,
+      "confidence": null,
+      "candidates": [
+        {
+          "entity_id": "location:2",
+          "label": "Chennai, Tamil Nadu",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:15",
+          "label": "Chennai, Tamil Nadu",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:16",
+          "label": "Chennai, Tamil Nadu",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:17",
+          "label": "Chennai, Tamil Nadu",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:21",
+          "label": "Chennai, Tamil Nadu",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:30",
+          "label": "Chennai, Tamil Nadu",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:42",
+          "label": "Chennai, Tamil Nadu",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:52",
+          "label": "Chennai, Tamil Nadu",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:53",
+          "label": "Chennai, Tamil Nadu",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:57",
+          "label": "Chennai, Tamil Nadu",
+          "detail": {}
+        }
+      ],
+      "explanation": "29 location records share Chennai, Tamil Nadu; supply a location_id to say which one.",
+      "is_new_entity": false
+    }
+  ],
+  "relationships": [],
+  "evidence": [],
+  "entity_ids": [
+    "person:141"
+  ],
+  "duplicate_of": null,
+  "impact": {
+    "changed": false,
+    "note": "Held for review: nothing was added to the graph and no intelligence was recomputed."
+  },
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious."
+}

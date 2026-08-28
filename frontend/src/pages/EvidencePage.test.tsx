@@ -17,13 +17,15 @@ import { EvidencePage } from './EvidencePage';
 const PHONE_ROUTE = '/evidence?entity=phone%3A%2B91-7804841598';
 
 describe('EvidencePage — resolve an entity, then show the row it came from', () => {
-  it('asks for nothing until an entity is named', async () => {
+  it('asks for no entity data until an entity is named', async () => {
     const { calls } = installFetch();
     renderWithRouter(<EvidencePage />, { route: '/evidence' });
 
     expect(screen.getByText('No entity selected')).toBeInTheDocument();
     expect(screen.getByRole('combobox')).toBeInTheDocument();
-    expect(calls).toHaveLength(0);
+    // The page-level integrity read-out checks the audit chain on mount; nothing
+    // else is requested, because nothing else has been asked for yet.
+    await waitFor(() => expect(calls).toEqual(['/api/v1/audit/verify']));
   });
 
   it('finds entities through the graph search index', async () => {

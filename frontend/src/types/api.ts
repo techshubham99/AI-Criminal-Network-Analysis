@@ -573,6 +573,221 @@ export interface NlpSearchResponse {
   searched_fields?: string[];
 }
 
+/* ======================================================================
+   Phase 4 — investigation intelligence
+
+   Two shapes carry weight here and must survive into the UI unchanged:
+
+   1. STRUCTURED AND NLP-DERIVED EVIDENCE ARE SEPARATE LISTS. The backend never
+      emits a merged `evidence` field, and nothing in this frontend creates one.
+      A structured item is an observed dataset row (confidence 1.0); an
+      NLP-derived item is a rule-extraction claim about FIR free text carrying
+      its own confidence, and it does not raise any score.
+
+   2. `value` AND `contribution` ARE SEPARATE NUMBERS, so a reader can verify the
+      arithmetic: contribution = round(value x max_contribution, 2), and the
+      published score is the sum of contributions rounded half-up.
+
+   Note one deliberate naming divergence from the backend: its Phase 4 ranking
+   schema is also called `TopPersonsResponse`, which already means the Phase 2
+   centrality ranking in this file. The Phase 4 one is `PriorityRankingResponse`
+   here. The two rank different things and are never interchangeable.
+   ====================================================================== */
+
+export const SCORE_BANDS = ['LOW', 'MEDIUM', 'HIGH'] as const;
+export type ScoreBand = (typeof SCORE_BANDS)[number];
+
+export const PATTERN_TYPES = [
+  'MULTI_CHANNEL_RELATIONSHIP',
+  'COMMUNICATION_ANOMALY',
+  'TRANSACTION_CYCLE',
+  'TRANSACTION_FAN_IN',
+  'TRANSACTION_FAN_OUT',
+  'TRANSACTION_CONCENTRATION',
+  'LOCATION_COHORT',
+  'SHARED_LOCATION_PAIR',
+  'BRIDGE_ENTITY',
+] as const;
+export type PatternType = (typeof PATTERN_TYPES)[number];
+
+/** The six scored features. Order here is the backend's weight order. */
+export const SCORE_FEATURES = [
+  'network_importance',
+  'multi_channel_relationship',
+  'transaction_patterns',
+  'communication_anomaly',
+  'location_patterns',
+  'bridge_network_structure',
+] as const;
+export type ScoreFeature = (typeof SCORE_FEATURES)[number];
+
+export interface EvidenceOut {
+  evidence_id: string;
+  /** `STRUCTURED` = observed record; `NLP_DERIVED` = claim about FIR text. */
+  evidence_class: 'STRUCTURED' | 'NLP_DERIVED';
+  source_dataset: string;
+  source_record_id: string;
+  confidence: number;
+  confidence_basis: string;
+  evidence_text?: string | null;
+}
+
+export interface PatternOut {
+  /** Content-addressed: `<type>~<sha256 prefix>`, stable across restarts. */
+  pattern_id: string;
+  pattern_type: string;
+  entity_ids: string[];
+  relationship_types: string[];
+  source_datasets: string[];
+  severity: number;
+  explanation: string;
+  structured_evidence: EvidenceOut[];
+  nlp_evidence: EvidenceOut[];
+  detail?: Record<string, unknown>;
+}
+
+export interface PatternListResponse {
+  total: number;
+  count: number;
+  offset: number;
+  limit: number;
+  patterns: PatternOut[];
+  filters: { pattern_type?: string | null; entity_id?: string | null };
+  note: string;
+}
+
+export interface ScoreFactorOut {
+  feature: string;
+  /** 0-1, before weighting. */
+  value: number;
+  max_contribution: number;
+  contribution: number;
+  pattern_ids: string[];
+  evidence_ids: string[];
+  explanation: string;
+  detail?: Record<string, unknown>;
+}
+
+export interface PriorityScoreOut {
+  person_id: number;
+  entity_id: string;
+  /** 0-100. Not a probability of anything. */
+  score: number;
+  band: ScoreBand;
+  factors: ScoreFactorOut[];
+  pattern_ids: string[];
+  structured_evidence: EvidenceOut[];
+  nlp_evidence: EvidenceOut[];
+  explanation: string;
+  disclaimer: string;
+}
+
+export interface RankedPersonOut {
+  person_id: number;
+  entity_id: string;
+  name?: string | null;
+  city?: string | null;
+  state?: string | null;
+  score: number;
+  band: ScoreBand;
+  /** At most three, all with a contribution above zero. */
+  top_factors: ScoreFactorOut[];
+  pattern_count: number;
+  structured_evidence_count: number;
+  nlp_evidence_count: number;
+  explanation: string;
+}
+
+export interface PriorityRankingResponse {
+  count: number;
+  limit: number;
+  band?: ScoreBand | null;
+  persons: RankedPersonOut[];
+  band_boundaries: Record<string, string>;
+  note: string;
+  disclaimer: string;
+}
+
+export interface CommunicationBaselineOut {
+  person_id: number;
+  anomaly_status: string;
+  observed_count?: number | null;
+  peak_date?: string | null;
+  z_score?: number | null;
+  excess_over_baseline?: number | null;
+  materially_significant?: boolean;
+  baseline?: {
+    observation_days?: number | null;
+    total_calls?: number | null;
+    mean_calls_per_active_day?: number | null;
+    stdev_calls_per_active_day?: number | null;
+    min_calls_per_active_day?: number | null;
+    max_calls_per_active_day?: number | null;
+  };
+  supporting_call_ids?: number[];
+  [key: string]: unknown;
+}
+
+export interface PersonIntelligenceResponse {
+  person: Person;
+  priority: PriorityScoreOut;
+  patterns: PatternOut[];
+  communication_baseline?: CommunicationBaselineOut | null;
+  /** Phase 2 centrality, reported alongside and never folded into the score. */
+  network_position?: PersonAnalyticsOut | null;
+  disclaimer: string;
+}
+
+export interface FactorWalkthroughOut extends ScoreFactorOut {
+  label: string;
+  feature_value: number;
+  /** e.g. `"0.89 x 20.0 = 17.78"` — the arithmetic, spelled out. */
+  arithmetic: string;
+}
+
+export interface ExplainResponse {
+  person_id: number;
+  entity_id: string;
+  score: number;
+  band: ScoreBand;
+  sum_of_contributions: number;
+  rounding: string;
+  band_meaning: string;
+  factor_walkthrough: FactorWalkthroughOut[];
+  structured_evidence: EvidenceOut[];
+  nlp_evidence: EvidenceOut[];
+  evidence_separation_note: string;
+  explanation: string;
+  disclaimer: string;
+}
+
+export interface IntelligenceSummaryResponse {
+  phase: string;
+  persons_scored: number;
+  patterns_detected: number;
+  duplicate_pattern_ids_collapsed: number;
+  patterns_by_type: Record<string, number>;
+  zero_result_categories: Array<{ pattern_type: string; [key: string]: unknown }>;
+  score_bands: {
+    boundaries: Record<string, string>;
+    distribution: Record<string, number>;
+  };
+  score_stats: { min: number; max: number; mean: number };
+  feature_weights: Record<string, number>;
+  feature_weight_total: number;
+  detection_coverage: Record<string, unknown>;
+  evidence_policy: Record<string, string>;
+  self_reference_policy: string;
+  overlay_policy: string;
+  structured_graph_mutated: boolean;
+  ranking_note: string;
+  disclaimer: string;
+}
+
+/* ======================================================================
+   Phase 3 (continued) — corpus-level NLP metrics
+   ====================================================================== */
+
 /** `GET /nlp/summary` is an open dict; these are the keys it returns today. */
 export interface NlpSummaryResponse {
   phase?: string;
@@ -613,4 +828,215 @@ export interface NlpSummaryResponse {
   confidence_semantics?: Record<string, unknown>;
   evaluation?: Record<string, unknown>;
   [key: string]: unknown;
+}
+
+/* ======================================================================
+   Phase 4.6 — live ingestion (`POST /ingest/*`) and the SSE channel
+   Transcribed from `backend/app/schemas/ingest.py` and
+   `backend/app/ingest/events.py`.
+   ====================================================================== */
+
+/** An identifier may be sent as a number or a string; normalization decides. */
+export type IngestScalar = string | number;
+
+/** How a submission points at a person. At least one field must be usable. */
+export interface PersonRef {
+  person_id?: IngestScalar;
+  phone?: IngestScalar;
+  aadhaar?: IngestScalar;
+  name?: string;
+}
+
+/**
+ * Where the submitter says the record came from. Stored and echoed verbatim; it
+ * is never interpreted as an integration with any external system.
+ */
+export interface ProvenanceIn {
+  source_name: string;
+  submitted_by?: string;
+  reference?: string;
+  note?: string;
+}
+
+export interface FirIn {
+  provenance: ProvenanceIn;
+  date: IngestScalar;
+  complainant: PersonRef;
+  /** Omit when no accused is named yet — that is a valid FIR. */
+  accused?: PersonRef;
+  narrative: string;
+  location_id?: IngestScalar;
+  city?: string;
+  state?: string;
+}
+
+export interface CallIn {
+  provenance: ProvenanceIn;
+  caller: PersonRef;
+  callee: PersonRef;
+  start_time: IngestScalar;
+  duration_sec: IngestScalar;
+  cell_tower_id?: IngestScalar;
+}
+
+export interface TransactionIn {
+  provenance: ProvenanceIn;
+  sender: PersonRef;
+  receiver: PersonRef;
+  amount_inr: IngestScalar;
+  txn_time: IngestScalar;
+  mode: string;
+  bank_ref?: string;
+}
+
+export interface LocationIn {
+  provenance: ProvenanceIn;
+  person: PersonRef;
+  observed_at?: IngestScalar;
+  location_id?: IngestScalar;
+  city?: string;
+  state?: string;
+}
+
+/** The four decisions the pipeline can reach. */
+export const INGEST_STATUSES = [
+  'ACCEPTED',
+  'DUPLICATE',
+  'REVIEW_REQUIRED',
+  'REJECTED',
+] as const;
+export type IngestStatus = (typeof INGEST_STATUSES)[number];
+
+/** The two review reasons, which are deliberately NOT interchangeable. */
+export type ReviewReason = 'AMBIGUOUS_MATCH' | 'NO_MATCH_NEW_ENTITY' | string;
+
+export interface CandidateOut {
+  entity_id: string;
+  label: string;
+  detail?: Record<string, unknown>;
+}
+
+export interface MatchOut {
+  field: string;
+  /** MATCHED | AMBIGUOUS | NO_MATCH */
+  status: string;
+  /** trusted_identifier | normalized_exact | deterministic_context | none */
+  method: string;
+  entity_id?: string | null;
+  label?: string | null;
+  confidence?: number | null;
+  candidates: CandidateOut[];
+  explanation: string;
+  is_new_entity: boolean;
+}
+
+/**
+ * The backend calls this `RelationshipOut` too, but Phase 3's NLP relationship
+ * already owns that name above; the prefix keeps the two apart.
+ */
+export interface IngestRelationshipOut {
+  relationship_type: string;
+  source_entity_id?: string | null;
+  target_entity_id?: string | null;
+  accepted: boolean;
+  reason: string;
+  relationship_id?: string | null;
+  is_new_edge: boolean;
+  is_self_reference: boolean;
+  excluded_from_intelligence: boolean;
+  is_narrative: boolean;
+}
+
+export interface ProvenanceOut {
+  source_type: string;
+  source_name: string;
+  submitted_by?: string | null;
+  reference?: string | null;
+  note?: string | null;
+}
+
+/**
+ * One submitted record and its verdict.
+ *
+ * `impact` is an open dict on the backend; the keys the UI reads are narrowed
+ * where they are used, not asserted here.
+ */
+export interface IngestRecordOut {
+  record_id: string;
+  source_type: string;
+  status: IngestStatus | string;
+  validation_status: string;
+  resolution_status: string;
+  review_reason?: ReviewReason | null;
+  reject_reason?: string | null;
+  reason: string;
+  raw_payload: Record<string, unknown>;
+  normalized_payload: Record<string, unknown>;
+  provenance: ProvenanceOut;
+  ingested_at: string;
+  matches: MatchOut[];
+  relationships: IngestRelationshipOut[];
+  evidence: string[];
+  entity_ids: string[];
+  duplicate_of?: string | null;
+  impact: Record<string, unknown>;
+  disclaimer: string;
+}
+
+/** The five event types the live channel publishes. */
+export const LIVE_EVENT_TYPES = [
+  'new_intelligence',
+  'entity_updated',
+  'relationship_added',
+  'pattern_detected',
+  'priority_changed',
+] as const;
+export type LiveEventType = (typeof LIVE_EVENT_TYPES)[number];
+
+/**
+ * One frame off the SSE stream.
+ *
+ * Events are notifications, not data: they carry ids, counts and statuses so the
+ * UI knows what to refetch, never narrative text or identifiers. `data` is
+ * therefore left open and is not rendered.
+ */
+export interface LiveEvent {
+  event_id: number;
+  event_type: LiveEventType | string;
+  at: string;
+  data: Record<string, unknown>;
+}
+
+/* ------------------------------- Phase 5 — tamper-evident audit ledger -- */
+
+/** The only two verdicts the ledger returns. There is no "probably fine". */
+export const VERIFICATION_STATUSES = ['VERIFIED', 'INTEGRITY_COMPROMISED'] as const;
+export type VerificationStatus = (typeof VERIFICATION_STATUSES)[number];
+
+/**
+ * Why a verification failed, with the two hashes side by side.
+ *
+ * Present only when `status` is `INTEGRITY_COMPROMISED`, and never carries the
+ * content itself — a failure names the event and the digests, nothing more.
+ */
+export interface AuditFailureOut {
+  audit_event_id?: string | null;
+  resource_type?: string | null;
+  resource_id?: string | null;
+  reason: string;
+  expected_hash?: string | null;
+  actual_hash?: string | null;
+  message: string;
+}
+
+/** `GET /api/v1/audit/verify` — one recomputation of the whole hash chain. */
+export interface ChainVerificationOut {
+  status: VerificationStatus | string;
+  events_checked: number;
+  chain_length: number;
+  genesis_previous_hash: string;
+  head_hash: string;
+  backend: string;
+  persisted: boolean;
+  failure?: AuditFailureOut | null;
 }

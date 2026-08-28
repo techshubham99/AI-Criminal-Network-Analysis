@@ -1,11 +1,11 @@
 /**
- * Architecture tests — the Phase 3.5 constraints, enforced mechanically.
+ * Architecture tests — the project's standing constraints, enforced mechanically.
  *
  * Several of this project's rules are the kind that a reviewer can only check by
  * reading every file: "no mock data when a real endpoint exists", "only consume
- * verified endpoints", "one fetch site", "no Phase 4 risk scoring", "never
- * request the ground-truth overlay". Prose in a README does not enforce any of
- * them. These tests read the actual source tree and do.
+ * verified endpoints", "one fetch site", "no risk scoring", "never request the
+ * ground-truth overlay". Prose in a README does not enforce any of them. These
+ * tests read the actual source tree and do.
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
@@ -66,16 +66,43 @@ describe('there is exactly one fetch site', () => {
   it('no other transport is used anywhere', () => {
     for (const file of CODE) {
       expect(file.text, file.path).not.toMatch(/\bXMLHttpRequest\b/);
-      expect(file.text, file.path).not.toMatch(/\bEventSource\b/);
+      // EventSource is allowed ONLY in api/live.ts (the single SSE module, spec §12).
+      // WebSocket is forbidden unconditionally — only SSE is used.
+      if (file.path !== 'api/live.ts') {
+        expect(file.text, file.path).not.toMatch(/\bEventSource\b/);
+      }
       expect(file.text, file.path).not.toMatch(/\bnew WebSocket\b/);
       expect(file.text, file.path).not.toMatch(/\baxios\b/);
     }
   });
 
-  it('the client issues GET and nothing else', () => {
+  it('the client issues GET and POST, and no other verb exists', () => {
     const client = APP.find((f) => f.path === 'api/client.ts')!;
-    const methods = [...client.text.matchAll(/method:\s*'([A-Z]+)'/g)].map((m) => m[1]);
-    expect(methods).toEqual(['GET']);
+    // Phase 4.6 added the only writes in the app (`POST /ingest/*`). The verb
+    // union is closed at two, so a mutating verb cannot be smuggled in as a
+    // string, and nothing anywhere names one.
+    expect(client.text).toMatch(/export type HttpMethod = 'GET' \| 'POST';/);
+    for (const file of CODE) {
+      expect(stripComments(file.text), file.path).not.toMatch(
+        /'(?:PUT|PATCH|DELETE|HEAD|OPTIONS)'/,
+      );
+    }
+  });
+
+  it('the only POSTs are the Phase 4.6 ingestion routes', () => {
+    const bindings = APP.find((f) => f.path === 'api/endpoints.ts')!;
+    const posted = [...bindings.text.matchAll(/\bpost<[^>]*>\(\s*'([^']+)'/g)].map((m) => m[1]);
+    expect(posted.length).toBeGreaterThan(0);
+    expect(posted.filter((path) => !path.startsWith('ingest/'))).toEqual([]);
+
+    // Only the binding layer may write; no component reaches past it.
+    const offenders = CODE.filter(
+      (file) =>
+        file.path !== 'api/client.ts' &&
+        file.path !== 'api/endpoints.ts' &&
+        /\bpost\s*</.test(stripComments(file.text)),
+    ).map((f) => f.path);
+    expect(offenders).toEqual([]);
   });
 });
 
@@ -117,14 +144,26 @@ describe('only verified endpoints are consumed', () => {
   });
 
   it('there is no binding for an endpoint the backend does not expose', () => {
-    // Endpoints deliberately absent in Phase 3.5. If one of these ever appears,
-    // it is either invented or Phase 4 arriving early.
-    const forbidden = ['risk', 'score', 'audit', 'ledger', 'blockchain', 'vehicles', 'events'];
+    // Words this backend has no route for. `score` is on the list deliberately:
+    // Phase 4's endpoints are `intelligence/persons/top`, `/{id}` and
+    // `/{id}/explain` — there is no `/score` route to bind, and a binding named
+    // for one would be an invention. `blockchain` stays on the list permanently:
+    // Phase 5 is a local hash chain, and no name here may imply otherwise.
+    const forbidden = ['risk', 'score', 'ledger', 'blockchain', 'vehicles', 'events'];
     for (const name of Object.keys(endpoints)) {
       for (const word of forbidden) {
         expect(name.toLowerCase(), name).not.toContain(word);
       }
     }
+  });
+
+  it('binds one audit route only — the verification read', () => {
+    // The Phase 5 backend also exposes the event list, per-resource verification
+    // and an integrity-record write. The UI shows a verdict and nothing else, so
+    // those three must stay unbound: an unused binding is an invitation to build
+    // the ledger browser §12 rules out.
+    const audit = Object.keys(endpoints).filter((name) => /audit/i.test(name));
+    expect(audit).toEqual(['verifyAuditChain']);
   });
 });
 
@@ -137,9 +176,11 @@ describe('the ground-truth overlay is never requested', () => {
   });
 });
 
-describe('Phase 4 has not begun', () => {
+describe('Phase 5 has not begun', () => {
   it('no risk-score or threat-score field exists', () => {
-    // The prose "not a risk score" is allowed and expected; an identifier is not.
+    // Phase 4 publishes an explainable investigation-priority score, not a risk
+    // or threat score. The prose "not a risk score" is allowed and expected; an
+    // identifier of either name is not.
     for (const file of CODE) {
       const code = stripComments(file.text);
       expect(code, file.path).not.toMatch(/risk_score|riskScore|threat_score|threatScore/);
@@ -200,7 +241,7 @@ describe('everything stays local', () => {
 });
 
 describe('routes only exist where a backend does', () => {
-  it('App.tsx declares exactly the four supported screens plus a fallback', () => {
+  it('App.tsx declares exactly the five supported screens plus a fallback', () => {
     const app = APP.find((f) => f.path === 'App.tsx')!;
     const paths = [...app.text.matchAll(/<Route\s+path="([^"]+)"/g)].map((m) => m[1]);
     expect(new Set(paths)).toEqual(
@@ -211,7 +252,8 @@ describe('routes only exist where a backend does', () => {
         '/fir',
         '/fir/:firId',
         '/evidence',
-        // A redirect alias, not a fifth screen.
+        '/alerts',
+        // A redirect alias, not a sixth screen.
         '/firs',
         '*',
       ]),

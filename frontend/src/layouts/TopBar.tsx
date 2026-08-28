@@ -1,17 +1,23 @@
 /**
- * TopBar — identity, global search, the active subject, and a live backend
- * heartbeat.
+ * TopBar — identity, global search, the active subject, the theme toggle, the
+ * live-channel indicator and a backend heartbeat.
+ *
+ * The two status readouts answer different questions: LIVE is the SSE event
+ * stream (is this dashboard being told about changes?), while the heartbeat is
+ * `GET /health` (is the backend up at all?). One can be off while the other is on.
  *
  * The status cluster is driven entirely by `GET /health`; nothing about the
  * backend's state is asserted from a constant in this file. If the request
  * fails, the bar says so in words the operator can act on, which is the one
- * place in this UI where red is the correct colour.
+ * place in this UI where red is the correct colour. The visible readout is one
+ * word — the detail lives in a tooltip rather than on the chrome.
  */
 import { useEffect, type ReactElement } from 'react';
 
 import { api } from '@/api';
+import { LiveIndicator } from '@/components/live';
 import { GlobalSearch } from '@/components/search/GlobalSearch';
-import { Mono, Spinner, Tooltip } from '@/components/ui';
+import { Mono, Spinner, ThemeToggle, Tooltip } from '@/components/ui';
 import { useAsync } from '@/hooks/useAsync';
 import { useInvestigation } from '@/hooks/useInvestigation';
 import { humanizeToken } from '@/utils/format';
@@ -19,8 +25,8 @@ import { cn } from '@/utils/cn';
 
 /**
  * Heartbeat interval. Slow on purpose: a backend restart should surface within
- * half a minute of a demo, and a tighter loop would be a busy timer for no
- * analytical gain. Ticks are skipped while the tab is hidden.
+ * half a minute, and a tighter loop would be a busy timer for no analytical
+ * gain. Ticks are skipped while the tab is hidden.
  */
 const HEALTH_POLL_MS = 30_000;
 
@@ -50,7 +56,9 @@ export function TopBar(): ReactElement {
         <ProductMark />
         <GlobalSearch className="min-w-0 flex-1 sm:max-w-md lg:max-w-lg" />
         <ActiveInvestigation />
+        <LiveIndicator className="hidden sm:flex" />
         <SystemStatus />
+        <ThemeToggle />
       </div>
     </header>
   );
@@ -79,14 +87,9 @@ function ProductMark() {
         <circle className="fill-abyss" cx="11" cy="19" r="2.3" />
         <circle className="fill-abyss" cx="21" cy="19.5" r="1.5" />
       </svg>
-      <div className="min-w-0 leading-tight">
-        <p className="text-ink text-xs font-semibold tracking-[0.12em] whitespace-nowrap uppercase">
-          Criminal Network Analysis
-        </p>
-        <p className="text-ink-4 hidden text-2xs whitespace-nowrap sm:block">
-          Investigative Link Analysis · Prototype
-        </p>
-      </div>
+      <p className="text-ink text-xs font-semibold tracking-[0.12em] whitespace-nowrap uppercase">
+        Criminal Network Analysis
+      </p>
     </div>
   );
 }
@@ -99,13 +102,8 @@ function ActiveInvestigation() {
   if (!subject) {
     return (
       <div className="border-line bg-inset hidden shrink-0 rounded-md border px-2.5 py-1 md:block">
-        <p className="field-label">Active investigation</p>
-        <p className="mt-0.5 flex items-baseline gap-1.5 text-xs whitespace-nowrap">
-          <span className="text-ink-3">No active subject</span>
-          <span className="text-ink-4 hidden text-2xs xl:inline">
-            · selecting a person on Network Investigation sets it
-          </span>
-        </p>
+        <p className="field-label">Active subject</p>
+        <p className="text-ink-3 mt-0.5 text-xs whitespace-nowrap">None</p>
       </div>
     );
   }
@@ -113,20 +111,18 @@ function ActiveInvestigation() {
   return (
     <div className="border-line-accent bg-inset hidden shrink-0 items-center gap-2 rounded-md border px-2.5 py-1 md:flex">
       <div className="min-w-0">
-        <p className="field-label whitespace-nowrap">Active investigation · {subject.kind}</p>
+        <p className="field-label whitespace-nowrap">Active subject · {subject.kind}</p>
         <p className="mt-0.5 flex items-center gap-2">
           <span className="text-ink max-w-[11rem] truncate text-xs font-semibold">
             {subject.label}
           </span>
-          <Mono className="hidden lg:inline" title="Prefixed entity id as returned by the backend">
-            {subject.entityId}
-          </Mono>
+          <Mono className="hidden lg:inline">{subject.entityId}</Mono>
         </p>
       </div>
       <button
         type="button"
         onClick={() => setSubject(null)}
-        aria-label={`Clear active investigation subject ${subject.label}`}
+        aria-label={`Clear active subject ${subject.label}`}
         title="Clear active subject"
         className="border-line-strong text-ink-4 hover:border-line-accent hover:text-ink-2 inline-flex size-5 shrink-0 items-center justify-center rounded-xs border transition-colors"
       >
@@ -154,8 +150,7 @@ function SystemStatus() {
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      // No point polling a tab nobody is looking at, and it keeps a projector
-      // machine idle between demos.
+      // No point polling a tab nobody is looking at.
       if (!document.hidden) retry();
     }, HEALTH_POLL_MS);
     return () => window.clearInterval(timer);
@@ -175,58 +170,41 @@ function SystemStatus() {
   else if (!statusOk || !data.dataset_loaded) state = 'warn';
   else state = 'ok';
 
-  let primary: string;
-  let secondary: string | null = null;
-
-  if (error) {
-    primary = error.isNetworkError ? 'Backend unreachable' : `Backend error ${error.status}`;
-    secondary = error.isNetworkError ? 'Start the API, then retry' : 'Click to retry';
-  } else if (!data) {
-    primary = 'Checking backend';
-  } else if (!statusOk) {
-    primary = `Backend ${humanizeToken(data.status).toLowerCase()}`;
-    secondary = `v${data.version}`;
-  } else if (!data.dataset_loaded) {
-    primary = 'Dataset not loaded';
-    secondary = `v${data.version}`;
-  } else {
-    primary = 'Backend online';
-    secondary = `v${data.version} · dataset loaded`;
-  }
+  // One word where one word will do. The full picture is in the tooltip.
+  let label: string;
+  if (error) label = error.isNetworkError ? 'Offline' : `Error ${error.status}`;
+  else if (!data) label = 'Checking';
+  else if (!statusOk) label = humanizeToken(data.status);
+  else if (!data.dataset_loaded) label = 'No dataset';
+  else label = 'Online';
 
   const trigger = (
     <button
       type="button"
       onClick={retry}
-      aria-label="Backend status — click to re-check"
-      title={error ? `${error.message} (${error.url})` : undefined}
-      className="hover:bg-panel-2/70 flex shrink-0 items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors"
+      aria-label={`System status: ${label}. Re-check now.`}
+      title={error ? error.message : undefined}
+      className={cn(
+        'border-line bg-inset hover:border-line-accent flex shrink-0 items-center gap-2 rounded-md border px-2 py-1 transition-colors',
+      )}
     >
       {/* A fixed-size slot so the indicator does not shift the row when the
           spinner is replaced by the dot. Spinner is left at its default size
           rather than overridden, which avoids a same-family class conflict. */}
       <span className="flex size-3.5 shrink-0 items-center justify-center">
         {state === 'loading' ? (
-          <Spinner label="Checking backend status" />
+          <Spinner label="Checking system status" />
         ) : (
           <span aria-hidden="true" className={cn('size-2 rounded-full', DOT_CLASS[state])} />
         )}
       </span>
-      <span className="min-w-0">
-        <span className="field-label block">System status</span>
-        <span className="mt-0.5 flex items-baseline gap-1.5 whitespace-nowrap">
-          <span
-            className={cn(
-              'text-xs font-semibold',
-              state === 'loading' ? 'text-ink-3' : TEXT_CLASS[state],
-            )}
-          >
-            {primary}
-          </span>
-          {secondary ? (
-            <span className="text-ink-4 hidden font-mono text-2xs lg:inline">{secondary}</span>
-          ) : null}
-        </span>
+      <span
+        className={cn(
+          'text-2xs font-semibold whitespace-nowrap',
+          state === 'loading' ? 'text-ink-3' : TEXT_CLASS[state],
+        )}
+      >
+        {label}
       </span>
     </button>
   );
@@ -244,17 +222,10 @@ function SystemStatus() {
         content={
           <span className="block space-y-0.5">
             <span className="text-ink block font-semibold">{data.app}</span>
-            <span className="block">Reported status: {humanizeToken(data.status)}</span>
-            <span className="block">Version: {data.version}</span>
-            <span className="block">Phase: {data.phase}</span>
-            <span className="block">Environment: {humanizeToken(data.environment)}</span>
-            <span className="block">
-              Dataset: {data.dataset_loaded ? 'loaded' : 'not loaded'}
-            </span>
+            <span className="block">Version {data.version}</span>
+            <span className="block">Dataset {data.dataset_loaded ? 'loaded' : 'not loaded'}</span>
             {error ? <span className="text-alert-300 block">{error.message}</span> : null}
-            <span className="text-ink-4 block pt-1">
-              Live from GET /health, re-checked every 30 s. Click to re-check now.
-            </span>
+            <span className="text-ink-4 block pt-1">Click to re-check.</span>
           </span>
         }
       >

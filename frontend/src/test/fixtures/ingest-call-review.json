@@ -1,0 +1,72 @@
+{
+  "record_id": "703b9308d9f83a0a0dd25c4ba0ca7b063ee03e283182c10185f4876e25884d09",
+  "source_type": "CALL",
+  "status": "REVIEW_REQUIRED",
+  "validation_status": "VALID",
+  "resolution_status": "UNRESOLVED",
+  "review_reason": "NO_MATCH_NEW_ENTITY",
+  "reject_reason": null,
+  "reason": "No validated connection found with existing investigation data.",
+  "raw_payload": {
+    "caller": {
+      "phone": "9812345670"
+    },
+    "callee": {
+      "phone": "9812345671"
+    },
+    "start_time": "2026-08-22T11:05",
+    "duration_sec": 96
+  },
+  "normalized_payload": {
+    "caller": {
+      "phone": "9812345670"
+    },
+    "callee": {
+      "phone": "9812345671"
+    },
+    "start_time": "2026-08-22T11:05:00",
+    "duration_sec": 96,
+    "cell_tower_id": null
+  },
+  "provenance": {
+    "source_type": "CALL",
+    "source_name": "new-case-file",
+    "submitted_by": null,
+    "reference": null,
+    "note": null
+  },
+  "ingested_at": "2026-08-28T13:31:57",
+  "matches": [
+    {
+      "field": "caller",
+      "status": "NO_MATCH",
+      "method": "none",
+      "entity_id": null,
+      "label": null,
+      "confidence": null,
+      "candidates": [],
+      "explanation": "No existing person carries this phone ending 5670; treated as a new subject rather than matched to anyone.",
+      "is_new_entity": true
+    },
+    {
+      "field": "callee",
+      "status": "NO_MATCH",
+      "method": "none",
+      "entity_id": null,
+      "label": null,
+      "confidence": null,
+      "candidates": [],
+      "explanation": "No existing person carries this phone ending 5671; treated as a new subject rather than matched to anyone.",
+      "is_new_entity": true
+    }
+  ],
+  "relationships": [],
+  "evidence": [],
+  "entity_ids": [],
+  "duplicate_of": null,
+  "impact": {
+    "changed": false,
+    "note": "Held for review: nothing was added to the graph and no intelligence was recomputed."
+  },
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious."
+}

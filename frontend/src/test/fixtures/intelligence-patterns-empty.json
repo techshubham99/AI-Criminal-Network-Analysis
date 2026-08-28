@@ -1,0 +1,12 @@
+{
+  "total": 0,
+  "count": 0,
+  "offset": 0,
+  "limit": 8,
+  "patterns": [],
+  "filters": {
+    "pattern_type": null,
+    "entity_id": "person:999999"
+  },
+  "note": "Pattern ids are content-addressed (sha256 of pattern type + sorted entity ids + sorted evidence ids) and therefore stable across restarts. A category with zero detections is reported as zero in /summary rather than filled with an example."
+}

@@ -1,14 +1,16 @@
 /**
- * Sidebar — the four screens this build actually has a backend for.
+ * Sidebar — the five screens this build has a backend for.
  *
- * There are deliberately no entries for risk scoring, an audit/blockchain
- * ledger, or vehicle/organisation entities: the backend exposes none of those in
- * Phases 1-3, and a nav item that leads nowhere is a promise the prototype
- * cannot keep.
+ * Labels only. A nav rail is for getting somewhere, and a paragraph under each
+ * destination is text the operator reads once and then has to look past for the
+ * rest of the session.
  *
- * Below `lg` the rail becomes a horizontally scrollable row of chips that keeps
- * both the icon and the label, so a 1024px laptop loses the descriptions but
- * never the destinations.
+ * There are deliberately no entries for an audit/blockchain ledger or for
+ * vehicle/organisation entities: the backend exposes none of those, and a nav
+ * item that leads nowhere is a promise the app cannot keep.
+ *
+ * Below `lg` the rail becomes a horizontally scrollable row of chips, so a
+ * narrow laptop loses no destinations.
  */
 import { NavLink } from 'react-router-dom';
 import type { ReactElement, ReactNode } from 'react';
@@ -18,7 +20,6 @@ import { cn } from '@/utils/cn';
 interface NavItem {
   to: string;
   label: string;
-  description: string;
   icon: ReactNode;
 }
 
@@ -82,38 +83,29 @@ function EvidenceIcon() {
   );
 }
 
+/** Bell: something that wants an analyst's attention. */
+function AlertsIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M18 8.6a6 6 0 1 0-12 0c0 5-2 6.4-2 6.4h16s-2-1.4-2-6.4" />
+      <path d="M13.7 19a2 2 0 0 1-3.4 0" />
+    </svg>
+  );
+}
+
 const NAV_ITEMS: readonly NavItem[] = [
-  {
-    to: '/',
-    label: 'Command Center',
-    description: 'Dataset and graph scale, structural leads, corpus metrics',
-    icon: <CommandCenterIcon />,
-  },
-  {
-    to: '/network',
-    label: 'Network Investigation',
-    description: 'Expand a person one or two hops and read every edge',
-    icon: <NetworkIcon />,
-  },
-  {
-    to: '/fir',
-    label: 'FIR Intelligence',
-    description: 'FIR records with narrative extraction beside them',
-    icon: <FirIcon />,
-  },
-  {
-    to: '/evidence',
-    label: 'Evidence & Provenance',
-    description: 'Where each fact came from, and how confident the link is',
-    icon: <EvidenceIcon />,
-  },
+  { to: '/', label: 'Command Center', icon: <CommandCenterIcon /> },
+  { to: '/network', label: 'Network', icon: <NetworkIcon /> },
+  { to: '/fir', label: 'FIR Intelligence', icon: <FirIcon /> },
+  { to: '/evidence', label: 'Evidence', icon: <EvidenceIcon /> },
+  { to: '/alerts', label: 'Alerts', icon: <AlertsIcon /> },
 ];
 
 export function Sidebar(): ReactElement {
   return (
     <nav
       aria-label="Primary"
-      className="border-line bg-abyss/45 shrink-0 border-b lg:flex lg:h-full lg:w-60 lg:flex-col lg:border-r lg:border-b-0"
+      className="border-line bg-abyss/45 shrink-0 border-b lg:flex lg:h-full lg:w-52 lg:flex-col lg:border-r lg:border-b-0"
     >
       <div className="flex flex-row gap-1 overflow-x-auto px-2 py-2 lg:min-h-0 lg:flex-1 lg:flex-col lg:gap-0.5 lg:overflow-x-visible lg:overflow-y-auto lg:py-3">
         {NAV_ITEMS.map((item) => (
@@ -124,7 +116,7 @@ export function Sidebar(): ReactElement {
             end={item.to === '/'}
             className={({ isActive }) =>
               cn(
-                'group flex shrink-0 items-start gap-2.5 rounded-r-sm border-l-2 px-2.5 py-2 transition-colors lg:shrink',
+                'group flex shrink-0 items-center gap-2.5 rounded-r-sm border-l-2 px-2.5 py-2 transition-colors lg:shrink',
                 isActive
                   ? // A cyan rule plus one surface step: emphasis without a
                     // filled block, which would shout on a projector.
@@ -135,32 +127,12 @@ export function Sidebar(): ReactElement {
           >
             {({ isActive }) => (
               <>
-                <span className={cn('mt-px shrink-0', isActive && 'text-cyan-300')}>
-                  {item.icon}
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-xs font-semibold whitespace-nowrap">
-                    {item.label}
-                  </span>
-                  <span className="text-ink-4 mt-0.5 hidden text-2xs leading-snug lg:block">
-                    {item.description}
-                  </span>
-                </span>
+                <span className={cn('shrink-0', isActive && 'text-cyan-300')}>{item.icon}</span>
+                <span className="text-xs font-semibold whitespace-nowrap">{item.label}</span>
               </>
             )}
           </NavLink>
         ))}
-      </div>
-
-      <div className="border-line hidden shrink-0 border-t px-3 py-3 lg:block">
-        <p className="field-label">Build</p>
-        <p className="text-ink-4 mt-1 text-2xs leading-relaxed">
-          Local prototype over a synthetic dataset. No external services, no network calls beyond
-          the local analysis API, read-only throughout.
-        </p>
-        <p className="text-ink-4 mt-2 text-2xs leading-relaxed">
-          Phases 1-3 complete: data API, graph engine and analytics, narrative extraction.
-        </p>
       </div>
     </nav>
   );

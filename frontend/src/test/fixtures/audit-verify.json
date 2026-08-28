@@ -1,0 +1,10 @@
+{
+  "status": "VERIFIED",
+  "events_checked": 3,
+  "chain_length": 3,
+  "genesis_previous_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "head_hash": "7ca3b2d3a58175e1ac35533e4c961bdcfc18504245fc20f9db49ac60ea8dc324",
+  "backend": "local_hash_chain",
+  "persisted": false,
+  "failure": null
+}

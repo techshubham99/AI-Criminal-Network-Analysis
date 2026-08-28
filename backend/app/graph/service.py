@@ -43,6 +43,28 @@ class GraphService:
             self._analytics = GraphAnalytics(self.store, self.settings).compute()
         return self._analytics
 
+    @property
+    def cached_analytics(self) -> Optional[GraphAnalytics]:
+        """The already-computed pass, or ``None`` — never triggers a computation.
+
+        Live ingestion needs the *pre-change* metrics to report a before/after,
+        and the ``analytics`` property would compute them against the graph it
+        has just mutated. Reading the cache instead keeps "before" honest: if
+        nothing was computed yet, there is no before to report.
+        """
+        return self._analytics
+
+    def publish_analytics(self, analytics: GraphAnalytics) -> None:
+        """Adopt an externally recomputed analytics pass (Phase 4.6).
+
+        Live ingestion mutates the store in place, which makes the cached
+        analytics — and the demo selection derived from it — stale. Both are
+        replaced together so a served response can never mix pre-change
+        centrality with post-change topology.
+        """
+        self._analytics = analytics
+        self._demo = None
+
     def demo(self) -> dict:
         if self._demo is None:
             self._demo = select_demo(self.store, self.analytics, self.settings)

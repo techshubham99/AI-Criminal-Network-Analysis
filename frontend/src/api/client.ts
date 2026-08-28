@@ -9,6 +9,11 @@
  *
  * There are no external services. The base URL is same-origin by default and
  * the Vite dev-server proxies it to the local FastAPI backend.
+ *
+ * Almost all of this backend is read-only. The one exception is Phase 4.6's
+ * ingestion routes (`POST /ingest/*`), which is why {@link HttpMethod} exists
+ * and is deliberately narrow: GET or POST, nothing else. No PUT, PATCH or
+ * DELETE verb exists anywhere in the app, because no endpoint accepts one.
  */
 import type { ApiErrorEnvelope } from '@/types/api';
 
@@ -126,26 +131,43 @@ function decodeErrorEnvelope(body: unknown): { code: string; message: string; de
   return { code: 'http_error', message: 'Request failed', detail: body };
 }
 
+/**
+ * The only two verbs in use: GET everywhere, POST for the Phase 4.6 ingestion
+ * routes. Kept as a closed union so a mutating verb cannot be introduced by
+ * passing a string.
+ */
+export type HttpMethod = 'GET' | 'POST';
+
 export interface RequestOptions {
   params?: QueryInput;
   signal?: AbortSignal;
   /** Absolute or root-relative URL; bypasses the API base. */
   absolute?: boolean;
+  /** Defaults to `'GET'`. */
+  method?: HttpMethod;
+  /** JSON request body, serialised as-is. POST only. */
+  body?: unknown;
 }
 
 /**
- * Issue a GET and decode the result, or throw an {@link ApiError}.
- * This backend is read-only — there is no mutating verb anywhere in the app.
+ * Issue a request and decode the result, or throw an {@link ApiError}.
+ *
+ * The single `fetch` site in the application.
  */
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const target = options.absolute ? path : apiPath(path);
   const url = buildUrl(target, options.params);
+  const method: HttpMethod = options.method ?? 'GET';
+  const sendsBody = method !== 'GET' && options.body !== undefined;
 
   let response: Response;
   try {
     response = await fetch(url, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
+      method,
+      headers: sendsBody
+        ? { Accept: 'application/json', 'Content-Type': 'application/json' }
+        : { Accept: 'application/json' },
+      body: sendsBody ? JSON.stringify(options.body) : undefined,
       signal: options.signal,
     });
   } catch (cause) {
@@ -177,4 +199,20 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   }
 
   return body as T;
+}
+
+/**
+ * POST a JSON body. Only the `ingest/*` routes accept one.
+ *
+ * A rejected submission is not an HTTP failure: the backend answers 200 with a
+ * record whose status is `REJECTED` and a reason, because "this record was
+ * refused, and here is why" is a result, not a transport error. A 4xx here means
+ * the request itself was malformed (422) or the query was invalid (400).
+ */
+export function post<T>(
+  path: string,
+  body: unknown,
+  options: Omit<RequestOptions, 'method' | 'body'> = {},
+): Promise<T> {
+  return request<T>(path, { ...options, method: 'POST', body });
 }

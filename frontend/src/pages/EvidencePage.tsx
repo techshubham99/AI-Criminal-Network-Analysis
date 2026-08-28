@@ -33,6 +33,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { api } from '@/api';
+import { LedgerIntegrity } from '@/components/audit';
 import { NodeDetailsPanel } from '@/components/graph';
 import { SearchResultList } from '@/components/search/SearchResultList';
 import {
@@ -68,8 +69,7 @@ const OVERLAY_KEYS = new Set(['ring_id', 'ground_truth_ring_id']);
 /** Datasets whose `source_record_id` names a row this backend can actually serve. */
 const FETCHABLE_ROW_DATASETS = new Set(['persons', 'locations', 'firs']);
 
-const PAGE_SUBTITLE =
-  'Resolve any entity the graph materialises — person, phone, Aadhaar, location, FIR or cell tower — and read the dataset row it came from. Nothing on this page is inferred: every field below is returned by the backend for the id in the URL.';
+const PAGE_SUBTITLE = 'Resolve an entity and read the dataset row it was materialised from.';
 
 const optionDomId = (entityId: string) =>
   `cna-page-search-option-${entityId.replace(/[^A-Za-z0-9]+/g, '-')}`;
@@ -106,6 +106,7 @@ export function EvidencePage(): ReactElement {
   return (
     <div className="space-y-4 pb-10" data-testid="evidence-page">
       <SectionHeading title="Evidence & Provenance" subtitle={PAGE_SUBTITLE} />
+      <LedgerIntegrity />
       <EntityPicker currentEntityId={entityId} />
       {entityId ? (
         <EntityEvidence key={entityId} entityId={entityId} />
@@ -205,7 +206,7 @@ function EntityPicker({ currentEntityId }: { currentEntityId: string }): ReactEl
     <Panel>
       <PanelHeader
         title="Resolve an entity"
-        subtitle="GET /graph/search — the same index Network Investigation searches."
+        subtitle="Person, phone, Aadhaar, location, FIR or cell tower."
       />
       <PanelBody className="space-y-3 px-4 py-3">
         <label className="block">

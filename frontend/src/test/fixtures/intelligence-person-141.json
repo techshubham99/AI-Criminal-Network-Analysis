@@ -1,0 +1,1975 @@
+{
+  "person": {
+    "person_id": 141,
+    "name": "Yashica Borah",
+    "phone": "+91-8600506062",
+    "aadhar": "245220443325",
+    "address": "70\nPillay Nagar",
+    "city": "Bhopal",
+    "state": "Madhya Pradesh",
+    "location_id": 191,
+    "ring_id": null
+  },
+  "priority": {
+    "person_id": 141,
+    "entity_id": "person:141",
+    "score": 68,
+    "band": "MEDIUM",
+    "factors": [
+      {
+        "feature": "network_importance",
+        "value": 0.889,
+        "max_contribution": 20.0,
+        "contribution": 17.78,
+        "pattern_ids": [],
+        "evidence_ids": [],
+        "explanation": "Observed degree 27.0 sits at the 99.4th percentile and PageRank at the 78.4th percentile of the person projection; the feature value is the mean of the two. Betweenness is deliberately excluded here — it is scored once, under the bridge feature.",
+        "detail": {
+          "in_projection": true,
+          "degree": 27.0,
+          "degree_percentile": 99.4,
+          "pagerank": 0.00248515,
+          "pagerank_percentile": 78.4,
+          "metrics_used": [
+            "degree",
+            "pagerank"
+          ],
+          "note": "betweenness is excluded here and scored once under the bridge feature"
+        }
+      },
+      {
+        "feature": "multi_channel_relationship",
+        "value": 0.0,
+        "max_contribution": 20.0,
+        "contribution": 0.0,
+        "pattern_ids": [],
+        "evidence_ids": [],
+        "explanation": "No person pair involving this person is linked through two or more independent observed channels.",
+        "detail": {}
+      },
+      {
+        "feature": "transaction_patterns",
+        "value": 1.0,
+        "max_contribution": 20.0,
+        "contribution": 20.0,
+        "pattern_ids": [
+          "transaction_cycle~b8c6335664e92119",
+          "transaction_cycle~e0d845d62dc561cf",
+          "transaction_fan_in~9cacbe73c2d87922",
+          "transaction_fan_in~aca85325a6755066",
+          "transaction_fan_in~dd3c5a0c5ba709d7",
+          "transaction_fan_out~21e38afcfc967eee",
+          "transaction_fan_out~2cb4c5ad0a624ad5",
+          "transaction_fan_out~e09d22cf4ffd3385"
+        ],
+        "evidence_ids": [
+          "transactions:1013",
+          "transactions:1150",
+          "transactions:1161",
+          "transactions:1180",
+          "transactions:1214",
+          "transactions:1216",
+          "transactions:123",
+          "transactions:1259",
+          "transactions:1263",
+          "transactions:1298",
+          "transactions:1350",
+          "transactions:1463",
+          "transactions:1481",
+          "transactions:149",
+          "transactions:178",
+          "transactions:221",
+          "transactions:27",
+          "transactions:285",
+          "transactions:296",
+          "transactions:313",
+          "transactions:330",
+          "transactions:341",
+          "transactions:354",
+          "transactions:355",
+          "transactions:37",
+          "transactions:41",
+          "transactions:421",
+          "transactions:429",
+          "transactions:480",
+          "transactions:483",
+          "transactions:497",
+          "transactions:563",
+          "transactions:616",
+          "transactions:642",
+          "transactions:662",
+          "transactions:69",
+          "transactions:852",
+          "transactions:894",
+          "transactions:925"
+        ],
+        "explanation": "Potential transaction pattern(s) requiring review: cycle, fan_in, fan_out. The strongest of them scores 1.0 on the 0-1 severity scale (a closed circuit of 4 persons). These are shapes in the transaction records; no claim of laundering, fraud or confirmed criminal activity is made or implied.",
+        "detail": {
+          "pattern_types": [
+            "TRANSACTION_CYCLE",
+            "TRANSACTION_FAN_IN",
+            "TRANSACTION_FAN_OUT"
+          ],
+          "pattern_count": 8,
+          "top_severity": 1.0,
+          "top_pattern_id": "transaction_cycle~e0d845d62dc561cf",
+          "formula": "top severity + 0.15 per additional distinct pattern type, capped at 1.0",
+          "review_label": "Potential transaction pattern requiring review"
+        }
+      },
+      {
+        "feature": "communication_anomaly",
+        "value": 1.0,
+        "max_contribution": 15.0,
+        "contribution": 15.0,
+        "pattern_ids": [
+          "communication_anomaly~8f5a0234db556809"
+        ],
+        "evidence_ids": [
+          "calls:1626",
+          "calls:1649",
+          "calls:1652",
+          "calls:213"
+        ],
+        "explanation": "Unusually high activity: 4 call(s) on 2026-08-13 against this person's own baseline of 1.375 per observed day (z = 2.4749). The excess of 2.625 call(s) is materially significant in absolute terms.",
+        "detail": {
+          "baseline": {
+            "person_id": 141,
+            "anomaly_status": "high_activity_anomaly",
+            "observed_count": 4,
+            "peak_date": "2026-08-13",
+            "z_score": 2.4749,
+            "excess_over_baseline": 2.625,
+            "materially_significant": true,
+            "baseline": {
+              "observation_days": 8,
+              "total_calls": 11,
+              "mean_calls_per_active_day": 1.375,
+              "stdev_calls_per_active_day": 1.0607,
+              "min_calls_per_active_day": 1,
+              "max_calls_per_active_day": 4
+            },
+            "supporting_call_ids": [
+              213,
+              1626,
+              1649,
+              1652
+            ]
+          },
+          "formula": "absolute excess over baseline / configured material excess, capped at 1.0; the z-test decides whether the anomaly is flagged at all"
+        }
+      },
+      {
+        "feature": "location_patterns",
+        "value": 0.4,
+        "max_contribution": 15.0,
+        "contribution": 6.0,
+        "pattern_ids": [
+          "location_cohort~bf9c4b4ae1eec6f1"
+        ],
+        "evidence_ids": [
+          "locations:191",
+          "persons:112",
+          "persons:113",
+          "persons:141",
+          "persons:15",
+          "persons:172",
+          "persons:368"
+        ],
+        "explanation": "Shared canonical location: registered at a canonical location shared with 6 persons in total. Derived from the dataset's canonical location ids, never from raw coordinates. Sharing an address is not contact and asserts no meeting.",
+        "detail": {
+          "cohort_count": 1,
+          "largest_cohort_size": 6,
+          "shared_location_pair_count": 0,
+          "formula": "max cohort severity + 0.25 per corroborated pair (max 0.5), capped at 1.0"
+        }
+      },
+      {
+        "feature": "bridge_network_structure",
+        "value": 0.89,
+        "max_contribution": 10.0,
+        "contribution": 8.9,
+        "pattern_ids": [
+          "bridge_entity~ce3f8b2fdafc72a7"
+        ],
+        "evidence_ids": [
+          "calls:1626",
+          "calls:1649",
+          "calls:1652",
+          "calls:1682",
+          "calls:1968",
+          "calls:213",
+          "calls:328",
+          "calls:584",
+          "calls:892",
+          "firs:31",
+          "persons:112",
+          "persons:141",
+          "transactions:1259",
+          "transactions:1298",
+          "transactions:285",
+          "transactions:354",
+          "transactions:480",
+          "transactions:894"
+        ],
+        "explanation": "Bridge entity and investigation lead: betweenness at the 97.8th percentile, with relationships reaching 8 distinct detected communities. A structural position in the observed graph — not a determination of criminality or guilt.",
+        "detail": {
+          "betweenness": 0.00636854,
+          "betweenness_percentile": 97.8,
+          "percentile_floor": 90.0,
+          "community_id": 3,
+          "neighbour_communities": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "neighbour_community_count": 8,
+          "crossing_relationship_count": 17,
+          "label": "bridge_entity",
+          "is_investigation_lead": true,
+          "metrics_used": [
+            "betweenness"
+          ],
+          "formula": "0.5 + 0.5 * (betweenness percentile - floor) / (100 - floor)"
+        }
+      }
+    ],
+    "pattern_ids": [
+      "bridge_entity~ce3f8b2fdafc72a7",
+      "communication_anomaly~8f5a0234db556809",
+      "location_cohort~bf9c4b4ae1eec6f1",
+      "transaction_cycle~b8c6335664e92119",
+      "transaction_cycle~e0d845d62dc561cf",
+      "transaction_fan_in~9cacbe73c2d87922",
+      "transaction_fan_in~aca85325a6755066",
+      "transaction_fan_in~dd3c5a0c5ba709d7",
+      "transaction_fan_out~21e38afcfc967eee",
+      "transaction_fan_out~2cb4c5ad0a624ad5",
+      "transaction_fan_out~e09d22cf4ffd3385"
+    ],
+    "structured_evidence": [
+      {
+        "evidence_id": "calls:1626",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "calls",
+        "source_record_id": "calls:1626",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "calls:1649",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "calls",
+        "source_record_id": "calls:1649",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "calls:1652",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "calls",
+        "source_record_id": "calls:1652",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "calls:1682",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "calls",
+        "source_record_id": "calls:1682",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "calls:1968",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "calls",
+        "source_record_id": "calls:1968",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "calls:213",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "calls",
+        "source_record_id": "calls:213",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "calls:328",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "calls",
+        "source_record_id": "calls:328",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "calls:584",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "calls",
+        "source_record_id": "calls:584",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "calls:892",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "calls",
+        "source_record_id": "calls:892",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "firs:31",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "firs",
+        "source_record_id": "firs:31",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "locations:191",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "locations",
+        "source_record_id": "locations:191",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "persons:112",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "persons",
+        "source_record_id": "persons:112",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "persons:113",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "persons",
+        "source_record_id": "persons:113",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "persons:141",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "persons",
+        "source_record_id": "persons:141",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "persons:15",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "persons",
+        "source_record_id": "persons:15",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "persons:172",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "persons",
+        "source_record_id": "persons:172",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "persons:368",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "persons",
+        "source_record_id": "persons:368",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1013",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1013",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1150",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1150",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1161",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1161",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1180",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1180",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1214",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1214",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1216",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1216",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:123",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:123",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1259",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1259",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1263",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1263",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1298",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1298",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1350",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1350",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1463",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1463",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:1481",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:1481",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:149",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:149",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:178",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:178",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:221",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:221",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:27",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:27",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:285",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:285",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:296",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:296",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:313",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:313",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:330",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:330",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:341",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:341",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:354",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:354",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:355",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:355",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:37",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:37",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:41",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:41",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:421",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:421",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:429",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:429",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:480",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:480",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:483",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:483",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:497",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:497",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:563",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:563",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:616",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:616",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:642",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:642",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:662",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:662",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:69",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:69",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:852",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:852",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:894",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:894",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      },
+      {
+        "evidence_id": "transactions:925",
+        "evidence_class": "STRUCTURED",
+        "source_dataset": "transactions",
+        "source_record_id": "transactions:925",
+        "confidence": 1.0,
+        "confidence_basis": "structured_record",
+        "evidence_text": null
+      }
+    ],
+    "nlp_evidence": [],
+    "explanation": "Investigation priority score 68 of 100 (MEDIUM) for person:141, summed from 5 contributing feature(s): Transaction patterns 20.0 of 20.0, Network importance 17.78 of 20.0, Communication anomaly 15.0 of 15.0, Bridge / network structure 8.9 of 10.0, Location patterns 6.0 of 15.0. MEDIUM — one or more patterns are present and worth a look, in the ordinary course of triage. The score rests on 56 structured evidence item(s) and 0 NLP-derived item(s), which are listed separately and never merged. It is an investigation-prioritization signal only: not a probability of guilt, not a probability of criminality, and not proof of wrongdoing.",
+    "disclaimer": "Investigation-prioritization signal computed from observed synthetic records only. It is NOT a probability of guilt, NOT a probability of criminality, and NOT proof of wrongdoing."
+  },
+  "patterns": [
+    {
+      "pattern_id": "bridge_entity~ce3f8b2fdafc72a7",
+      "pattern_type": "BRIDGE_ENTITY",
+      "entity_ids": [
+        "person:141"
+      ],
+      "relationship_types": [
+        "CALLED",
+        "CO_LOCATED",
+        "REPORTED_AGAINST",
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "calls",
+        "firs",
+        "persons",
+        "transactions"
+      ],
+      "severity": 0.89,
+      "explanation": "person:141 is a bridge entity: its betweenness centrality of 0.006369 is at the 97.8th percentile of the observed person projection (floor 90.0), and its relationships reach 8 distinct detected communities across 17 community-crossing relationships. High network importance marks an investigation lead — a place where the observed network would come apart if this entity were removed. It is a structural position, not a determination of criminality or guilt.",
+      "structured_evidence": [
+        {
+          "evidence_id": "calls:1626",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1626",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1649",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1649",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1652",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1652",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1682",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1682",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1968",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1968",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:213",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:213",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:328",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:328",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:584",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:584",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:892",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:892",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "firs:31",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "firs",
+          "source_record_id": "firs:31",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:112",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:112",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:141",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:141",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1259",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1259",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1298",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1298",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:285",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:285",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:354",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:354",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:480",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:480",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:894",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:894",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "betweenness": 0.00636854,
+        "betweenness_percentile": 97.8,
+        "percentile_floor": 90.0,
+        "community_id": 3,
+        "neighbour_communities": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "neighbour_community_count": 8,
+        "crossing_relationship_count": 17,
+        "label": "bridge_entity",
+        "is_investigation_lead": true
+      }
+    },
+    {
+      "pattern_id": "communication_anomaly~8f5a0234db556809",
+      "pattern_type": "COMMUNICATION_ANOMALY",
+      "entity_ids": [
+        "person:141"
+      ],
+      "relationship_types": [
+        "CALLED"
+      ],
+      "source_datasets": [
+        "calls"
+      ],
+      "severity": 1.0,
+      "explanation": "person:141 recorded 4 calls on 2026-08-13 against their own baseline of 1.375 calls per observed day (stdev 1.0607 over 8 observed days), giving z = 2.4749, above the configured threshold of 2.0. The absolute excess is 2.625 calls, which is materially significant against the configured materiality of 2.0 calls. High activity only; low activity is never flagged.",
+      "structured_evidence": [
+        {
+          "evidence_id": "calls:1626",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1626",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1649",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1649",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:1652",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:1652",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "calls:213",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "calls",
+          "source_record_id": "calls:213",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "person_id": 141,
+        "anomaly_status": "high_activity_anomaly",
+        "observed_count": 4,
+        "peak_date": "2026-08-13",
+        "z_score": 2.4749,
+        "excess_over_baseline": 2.625,
+        "materially_significant": true,
+        "baseline": {
+          "observation_days": 8,
+          "total_calls": 11,
+          "mean_calls_per_active_day": 1.375,
+          "stdev_calls_per_active_day": 1.0607,
+          "min_calls_per_active_day": 1,
+          "max_calls_per_active_day": 4
+        },
+        "supporting_call_ids": [
+          213,
+          1626,
+          1649,
+          1652
+        ]
+      }
+    },
+    {
+      "pattern_id": "location_cohort~bf9c4b4ae1eec6f1",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:191",
+        "person:112",
+        "person:113",
+        "person:141",
+        "person:15",
+        "person:172",
+        "person:368"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.4,
+      "explanation": "6 persons are registered at the single canonical location location:191 (Bhopal, Madhya Pradesh), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:191",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:191",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:112",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:112",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:113",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:113",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:141",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:141",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:15",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:15",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:172",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:172",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:368",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:368",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:191",
+        "location_label": "Bhopal, Madhya Pradesh",
+        "member_count": 6,
+        "members": [
+          "person:15",
+          "person:112",
+          "person:113",
+          "person:141",
+          "person:172",
+          "person:368"
+        ],
+        "min_group": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_cycle~b8c6335664e92119",
+      "pattern_type": "TRANSACTION_CYCLE",
+      "entity_ids": [
+        "person:141",
+        "person:349",
+        "person:358",
+        "person:383"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 1.0,
+      "explanation": "Potential transaction pattern requiring review: value returns to its origin along person:141 -> person:383 -> person:358 -> person:349 -> person:141, a closed circuit of 4 persons carrying 1169956.42 INR across 4 observed transactions. A circuit is a shape, not a finding; the listed transaction records are the whole of the basis.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1214",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1214",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1259",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1259",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:429",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:429",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:852",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:852",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "cycle_length": 4,
+        "cycle_path": "person:141 -> person:383 -> person:358 -> person:349 -> person:141",
+        "members": [
+          "person:141",
+          "person:383",
+          "person:358",
+          "person:349"
+        ],
+        "legs": [
+          {
+            "from": "person:141",
+            "to": "person:383",
+            "transaction_count": 1,
+            "total_amount_inr": 92938.16,
+            "evidence_ids": [
+              "transactions:429"
+            ]
+          },
+          {
+            "from": "person:383",
+            "to": "person:358",
+            "transaction_count": 1,
+            "total_amount_inr": 496511.82,
+            "evidence_ids": [
+              "transactions:1214"
+            ]
+          },
+          {
+            "from": "person:358",
+            "to": "person:349",
+            "transaction_count": 1,
+            "total_amount_inr": 479652.12,
+            "evidence_ids": [
+              "transactions:852"
+            ]
+          },
+          {
+            "from": "person:349",
+            "to": "person:141",
+            "transaction_count": 1,
+            "total_amount_inr": 100854.32,
+            "evidence_ids": [
+              "transactions:1259"
+            ]
+          }
+        ],
+        "total_amount_inr": 1169956.42
+      }
+    },
+    {
+      "pattern_id": "transaction_cycle~e0d845d62dc561cf",
+      "pattern_type": "TRANSACTION_CYCLE",
+      "entity_ids": [
+        "person:141",
+        "person:272",
+        "person:312",
+        "person:316"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 1.0,
+      "explanation": "Potential transaction pattern requiring review: value returns to its origin along person:141 -> person:272 -> person:312 -> person:316 -> person:141, a closed circuit of 4 persons carrying 1172020.64 INR across 4 observed transactions. A circuit is a shape, not a finding; the listed transaction records are the whole of the basis.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1180",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1180",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:178",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:178",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:221",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:221",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:27",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:27",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "cycle_length": 4,
+        "cycle_path": "person:141 -> person:272 -> person:312 -> person:316 -> person:141",
+        "members": [
+          "person:141",
+          "person:272",
+          "person:312",
+          "person:316"
+        ],
+        "legs": [
+          {
+            "from": "person:141",
+            "to": "person:272",
+            "transaction_count": 1,
+            "total_amount_inr": 264414.71,
+            "evidence_ids": [
+              "transactions:1180"
+            ]
+          },
+          {
+            "from": "person:272",
+            "to": "person:312",
+            "transaction_count": 1,
+            "total_amount_inr": 216839.31,
+            "evidence_ids": [
+              "transactions:27"
+            ]
+          },
+          {
+            "from": "person:312",
+            "to": "person:316",
+            "transaction_count": 1,
+            "total_amount_inr": 361117.57,
+            "evidence_ids": [
+              "transactions:221"
+            ]
+          },
+          {
+            "from": "person:316",
+            "to": "person:141",
+            "transaction_count": 1,
+            "total_amount_inr": 329649.05,
+            "evidence_ids": [
+              "transactions:178"
+            ]
+          }
+        ],
+        "total_amount_inr": 1172020.64
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~9cacbe73c2d87922",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:127",
+        "person:134",
+        "person:141",
+        "person:205",
+        "person:321",
+        "person:332",
+        "person:372",
+        "person:58"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.7,
+      "explanation": "Potential transaction pattern requiring review: person:321 sits at the centre of 7 distinct senders paying into one target, across 7 observed transactions totalling 2551006.34 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1013",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1013",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1350",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1350",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1463",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1463",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:341",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:341",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:497",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:497",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:642",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:642",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:925",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:925",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:321",
+        "direction": "fan_in",
+        "counterparty_count": 7,
+        "counterparties": [
+          "person:58",
+          "person:127",
+          "person:134",
+          "person:141",
+          "person:205",
+          "person:332",
+          "person:372"
+        ],
+        "transaction_count": 7,
+        "total_amount_inr": 2551006.34,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~aca85325a6755066",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:141",
+        "person:160",
+        "person:291",
+        "person:316",
+        "person:342",
+        "person:349",
+        "person:480"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.6,
+      "explanation": "Potential transaction pattern requiring review: person:141 sits at the centre of 6 distinct senders paying into one target, across 6 observed transactions totalling 1380279.47 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1259",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1259",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1298",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1298",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:178",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:178",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:354",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:354",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:480",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:480",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:894",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:894",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:141",
+        "direction": "fan_in",
+        "counterparty_count": 6,
+        "counterparties": [
+          "person:160",
+          "person:291",
+          "person:316",
+          "person:342",
+          "person:349",
+          "person:480"
+        ],
+        "transaction_count": 6,
+        "total_amount_inr": 1380279.47,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~dd3c5a0c5ba709d7",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:141",
+        "person:167",
+        "person:235",
+        "person:273",
+        "person:292",
+        "person:384",
+        "person:395",
+        "person:500"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.7,
+      "explanation": "Potential transaction pattern requiring review: person:235 sits at the centre of 7 distinct senders paying into one target, across 7 observed transactions totalling 1196781.89 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1216",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1216",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1263",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1263",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:285",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:285",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:421",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:421",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:563",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:563",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:616",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:616",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:662",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:662",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:235",
+        "direction": "fan_in",
+        "counterparty_count": 7,
+        "counterparties": [
+          "person:141",
+          "person:167",
+          "person:273",
+          "person:292",
+          "person:384",
+          "person:395",
+          "person:500"
+        ],
+        "transaction_count": 7,
+        "total_amount_inr": 1196781.89,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_out~21e38afcfc967eee",
+      "pattern_type": "TRANSACTION_FAN_OUT",
+      "entity_ids": [
+        "person:141",
+        "person:24",
+        "person:280",
+        "person:291",
+        "person:325",
+        "person:349",
+        "person:429"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.6,
+      "explanation": "Potential transaction pattern requiring review: person:291 sits at the centre of one source sending to 6 distinct receivers, across 6 observed transactions totalling 1616056.73 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:123",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:123",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:149",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:149",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:355",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:355",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:41",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:41",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:480",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:480",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:483",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:483",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:291",
+        "direction": "fan_out",
+        "counterparty_count": 6,
+        "counterparties": [
+          "person:24",
+          "person:141",
+          "person:280",
+          "person:325",
+          "person:349",
+          "person:429"
+        ],
+        "transaction_count": 6,
+        "total_amount_inr": 1616056.73,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_out~2cb4c5ad0a624ad5",
+      "pattern_type": "TRANSACTION_FAN_OUT",
+      "entity_ids": [
+        "person:141",
+        "person:160",
+        "person:360",
+        "person:380",
+        "person:430",
+        "person:89"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.5,
+      "explanation": "Potential transaction pattern requiring review: person:160 sits at the centre of one source sending to 5 distinct receivers, across 5 observed transactions totalling 1262537.81 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:296",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:296",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:313",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:313",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:330",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:330",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:354",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:354",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:69",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:69",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:160",
+        "direction": "fan_out",
+        "counterparty_count": 5,
+        "counterparties": [
+          "person:89",
+          "person:141",
+          "person:360",
+          "person:380",
+          "person:430"
+        ],
+        "transaction_count": 5,
+        "total_amount_inr": 1262537.81,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_out~e09d22cf4ffd3385",
+      "pattern_type": "TRANSACTION_FAN_OUT",
+      "entity_ids": [
+        "person:141",
+        "person:168",
+        "person:243",
+        "person:263",
+        "person:293",
+        "person:342"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.5,
+      "explanation": "Potential transaction pattern requiring review: person:342 sits at the centre of one source sending to 5 distinct receivers, across 5 observed transactions totalling 828483.13 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1150",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1150",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1161",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1161",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1298",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1298",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1481",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1481",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:37",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:37",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:342",
+        "direction": "fan_out",
+        "counterparty_count": 5,
+        "counterparties": [
+          "person:141",
+          "person:168",
+          "person:243",
+          "person:263",
+          "person:293"
+        ],
+        "transaction_count": 5,
+        "total_amount_inr": 828483.13,
+        "threshold": 5
+      }
+    }
+  ],
+  "communication_baseline": {
+    "person_id": 141,
+    "anomaly_status": "high_activity_anomaly",
+    "observed_count": 4,
+    "peak_date": "2026-08-13",
+    "z_score": 2.4749,
+    "excess_over_baseline": 2.625,
+    "materially_significant": true,
+    "baseline": {
+      "observation_days": 8,
+      "total_calls": 11,
+      "mean_calls_per_active_day": 1.375,
+      "stdev_calls_per_active_day": 1.0607,
+      "min_calls_per_active_day": 1,
+      "max_calls_per_active_day": 4
+    },
+    "supporting_call_ids": [
+      213,
+      1626,
+      1649,
+      1652
+    ]
+  },
+  "network_position": {
+    "entity_id": "person:141",
+    "degree": 27,
+    "degree_centrality": 0.054108,
+    "weighted_degree": 24.5,
+    "betweenness": 0.006369,
+    "pagerank": 0.002485,
+    "community_id": 3,
+    "component_id": 0,
+    "interpretation": {
+      "label": "high_network_importance",
+      "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+      "is_investigation_lead": true,
+      "basis": {
+        "degree_percentile": 99.4,
+        "pagerank_percentile": 78.4,
+        "betweenness_percentile": 97.8,
+        "top_percentile_threshold": 90.0
+      },
+      "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+    }
+  },
+  "disclaimer": "Investigation-prioritization signal computed from observed synthetic records only. It is NOT a probability of guilt, NOT a probability of criminality, and NOT proof of wrongdoing."
+}

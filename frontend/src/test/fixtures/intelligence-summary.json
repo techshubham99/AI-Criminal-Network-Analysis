@@ -1,0 +1,102 @@
+{
+  "phase": "4 - Investigation Intelligence Engine",
+  "persons_scored": 500,
+  "patterns_detected": 502,
+  "duplicate_pattern_ids_collapsed": 0,
+  "patterns_by_type": {
+    "MULTI_CHANNEL_RELATIONSHIP": 47,
+    "COMMUNICATION_ANOMALY": 150,
+    "TRANSACTION_CYCLE": 29,
+    "TRANSACTION_FAN_IN": 91,
+    "TRANSACTION_FAN_OUT": 102,
+    "TRANSACTION_CONCENTRATION": 4,
+    "LOCATION_COHORT": 23,
+    "SHARED_LOCATION_PAIR": 5,
+    "BRIDGE_ENTITY": 51
+  },
+  "zero_result_categories": [],
+  "score_bands": {
+    "distribution": {
+      "LOW": 399,
+      "MEDIUM": 101,
+      "HIGH": 0
+    },
+    "boundaries": {
+      "LOW": "0-39",
+      "MEDIUM": "40-69",
+      "HIGH": "70-100"
+    }
+  },
+  "score_stats": {
+    "min": 0,
+    "max": 68,
+    "mean": 29.91
+  },
+  "feature_weights": {
+    "bridge_network_structure": 10.0,
+    "communication_anomaly": 15.0,
+    "location_patterns": 15.0,
+    "multi_channel_relationship": 20.0,
+    "network_importance": 20.0,
+    "transaction_patterns": 20.0
+  },
+  "feature_weight_total": 100.0,
+  "detection_coverage": {
+    "communication_anomaly": {
+      "persons_with_calls": 500,
+      "by_status": {
+        "high_activity_anomaly": 150,
+        "insufficient_baseline_data": 65,
+        "insufficient_baseline_variance": 159,
+        "no_anomaly": 126
+      },
+      "high_activity_materially_significant": 1,
+      "min_observations_required": 5,
+      "z_threshold": 2.0,
+      "material_excess_calls": 2.0
+    },
+    "transaction_patterns": {
+      "transaction_records": 1500,
+      "self_transfers_excluded": 0,
+      "directed_person_pairs": 1498,
+      "cycle_max_length": 4,
+      "fan_in_min_counterparties": 5,
+      "fan_out_min_counterparties": 5,
+      "concentration_min_transactions": 4,
+      "concentration_min_share": 0.6
+    },
+    "location_patterns": {
+      "locations": 200,
+      "min_group": 5,
+      "max_group": 30,
+      "cohorts_skipped_above_max_group": 0,
+      "self_fir_references_excluded": 1,
+      "basis": "canonical location_id from persons/firs rows; raw coordinates are never clustered"
+    },
+    "bridge_network_structure": {
+      "persons_in_projection": 500,
+      "percentile_floor": 90.0,
+      "basis": "Phase 2 betweenness on the undirected person projection (overlay and self-loops excluded)"
+    },
+    "multi_channel_relationship": {
+      "min_channels": 2,
+      "channels": [
+        "CALL",
+        "TRANSACTION",
+        "FIR",
+        "CO_LOCATION"
+      ]
+    }
+  },
+  "evidence_policy": {
+    "structured": "observed dataset records, provenance confidence 1.0",
+    "nlp_derived": "Phase 3 rule-extraction claims about FIR free text, each carrying its own extraction confidence",
+    "separation": "reported in separate collections and never merged",
+    "nlp_scoring": "NLP-derived evidence is attached and reported but does not raise any score in this build"
+  },
+  "self_reference_policy": "Self-calls, self-transfers and self-FIR references are excluded from all Phase 4 detection and scoring. The records remain available as Phase 1/2 evidence.",
+  "overlay_policy": "The SAME_RING ground-truth overlay is never an input to Phase 4 detection or scoring.",
+  "structured_graph_mutated": false,
+  "ranking_note": "Investigation-priority ranking from the Phase 4 explainable 0-100 score. This is NOT the Phase 2 graph-based network importance ranking served by /api/v1/analytics/persons/top; the two rank different things and are not interchangeable.",
+  "disclaimer": "Investigation-prioritization signal computed from observed synthetic records only. It is NOT a probability of guilt, NOT a probability of criminality, and NOT proof of wrongdoing."
+}

@@ -1,0 +1,404 @@
+{
+  "record_id": "9300966e539fadd014561a2c250fd1daf9821de53434ecd8af0c3ada30ac5c9e",
+  "source_type": "FIR",
+  "status": "ACCEPTED",
+  "validation_status": "VALID",
+  "resolution_status": "RESOLVED",
+  "review_reason": null,
+  "reject_reason": null,
+  "reason": "4 relationship(s) accepted; 4 new edge(s); 1 new pattern(s); 2 priority change(s).",
+  "raw_payload": {
+    "date": "2026-08-21",
+    "complainant": {
+      "person_id": 21
+    },
+    "accused": {
+      "person_id": 141
+    },
+    "narrative": "Complainant Gunbir Sankar reports that Yashica Borah called him from 8600506062 on 20-08-2026 demanding payment, and that an amount of Rs 250000 was transferred by UPI the same night.",
+    "city": "Lucknow",
+    "state": "Uttar Pradesh"
+  },
+  "normalized_payload": {
+    "date": "2026-08-21",
+    "complainant": {
+      "person_id": 21
+    },
+    "narrative": "Complainant Gunbir Sankar reports that Yashica Borah called him from 8600506062 on 20-08-2026 demanding payment, and that an amount of Rs 250000 was transferred by UPI the same night.",
+    "place": {
+      "city": "Lucknow",
+      "state": "Uttar Pradesh"
+    },
+    "accused": {
+      "person_id": 141
+    }
+  },
+  "provenance": {
+    "source_type": "FIR",
+    "source_name": "station-log",
+    "submitted_by": "demo",
+    "reference": null,
+    "note": null
+  },
+  "ingested_at": "2026-08-28T13:31:59",
+  "matches": [
+    {
+      "field": "complainant",
+      "status": "MATCHED",
+      "method": "trusted_identifier",
+      "entity_id": "person:21",
+      "label": "Gunbir Sankar",
+      "confidence": 1.0,
+      "candidates": [],
+      "explanation": "Matched on trusted identifier (person_id).",
+      "is_new_entity": false
+    },
+    {
+      "field": "accused",
+      "status": "MATCHED",
+      "method": "trusted_identifier",
+      "entity_id": "person:141",
+      "label": "Yashica Borah",
+      "confidence": 1.0,
+      "candidates": [],
+      "explanation": "Matched on trusted identifier (person_id).",
+      "is_new_entity": false
+    },
+    {
+      "field": "place",
+      "status": "MATCHED",
+      "method": "deterministic_context",
+      "entity_id": "location:46",
+      "label": "Lucknow, Uttar Pradesh",
+      "confidence": 0.9,
+      "candidates": [
+        {
+          "entity_id": "location:7",
+          "label": "Lucknow, Uttar Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:37",
+          "label": "Lucknow, Uttar Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:38",
+          "label": "Lucknow, Uttar Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:39",
+          "label": "Lucknow, Uttar Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:41",
+          "label": "Lucknow, Uttar Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:46",
+          "label": "Lucknow, Uttar Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:75",
+          "label": "Lucknow, Uttar Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:76",
+          "label": "Lucknow, Uttar Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:89",
+          "label": "Lucknow, Uttar Pradesh",
+          "detail": {}
+        },
+        {
+          "entity_id": "location:90",
+          "label": "Lucknow, Uttar Pradesh",
+          "detail": {}
+        }
+      ],
+      "explanation": "23 location records share this city and state; the referenced person's own recorded location singles one out.",
+      "is_new_entity": false
+    }
+  ],
+  "relationships": [
+    {
+      "relationship_type": "NAMED_IN_FIR",
+      "source_entity_id": "person:21",
+      "target_entity_id": "fir:301",
+      "accepted": true,
+      "reason": "Complainant named on the FIR.",
+      "relationship_id": "NAMED_IN_FIR~complainant~person:21~fir:301",
+      "is_new_edge": true,
+      "is_self_reference": false,
+      "excluded_from_intelligence": false,
+      "is_narrative": false
+    },
+    {
+      "relationship_type": "NAMED_IN_FIR",
+      "source_entity_id": "person:141",
+      "target_entity_id": "fir:301",
+      "accepted": true,
+      "reason": "Accused named on the FIR.",
+      "relationship_id": "NAMED_IN_FIR~accused~person:141~fir:301",
+      "is_new_edge": true,
+      "is_self_reference": false,
+      "excluded_from_intelligence": false,
+      "is_narrative": false
+    },
+    {
+      "relationship_type": "REPORTED_AGAINST",
+      "source_entity_id": "person:21",
+      "target_entity_id": "person:141",
+      "accepted": true,
+      "reason": "Structured complainant/accused roles on the FIR.",
+      "relationship_id": "REPORTED_AGAINST~person:21~person:141",
+      "is_new_edge": true,
+      "is_self_reference": false,
+      "excluded_from_intelligence": false,
+      "is_narrative": false
+    },
+    {
+      "relationship_type": "LOCATED_AT",
+      "source_entity_id": "fir:301",
+      "target_entity_id": "location:46",
+      "accepted": true,
+      "reason": "FIR recorded at an existing location.",
+      "relationship_id": "LOCATED_AT~fir:301~location:46",
+      "is_new_edge": true,
+      "is_self_reference": false,
+      "excluded_from_intelligence": false,
+      "is_narrative": false
+    }
+  ],
+  "evidence": [
+    "firs:301"
+  ],
+  "entity_ids": [
+    "fir:301",
+    "location:46",
+    "person:141",
+    "person:21"
+  ],
+  "duplicate_of": null,
+  "impact": {
+    "changed": true,
+    "graph": {
+      "nodes_added": [
+        "fir:301"
+      ],
+      "edges_added": [
+        "NAMED_IN_FIR~complainant~person:21~fir:301",
+        "NAMED_IN_FIR~accused~person:141~fir:301",
+        "REPORTED_AGAINST~person:21~person:141",
+        "LOCATED_AT~fir:301~location:46"
+      ],
+      "edges_updated": []
+    },
+    "graph_totals": {
+      "nodes": 3804,
+      "edges": 10808
+    },
+    "live_rows": {
+      "calls": 1,
+      "transactions": 1,
+      "firs": 1,
+      "location_observations": 0
+    },
+    "relationships_accepted": 4,
+    "relationships_rejected": 0,
+    "recompute_cost_ms": {
+      "analytics_ms": 1537.2,
+      "intelligence_ms": 228.8,
+      "total_ms": 1766.1
+    },
+    "new_pattern_ids": [
+      "multi_channel_relationship~5519a23a4c2fad59"
+    ],
+    "cleared_pattern_ids": [],
+    "reidentified_pattern_count": 47,
+    "reidentified_note": "Patterns whose deterministic id changed because community labels shifted, while the pattern still asserts the same thing about the same entities. Not new detections.",
+    "priority_changes": [
+      {
+        "person_id": 21,
+        "entity_id": "person:21",
+        "score_before": 41,
+        "score_after": 46,
+        "band_before": "MEDIUM",
+        "band_after": "MEDIUM"
+      },
+      {
+        "person_id": 141,
+        "entity_id": "person:141",
+        "score_before": 69,
+        "score_after": 76,
+        "band_before": "MEDIUM",
+        "band_after": "HIGH"
+      }
+    ],
+    "persons": [
+      {
+        "before": {
+          "person_id": 21,
+          "score": 41,
+          "band": "MEDIUM",
+          "pattern_count": 7,
+          "pagerank": 0.002621,
+          "betweenness": 0.003426,
+          "community_id": 9
+        },
+        "after": {
+          "person_id": 21,
+          "score": 46,
+          "band": "MEDIUM",
+          "pattern_count": 8,
+          "pagerank": 0.002635,
+          "betweenness": 0.003426,
+          "community_id": 1
+        }
+      },
+      {
+        "before": {
+          "person_id": 141,
+          "score": 69,
+          "band": "MEDIUM",
+          "pattern_count": 12,
+          "pagerank": 0.002485,
+          "betweenness": 0.007416,
+          "community_id": 1
+        },
+        "after": {
+          "person_id": 141,
+          "score": 76,
+          "band": "HIGH",
+          "pattern_count": 13,
+          "pagerank": 0.002764,
+          "betweenness": 0.007416,
+          "community_id": 1
+        }
+      }
+    ],
+    "patterns_before": {
+      "MULTI_CHANNEL_RELATIONSHIP": 47,
+      "COMMUNICATION_ANOMALY": 150,
+      "TRANSACTION_CYCLE": 29,
+      "TRANSACTION_FAN_IN": 91,
+      "TRANSACTION_FAN_OUT": 103,
+      "TRANSACTION_CONCENTRATION": 4,
+      "LOCATION_COHORT": 23,
+      "SHARED_LOCATION_PAIR": 5,
+      "BRIDGE_ENTITY": 51
+    },
+    "patterns_after": {
+      "MULTI_CHANNEL_RELATIONSHIP": 48,
+      "COMMUNICATION_ANOMALY": 150,
+      "TRANSACTION_CYCLE": 29,
+      "TRANSACTION_FAN_IN": 91,
+      "TRANSACTION_FAN_OUT": 103,
+      "TRANSACTION_CONCENTRATION": 4,
+      "LOCATION_COHORT": 23,
+      "SHARED_LOCATION_PAIR": 5,
+      "BRIDGE_ENTITY": 51
+    },
+    "nlp": {
+      "fir_id": 301,
+      "extracted_entities": [
+        {
+          "type": "PERSON",
+          "value": "Gunbir Sankar",
+          "confidence": 1.0,
+          "extraction_method": "known_record",
+          "resolution_status": "resolved",
+          "entity_id": "person:21",
+          "method": "normalized_name"
+        },
+        {
+          "type": "PERSON",
+          "value": "Yashica Borah",
+          "confidence": 1.0,
+          "extraction_method": "known_record",
+          "resolution_status": "resolved",
+          "entity_id": "person:141",
+          "method": "normalized_name"
+        },
+        {
+          "type": "PHONE",
+          "value": "8600506062",
+          "confidence": 1.0,
+          "extraction_method": "regex",
+          "resolution_status": "resolved",
+          "entity_id": "phone:+91-8600506062",
+          "method": "structured_identifier"
+        },
+        {
+          "type": "DATE",
+          "value": "2026-08-20",
+          "confidence": 1.0,
+          "extraction_method": "regex",
+          "resolution_status": "not_applicable",
+          "entity_id": null,
+          "method": null
+        },
+        {
+          "type": "MONEY",
+          "value": "250000",
+          "confidence": 1.0,
+          "extraction_method": "regex",
+          "resolution_status": "not_applicable",
+          "entity_id": null,
+          "method": null
+        }
+      ],
+      "resolved_entity_ids": [
+        "person:141",
+        "person:21",
+        "phone:+91-8600506062"
+      ],
+      "new_entities": [],
+      "review_required_entities": [],
+      "relationships_accepted": [],
+      "relationships_rejected": [],
+      "entities": {
+        "counts_by_type": {
+          "DATE": 1,
+          "MONEY": 1,
+          "PERSON": 2,
+          "PHONE": 1
+        },
+        "resolution_counts": {
+          "not_applicable": 2,
+          "resolved": 3
+        },
+        "absent_entity_types": [
+          "AADHAAR",
+          "LOCATION",
+          "VEHICLE",
+          "ORGANIZATION"
+        ]
+      },
+      "relationship_types": {
+        "counts_by_type": {}
+      },
+      "impact": {
+        "extracted_entity_count": 5,
+        "resolved_entity_count": 3,
+        "unresolved_entity_count": 0,
+        "ambiguous_entity_count": 0,
+        "validated_relationship_count": 0,
+        "proposed_count": 0,
+        "accepted_count": 0,
+        "rejected_count": 0,
+        "by_status": {},
+        "structured_graph_mutated": false
+      },
+      "note": "Narrative-derived relationships are materialised in the Phase 3 narrative overlay and kept separate from structured observations."
+    }
+  },
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious."
+}

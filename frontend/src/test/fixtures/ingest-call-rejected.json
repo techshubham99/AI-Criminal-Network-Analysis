@@ -1,0 +1,39 @@
+{
+  "record_id": "fe8407d6eb5ff55d14b65c7bd746654d2c1b638a23d1800d07c4851a6d3e7b8e",
+  "source_type": "CALL",
+  "status": "REJECTED",
+  "validation_status": "INVALID",
+  "resolution_status": "NOT_ATTEMPTED",
+  "review_reason": null,
+  "reject_reason": "INVALID_FIELD",
+  "reason": "caller.phone: not a 10-digit Indian mobile number",
+  "raw_payload": {
+    "caller": {
+      "phone": "12345"
+    },
+    "callee": {
+      "person_id": 21
+    },
+    "start_time": "not-a-time",
+    "duration_sec": -3
+  },
+  "normalized_payload": {},
+  "provenance": {
+    "source_type": "CALL",
+    "source_name": "manual-entry",
+    "submitted_by": null,
+    "reference": null,
+    "note": null
+  },
+  "ingested_at": "2026-08-28T13:31:57",
+  "matches": [],
+  "relationships": [],
+  "evidence": [],
+  "entity_ids": [],
+  "duplicate_of": null,
+  "impact": {
+    "changed": false,
+    "note": "Rejected: nothing was stored or changed."
+  },
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious."
+}

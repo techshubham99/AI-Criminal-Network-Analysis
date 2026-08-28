@@ -33,21 +33,62 @@ import {
  * ---------------------------------------------------------------------------
  */
 
-/** Canvas ground. Matches the `--color-abyss` token; also used as the label halo. */
-export const GRAPH_BACKGROUND = '#0b111c';
+/**
+ * Canvas chrome, per theme.
+ *
+ * Cytoscape paints to a canvas, so it cannot read CSS custom properties — the
+ * one place in the app that needs literal hex values. Each field mirrors a design
+ * token by name so the two themes cannot drift apart: change a token in
+ * `styles/index.css` and change its twin here.
+ *
+ * ENTITY AND RELATIONSHIP COLOURS ARE NOT HERE. Those come from the shared
+ * vocabulary in `@/utils/entity` and are identical in both themes, because a
+ * PERSON node that changes hue with the theme would break every legend, badge and
+ * screenshot that refers to it.
+ */
+export interface GraphChrome {
+  /** `--color-abyss`. Canvas ground, and the label halo. */
+  background: string;
+  /** A hairline this close to the ground separates two touching nodes. */
+  nodeBorder: string;
+  /** `--color-ink-2`. Node labels: readable, never maximum contrast. */
+  label: string;
+  /** `--color-ink`. Used for the label of a selected or focused node. */
+  ink: string;
+  /** `--color-cyan-400` / `--color-cyan-300` — the only accent the graph uses. */
+  accent: string;
+  accentBright: string;
+  /** `--color-ink`. Hover reads as neutral, never as a semantic state. */
+  hoverBorder: string;
+}
 
-/** `--color-void` — a hairline this dark separates two touching nodes. */
-const NODE_BORDER = '#070b12';
+const CHROME: Record<GraphTheme, GraphChrome> = {
+  dark: {
+    background: '#0b111c',
+    nodeBorder: '#070b12',
+    label: '#a7b6c9',
+    ink: '#e8eff8',
+    accent: '#22d3ee',
+    accentBright: '#67e8f9',
+    hoverBorder: '#e8eff8',
+  },
+  light: {
+    background: '#f4f7fb',
+    nodeBorder: '#ffffff',
+    label: '#33506b',
+    ink: '#0f2032',
+    accent: '#0891b2',
+    accentBright: '#0e7490',
+    hoverBorder: '#0f2032',
+  },
+};
 
-/** `--color-ink-2`: light enough to read on the abyss ground, never pure white. */
-const LABEL_COLOR = '#a7b6c9';
+/** Narrower than `Theme` from the theme hook on purpose: this module has no React. */
+export type GraphTheme = 'dark' | 'light';
 
-/** `--color-cyan-400` / `--color-cyan-300` — the only accent the graph uses. */
-const ACCENT = '#22d3ee';
-const ACCENT_BRIGHT = '#67e8f9';
-
-/** `--color-ink` — hover reads as neutral, never as a semantic state. */
-const HOVER_BORDER = '#e8eff8';
+export function graphChrome(theme: GraphTheme): GraphChrome {
+  return CHROME[theme];
+}
 
 /**
  * The app's `--font-sans` stack, flattened for the canvas text renderer.
@@ -75,7 +116,17 @@ const NODE_SHAPES: Record<string, 'ellipse' | 'round-rectangle' | 'diamond' | 't
     CELL_TOWER: 'hexagon',
   };
 
-export function buildGraphStylesheet(): StylesheetJsonBlock[] {
+export function buildGraphStylesheet(theme: GraphTheme = 'dark'): StylesheetJsonBlock[] {
+  const {
+    background: GRAPH_BACKGROUND,
+    nodeBorder: NODE_BORDER,
+    label: LABEL_COLOR,
+    ink: INK,
+    accent: ACCENT,
+    accentBright: ACCENT_BRIGHT,
+    hoverBorder: HOVER_BORDER,
+  } = graphChrome(theme);
+
   const sheet: StylesheetJsonBlock[] = [
     /* ---------------------------------------------------------------- nodes */
     {
@@ -263,7 +314,7 @@ export function buildGraphStylesheet(): StylesheetJsonBlock[] {
         'border-width': 2.5,
         'border-color': ACCENT_BRIGHT,
         'border-opacity': 1,
-        color: '#e8eff8',
+        color: INK,
         'z-index': 30,
       },
     },
@@ -286,7 +337,7 @@ export function buildGraphStylesheet(): StylesheetJsonBlock[] {
         'border-width': 3,
         'border-color': ACCENT,
         'border-opacity': 1,
-        color: '#e8eff8',
+        color: INK,
         'font-weight': 700,
         'z-index': 40,
       },

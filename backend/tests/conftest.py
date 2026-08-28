@@ -57,3 +57,9 @@ def nlp_service(app, client):
 def narrative_store(nlp_service):
     """The SEPARATE narrative graph. Never the Phase 2 structured store."""
     return nlp_service.integrator.store
+
+
+@pytest.fixture(scope="session")
+def intelligence(app, client):
+    # Built once during lifespan startup (Phase 4), after the graph and NLP.
+    return app.state.intelligence
