@@ -1,13 +1,13 @@
 /**
  * Alerts — the investigation-priority queue and the patterns behind it.
  *
- * Two things on this screen, both read straight from Phase 4 endpoints:
+ * Two things on this screen:
  *
  *  1. THE QUEUE. `GET /intelligence/persons/top` ranks persons by the explainable
- *     0-100 priority score. It is not the Phase 2 centrality ranking on the
- *     Command Center; the two order different things and are never mixed. The
- *     band filter is a backend parameter, not a client-side slice, so a band with
- *     no members comes back empty and is reported as empty.
+ *     0-100 priority score. It is not the centrality ranking on the Command
+ *     Center; the two order different things and are never mixed. The band filter
+ *     is a backend parameter, not a client-side slice, so a band with no members
+ *     comes back empty and is reported as empty.
  *
  *  2. THE PATTERNS. `GET /intelligence/patterns` with its own type filter, and one
  *     pattern in full beside it. Selecting a person does not filter the pattern
@@ -15,11 +15,10 @@
  *     answers "what was detected across the corpus", and scoping one to the other
  *     would quietly turn the second question into the first.
  *
- *  3. ADD INTELLIGENCE (Phase 4.6). The one write surface in the app: submit a new
- *     FIR, call, transaction or location observation and read the pipeline's
- *     verdict. An accepted record publishes a live event, and this screen refetches
- *     the queue, the priority detail and the pattern list when it arrives — which is
- *     why the ranking can change without a page reload.
+ * Add Intelligence lives once, in the header, so a submitted record has a single
+ * entry point. When an accepted record publishes a live event this screen refetches
+ * the queue, the priority detail and the pattern list — which is why the ranking
+ * can change without a page reload.
  *
  * A score is never shown without its factors, and the backend's own note and
  * disclaimer are displayed verbatim rather than paraphrased.
@@ -28,7 +27,6 @@ import { useCallback, useEffect, useState, type ReactElement } from 'react';
 
 import { api } from '@/api';
 import { PatternDetails, PatternList, PriorityPanel } from '@/components/intelligence';
-import { AddIntelligence } from '@/components/live';
 import { BAND_BAR_CLASS, BAND_TEXT_CLASS, BAND_TONE, featureLabel } from '@/components/intelligence';
 import {
   Badge,
@@ -38,7 +36,6 @@ import {
   Panel,
   PanelBody,
   PanelHeader,
-  SectionHeading,
   SegmentedControl,
   SkeletonRows,
 } from '@/components/ui';
@@ -119,11 +116,16 @@ export function AlertsPage(): ReactElement {
   };
 
   return (
-    <div className="space-y-4 pb-10" data-testid="alerts-page">
-      <SectionHeading
-        title="Alerts"
-        subtitle="Persons ranked by investigation priority, and the patterns behind the ranking."
-      />
+    <div className="space-y-4 pb-10 animate-fade-in" data-testid="alerts-page">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-ink text-base font-bold tracking-tight">Alerts</h1>
+        <SegmentedControl
+          label="Filter queue by band"
+          options={BAND_OPTIONS}
+          value={band}
+          onChange={setBand}
+        />
+      </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]">
         <Panel className="flex min-w-0 flex-col" data-testid="priority-queue">
@@ -131,14 +133,6 @@ export function AlertsPage(): ReactElement {
             title="Priority queue"
             subtitle={ranking.data ? `${formatCount(ranking.data.count)} shown` : undefined}
             accent
-            actions={
-              <SegmentedControl
-                label="Filter queue by band"
-                options={BAND_OPTIONS}
-                value={band}
-                onChange={setBand}
-              />
-            }
           />
           <PanelBody className="min-h-0 flex-1 overflow-y-auto">
             {ranking.isInitialLoading ? <SkeletonRows rows={6} /> : null}
@@ -189,8 +183,6 @@ export function AlertsPage(): ReactElement {
         />
         <PatternDetails patternId={patternId} />
       </div>
-
-      <AddIntelligence />
 
       {ranking.data ? (
         <p className="text-ink-4 text-2xs leading-relaxed">{ranking.data.disclaimer}</p>

@@ -30,7 +30,7 @@
  */
 import type { ReactElement } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { api } from '@/api';
 import { LedgerIntegrity } from '@/components/audit';
@@ -49,19 +49,17 @@ import {
   PanelBody,
   PanelHeader,
   ProvenanceTag,
-  SectionHeading,
   SkeletonRows,
 } from '@/components/ui';
 import { useAsync } from '@/hooks/useAsync';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import type { NodeOut } from '@/types/api';
-import { cn } from '@/utils/cn';
 import { splitEntityId } from '@/utils/entity';
 import { flattenScalars } from '@/utils/records';
 
 const SEARCH_LIMIT = 20;
 const MIN_QUERY_LENGTH = 2;
-const PAGE_LISTBOX_ID = 'cna-page-search-listbox';
+const PAGE_LISTBOX_ID = 'tracex-page-search-listbox';
 
 /** The generator's answer key. Shown, but never mixed into the record. */
 const OVERLAY_KEYS = new Set(['ring_id', 'ground_truth_ring_id']);
@@ -69,13 +67,8 @@ const OVERLAY_KEYS = new Set(['ring_id', 'ground_truth_ring_id']);
 /** Datasets whose `source_record_id` names a row this backend can actually serve. */
 const FETCHABLE_ROW_DATASETS = new Set(['persons', 'locations', 'firs']);
 
-const PAGE_SUBTITLE = 'Resolve an entity and read the dataset row it was materialised from.';
-
 const optionDomId = (entityId: string) =>
-  `cna-page-search-option-${entityId.replace(/[^A-Za-z0-9]+/g, '-')}`;
-
-const LINK_CLASS =
-  'inline-flex h-8 shrink-0 items-center justify-center gap-2 rounded-sm border border-line-strong bg-panel-2 px-2.5 text-xs font-semibold whitespace-nowrap text-ink-2 transition-colors hover:border-line-accent hover:bg-panel-3 hover:text-ink';
+  `tracex-page-search-option-${entityId.replace(/[^A-Za-z0-9]+/g, '-')}`;
 
 /** `persons:445` -> `{ dataset: 'persons', rowId: 445 }`; null when not a row. */
 function parseSourceRecord(
@@ -104,8 +97,10 @@ export function EvidencePage(): ReactElement {
   const entityId = (params.get('entity') ?? '').trim();
 
   return (
-    <div className="space-y-4 pb-10" data-testid="evidence-page">
-      <SectionHeading title="Evidence & Provenance" subtitle={PAGE_SUBTITLE} />
+    <div className="space-y-4 pb-10 animate-fade-in" data-testid="evidence-page">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-ink text-base font-bold tracking-tight">Evidence & Provenance</h1>
+      </div>
       <LedgerIntegrity />
       <EntityPicker currentEntityId={entityId} />
       {entityId ? (
@@ -114,7 +109,7 @@ export function EvidencePage(): ReactElement {
         <EmptyState
           icon="search"
           title="No entity selected"
-          description="Search above for a person, phone, Aadhaar, location, FIR or cell tower. You can also arrive here by clicking a non-person node in Network Investigation."
+          description="Search for a person, phone, Aadhaar, location, FIR or cell tower."
         />
       )}
     </div>
@@ -204,10 +199,7 @@ function EntityPicker({ currentEntityId }: { currentEntityId: string }): ReactEl
 
   return (
     <Panel>
-      <PanelHeader
-        title="Resolve an entity"
-        subtitle="Person, phone, Aadhaar, location, FIR or cell tower."
-      />
+      <PanelHeader title="Resolve an entity" />
       <PanelBody className="space-y-3 px-4 py-3">
         <label className="block">
           <span className="text-ink-3 text-2xs font-semibold tracking-wide uppercase">
@@ -253,8 +245,7 @@ function EntityPicker({ currentEntityId }: { currentEntityId: string }): ReactEl
 
         {!isSearchable && currentEntityId ? (
           <p className="text-ink-4 text-xs">
-            Showing <Mono>{currentEntityId}</Mono>. Type at least {MIN_QUERY_LENGTH} characters to
-            resolve a different entity.
+            Showing <Mono>{currentEntityId}</Mono>
           </p>
         ) : null}
       </PanelBody>
@@ -290,11 +281,6 @@ function EntityEvidence({ entityId }: { entityId: string }): ReactElement {
   const personRowId = record?.dataset === 'persons' ? record.rowId : null;
   const locationRowId = record?.dataset === 'locations' ? record.rowId : null;
   const firRowId = record?.dataset === 'firs' ? record.rowId : null;
-
-  // Route targets, by contrast, do depend on the id in the URL: only a person
-  // can root a network view, and only a FIR has a narrative page.
-  const personId = numericKey(entityId, 'person');
-  const firId = numericKey(entityId, 'fir');
 
   const personRecord = useAsync(
     (signal) => api.getPersonRecord(personRowId as number, { signal }),
@@ -337,13 +323,7 @@ function EntityEvidence({ entityId }: { entityId: string }): ReactElement {
       <EmptyState
         icon="search"
         title="The graph does not contain this entity"
-        description={
-          <>
-            <Mono>{entityId}</Mono> resolved to no node. The request succeeded — this is an answer,
-            not a failure. Either the id is not in the current dataset, or it is a type the Phase 2
-            graph does not materialise.
-          </>
-        }
+        description={<Mono>{entityId}</Mono>}
       />
     );
   }
@@ -363,7 +343,6 @@ function EntityEvidence({ entityId }: { entityId: string }): ReactElement {
         <Panel>
           <PanelHeader
             title="Provenance chain"
-            subtitle="Which dataset this entity was read from, and which row."
             actions={<ProvenanceTag provenance="structured" short />}
           />
           <PanelBody>
@@ -377,26 +356,14 @@ function EntityEvidence({ entityId }: { entityId: string }): ReactElement {
               <KeyValueRow
                 label="Source dataset"
                 value={<Mono>{node.source_dataset ?? '—'}</Mono>}
-                hint="The synthetic table this entity was materialised from. The dataset files themselves are read-only and unmodified."
+                hint="The dataset table this entity was read from. The dataset files are read-only."
               />
               <KeyValueRow
                 label="Source record"
                 value={<Mono>{node.source_record_id ?? '—'}</Mono>}
-                hint="dataset:row_id. For a cell tower this names a column of the calls table rather than a record with its own endpoint, so no row link is offered."
+                hint="dataset:row_id. A cell tower names a column of the calls table, so it has no fetchable row."
               />
             </KeyValueList>
-
-            {record ? (
-              <p className="text-ink-3 mt-3 text-xs leading-relaxed">
-                The row this entity was read from is <Mono>{node.source_record_id}</Mono>. It is
-                shown below — appearing on a row is not a claim of ownership or possession.
-              </p>
-            ) : (
-              <p className="text-ink-4 mt-3 text-xs leading-relaxed">
-                This entity&rsquo;s provenance does not name a fetchable row, so there is no record
-                to display. That is a property of how the graph is built, not a missing lookup.
-              </p>
-            )}
           </PanelBody>
         </Panel>
 
@@ -404,7 +371,6 @@ function EntityEvidence({ entityId }: { entityId: string }): ReactElement {
           <Panel>
             <PanelHeader
               title={`Structured record · ${record.dataset}:${record.rowId}`}
-              subtitle="Verbatim fields of the backing dataset row."
               actions={<ProvenanceTag provenance="structured" short />}
             />
             <PanelBody>
@@ -438,49 +404,12 @@ function EntityEvidence({ entityId }: { entityId: string }): ReactElement {
                       <KeyValueRow key={key} label={key} value={value} mono tone="muted" />
                     ))}
                   </KeyValueList>
-                  <p className="text-ink-4 mt-2 text-xs leading-relaxed">
-                    This field is the synthetic generator&rsquo;s own ground-truth grouping. It is
-                    displayed for transparency and is never used to rank, colour, cluster or filter
-                    anything in this system.
-                  </p>
                 </div>
               ) : null}
             </PanelBody>
           </Panel>
         ) : null}
 
-        <Panel>
-          <PanelHeader title="Where to go next" />
-          <PanelBody className="space-y-3 px-4 py-3">
-            <p className="text-ink-3 text-xs leading-relaxed">
-              Relationship-level evidence — the type of a link, its weight, and the{' '}
-              <Mono>dataset:record_id</Mono> citations behind it — is shown in Network Investigation:
-              click any edge on the canvas to open its provenance. This page resolves entities only.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {personId !== null ? (
-                <Link className={LINK_CLASS} to={`/network/${personId}`}>
-                  Open network
-                </Link>
-              ) : null}
-              {firId !== null ? (
-                <Link className={LINK_CLASS} to={`/fir/${firId}`}>
-                  Open FIR narrative
-                </Link>
-              ) : null}
-              <Link className={LINK_CLASS} to="/network">
-                Network Investigation
-              </Link>
-            </div>
-            {personId === null && firId === null ? (
-              <p className="text-ink-4 text-xs leading-relaxed">
-                The network endpoint is person-rooted (<Mono>/graph/persons/{'{id}'}/network</Mono>),
-                so a {node.entity_type.replace(/_/g, ' ').toLowerCase()} cannot be a network root on
-                this backend. Reach it through a person it appears with.
-              </p>
-            ) : null}
-          </PanelBody>
-        </Panel>
       </div>
 
       <div className="space-y-4">
@@ -499,15 +428,13 @@ function EntityEvidence({ entityId }: { entityId: string }): ReactElement {
               <span className="text-ink-3 text-2xs font-semibold tracking-wide uppercase">
                 Resolution
               </span>
-              <Badge tone="muted" title="Number of nodes the exact-id lookup returned.">
-                {resolution.data?.count ?? 0} HIT{(resolution.data?.count ?? 0) === 1 ? '' : 'S'}
-              </Badge>
+              <div className="flex items-center gap-1.5">
+                <Badge tone="muted" title="Number of nodes the exact-id lookup returned.">
+                  {resolution.data?.count ?? 0} HIT{(resolution.data?.count ?? 0) === 1 ? '' : 'S'}
+                </Badge>
+                <InfoHint content="Exact-id lookup against the graph search endpoint. One node per materialised type; zero for an id the dataset does not contain." />
+              </div>
             </div>
-            <p className={cn('text-ink-4 mt-2 text-xs leading-relaxed')}>
-              Resolved by an exact-id lookup against <Mono>GET /graph/search</Mono>. There is no
-              entity-by-id endpoint on this backend
-              <InfoHint content="Verified against the live backend: querying the full prefixed entity id returns exactly one node for each materialised type, and count: 0 for an id the dataset does not contain." />
-            </p>
           </PanelBody>
         </Panel>
       </div>

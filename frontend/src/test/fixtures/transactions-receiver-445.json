@@ -1,0 +1,39 @@
+{
+  "items": [
+    {
+      "txn_id": 156,
+      "sender_id": 150,
+      "receiver_id": 445,
+      "amount_inr": 263469.41,
+      "txn_time": "2026-07-29T10:41:55",
+      "mode": "IMPS",
+      "bank_ref": "NVPL6618443861259"
+    },
+    {
+      "txn_id": 514,
+      "sender_id": 136,
+      "receiver_id": 445,
+      "amount_inr": 170637.03,
+      "txn_time": "2026-08-06T05:17:29",
+      "mode": "CARD",
+      "bank_ref": "UAJY0142473107201"
+    },
+    {
+      "txn_id": 857,
+      "sender_id": 238,
+      "receiver_id": 445,
+      "amount_inr": 226142.99,
+      "txn_time": "2026-06-27T08:31:31",
+      "mode": "NEFT",
+      "bank_ref": "WBAE6876448676497"
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "page_size": 200,
+    "total": 3,
+    "total_pages": 1,
+    "has_next": false,
+    "has_prev": false
+  }
+}

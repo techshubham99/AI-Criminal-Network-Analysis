@@ -149,6 +149,19 @@ describe('GlobalSearch — the two id forms', () => {
     expect(location()).toContain('%2B');
   });
 
+  it('opens a location in Location Intelligence, at its numeric id', async () => {
+    const place = realNode('LOCATION');
+    installFetch([{ match: '/api/v1/graph/search', body: searchBody([place]) }]);
+    const { input } = renderSearch();
+    type(input, 'mumbai');
+
+    fireEvent.click(await screen.findByText(place.label));
+    // §21: a location is a location, not a node to draw. The locations screen
+    // reads the NUMERIC row id, so the prefix is stripped here and not later.
+    expect(location()).toBe(`/locations?location=${place.entity_id.split(':')[1]}`);
+    expect(location()).not.toContain('location%3A');
+  });
+
   it('says where a non-person result will open rather than hiding the limitation', async () => {
     const tower = realNode('CELL_TOWER');
     installFetch([{ match: '/api/v1/graph/search', body: searchBody([tower]) }]);
@@ -192,9 +205,9 @@ describe('GlobalSearch — keyboard', () => {
     type(input, 'ojas');
     await screen.findAllByRole('option');
 
-    expect(input).toHaveAttribute('aria-activedescendant', 'cna-dropdown-search-option-person-123');
+    expect(input).toHaveAttribute('aria-activedescendant', 'tracex-dropdown-search-option-person-123');
     fireEvent.keyDown(input, { key: 'ArrowDown' });
-    expect(input).toHaveAttribute('aria-activedescendant', 'cna-dropdown-search-option-person-275');
+    expect(input).toHaveAttribute('aria-activedescendant', 'tracex-dropdown-search-option-person-275');
   });
 
   it('clears the field on Escape and closes the panel', async () => {

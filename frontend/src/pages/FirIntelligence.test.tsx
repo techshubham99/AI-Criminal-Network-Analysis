@@ -24,12 +24,17 @@ const routedPage = (
 );
 
 describe('FirIntelligence — the record as filed, beside what was read out of it', () => {
-  it('lists FIRs and selects none until one is chosen', async () => {
+  it('is the FIR list when no FIR is selected, and asks for no extraction', async () => {
     const { calls } = installFetch();
     renderWithRouter(routedPage, { route: '/fir' });
 
-    expect(screen.getByText('No FIR selected')).toBeInTheDocument();
+    // §5: useful with nothing selected. The list IS the page — not an empty
+    // detail pane waiting for a click.
+    expect(screen.getByRole('heading', { name: 'FIR Intelligence' })).toBeInTheDocument();
     await waitFor(() => expect(calls.some((url) => url.includes('/api/v1/firs?'))).toBe(true));
+    for (const column of ['FIR', 'Date', 'Complainant', 'Accused', 'Location', 'Narrative']) {
+      expect(screen.getByRole('columnheader', { name: column })).toBeInTheDocument();
+    }
     await waitFor(() =>
       expect(
         screen.getAllByRole('link').some((link) => link.getAttribute('href') === '/fir/1'),
@@ -102,12 +107,17 @@ describe('FirIntelligence — the record as filed, beside what was read out of i
     installFetch();
     renderWithRouter(routedPage, { route: '/fir/79' });
 
-    await waitFor(() => expect(screen.getAllByText('STRUCTURED').length).toBeGreaterThan(0));
+    // The tags are compact on a dense screen; the claim each one makes lives in
+    // its tooltip, which is in the document either way.
+    await waitFor(() => expect(screen.getAllByText('STRUCT').length).toBeGreaterThan(0));
     // §6: the two kinds of claim must never read as one kind of fact.
     expect(screen.getAllByText('NARRATIVE').length).toBeGreaterThan(0);
     expect(
-      screen.getByText(/stored in a separate narrative graph and never added to the structured/i),
-    ).toBeInTheDocument();
+      screen.getAllByText(/never merged into the structured graph/i).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(/recorded column value, not an inference/i).length,
+    ).toBeGreaterThan(0);
   });
 
   it('refuses a prefixed FIR id without sending it to the backend', async () => {
@@ -117,6 +127,26 @@ describe('FirIntelligence — the record as filed, beside what was read out of i
     expect(await screen.findByText('Invalid FIR reference')).toBeInTheDocument();
     expect(calls.some((url) => url.includes('fir:79') || url.includes('fir%3A79'))).toBe(false);
     expect(calls.some((url) => url.includes('/api/v1/nlp/firs/'))).toBe(false);
+  });
+
+  it('answers an unknown FIR id with a 404 state and a way back', async () => {
+    // The backend's own envelope for a missing row, ahead of the list route so the
+    // detail URL is not swallowed by it.
+    const { calls } = installFetch([
+      {
+        match: '/api/v1/firs/424242',
+        body: { error: { code: 'not_found', message: 'FIR 424242 not found.' } },
+        status: 404,
+      },
+      ...defaultRoutes(),
+    ]);
+    renderWithRouter(routedPage, { route: '/fir/424242' });
+
+    expect(await screen.findByText('FIR 424242 not found')).toBeInTheDocument();
+    expect(calls.some((url) => url.includes('/api/v1/firs/424242'))).toBe(true);
+    // §5: concise, and the only offered next step is the list.
+    expect(screen.getByRole('button', { name: 'Back to the FIR list' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /Extracted entities/ })).not.toBeInTheDocument();
   });
 
   it('fails one section at a time when an extraction request fails', async () => {

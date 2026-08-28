@@ -1,0 +1,942 @@
+{
+  "total": 91,
+  "count": 10,
+  "offset": 0,
+  "limit": 10,
+  "patterns": [
+    {
+      "pattern_id": "transaction_fan_in~07a155b510cd169c",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:104",
+        "person:136",
+        "person:171",
+        "person:352",
+        "person:39",
+        "person:500",
+        "person:90"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.6,
+      "explanation": "Potential transaction pattern requiring review: person:136 sits at the centre of 6 distinct senders paying into one target, across 6 observed transactions totalling 1240917.86 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1231",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1231",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1498",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1498",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:4",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:4",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:53",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:53",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:669",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:669",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:82",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:82",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:136",
+        "direction": "fan_in",
+        "counterparty_count": 6,
+        "counterparties": [
+          "person:39",
+          "person:90",
+          "person:104",
+          "person:171",
+          "person:352",
+          "person:500"
+        ],
+        "transaction_count": 6,
+        "total_amount_inr": 1240917.86,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~0900e26b631244a4",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:22",
+        "person:223",
+        "person:263",
+        "person:275",
+        "person:280",
+        "person:359",
+        "person:417"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.6,
+      "explanation": "Potential transaction pattern requiring review: person:417 sits at the centre of 6 distinct senders paying into one target, across 6 observed transactions totalling 1787783.55 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1087",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1087",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1191",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1191",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:120",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:120",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1307",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1307",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1333",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1333",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:231",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:231",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:417",
+        "direction": "fan_in",
+        "counterparty_count": 6,
+        "counterparties": [
+          "person:22",
+          "person:223",
+          "person:263",
+          "person:275",
+          "person:280",
+          "person:359"
+        ],
+        "transaction_count": 6,
+        "total_amount_inr": 1787783.55,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~0b72334d5a61678b",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:215",
+        "person:310",
+        "person:396",
+        "person:412",
+        "person:414",
+        "person:495",
+        "person:54"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.6,
+      "explanation": "Potential transaction pattern requiring review: person:414 sits at the centre of 6 distinct senders paying into one target, across 6 observed transactions totalling 1893648.71 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:113",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:113",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1160",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1160",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1212",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1212",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:323",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:323",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:404",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:404",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:407",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:407",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:414",
+        "direction": "fan_in",
+        "counterparty_count": 6,
+        "counterparties": [
+          "person:54",
+          "person:215",
+          "person:310",
+          "person:396",
+          "person:412",
+          "person:495"
+        ],
+        "transaction_count": 6,
+        "total_amount_inr": 1893648.71,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~0d9eae72f3439f77",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:129",
+        "person:350",
+        "person:385",
+        "person:413",
+        "person:464",
+        "person:489"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.5,
+      "explanation": "Potential transaction pattern requiring review: person:129 sits at the centre of 5 distinct senders paying into one target, across 5 observed transactions totalling 1079610.54 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1096",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1096",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1173",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1173",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1291",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1291",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1479",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1479",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:647",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:647",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:129",
+        "direction": "fan_in",
+        "counterparty_count": 5,
+        "counterparties": [
+          "person:350",
+          "person:385",
+          "person:413",
+          "person:464",
+          "person:489"
+        ],
+        "transaction_count": 5,
+        "total_amount_inr": 1079610.54,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~10ba30fc5211fab8",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:118",
+        "person:13",
+        "person:174",
+        "person:310",
+        "person:404",
+        "person:417"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.5,
+      "explanation": "Potential transaction pattern requiring review: person:118 sits at the centre of 5 distinct senders paying into one target, across 5 observed transactions totalling 855266.52 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1362",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1362",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1489",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1489",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:150",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:150",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:209",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:209",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:279",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:279",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:118",
+        "direction": "fan_in",
+        "counterparty_count": 5,
+        "counterparties": [
+          "person:13",
+          "person:174",
+          "person:310",
+          "person:404",
+          "person:417"
+        ],
+        "transaction_count": 5,
+        "total_amount_inr": 855266.52,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~113d4d58180ae76d",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:121",
+        "person:124",
+        "person:166",
+        "person:316",
+        "person:388",
+        "person:9"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.5,
+      "explanation": "Potential transaction pattern requiring review: person:9 sits at the centre of 5 distinct senders paying into one target, across 5 observed transactions totalling 1018484.37 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1054",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1054",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1082",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1082",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1436",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1436",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:21",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:21",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:671",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:671",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:9",
+        "direction": "fan_in",
+        "counterparty_count": 5,
+        "counterparties": [
+          "person:121",
+          "person:124",
+          "person:166",
+          "person:316",
+          "person:388"
+        ],
+        "transaction_count": 5,
+        "total_amount_inr": 1018484.37,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~1164c4ee7eac2f4c",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:178",
+        "person:27",
+        "person:281",
+        "person:333",
+        "person:422",
+        "person:425",
+        "person:448",
+        "person:55"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.7,
+      "explanation": "Potential transaction pattern requiring review: person:422 sits at the centre of 7 distinct senders paying into one target, across 7 observed transactions totalling 1826224.68 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1135",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1135",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1487",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1487",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:192",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:192",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:437",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:437",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:741",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:741",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:777",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:777",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:906",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:906",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:422",
+        "direction": "fan_in",
+        "counterparty_count": 7,
+        "counterparties": [
+          "person:27",
+          "person:55",
+          "person:178",
+          "person:281",
+          "person:333",
+          "person:425",
+          "person:448"
+        ],
+        "transaction_count": 7,
+        "total_amount_inr": 1826224.68,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~138c65ced2984850",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:123",
+        "person:209",
+        "person:275",
+        "person:28",
+        "person:384",
+        "person:413",
+        "person:433",
+        "person:70"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.7,
+      "explanation": "Potential transaction pattern requiring review: person:209 sits at the centre of 7 distinct senders paying into one target, across 7 observed transactions totalling 1566198.94 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1056",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1056",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1244",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1244",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1344",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1344",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1398",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1398",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1414",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1414",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:708",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:708",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:966",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:966",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:209",
+        "direction": "fan_in",
+        "counterparty_count": 7,
+        "counterparties": [
+          "person:28",
+          "person:70",
+          "person:123",
+          "person:275",
+          "person:384",
+          "person:413",
+          "person:433"
+        ],
+        "transaction_count": 7,
+        "total_amount_inr": 1566198.94,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~18e0d11eebc95be6",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:103",
+        "person:115",
+        "person:215",
+        "person:217",
+        "person:353",
+        "person:500",
+        "person:79"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.6,
+      "explanation": "Potential transaction pattern requiring review: person:353 sits at the centre of 6 distinct senders paying into one target, across 6 observed transactions totalling 1967899.1 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:1157",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1157",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1267",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1267",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1303",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1303",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:189",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:189",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:255",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:255",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:979",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:979",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:353",
+        "direction": "fan_in",
+        "counterparty_count": 6,
+        "counterparties": [
+          "person:79",
+          "person:103",
+          "person:115",
+          "person:215",
+          "person:217",
+          "person:500"
+        ],
+        "transaction_count": 6,
+        "total_amount_inr": 1967899.1,
+        "threshold": 5
+      }
+    },
+    {
+      "pattern_id": "transaction_fan_in~1cbb22c38688f282",
+      "pattern_type": "TRANSACTION_FAN_IN",
+      "entity_ids": [
+        "person:105",
+        "person:123",
+        "person:127",
+        "person:190",
+        "person:255",
+        "person:41",
+        "person:72"
+      ],
+      "relationship_types": [
+        "TRANSACTED"
+      ],
+      "source_datasets": [
+        "transactions"
+      ],
+      "severity": 0.6,
+      "explanation": "Potential transaction pattern requiring review: person:105 sits at the centre of 6 distinct senders paying into one target, across 6 observed transactions totalling 1691303.71 INR (threshold: 5 counterparties). Many counterparties is a shape common to legitimate activity as well; it is a reason to look, not a conclusion.",
+      "structured_evidence": [
+        {
+          "evidence_id": "transactions:135",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:135",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:1371",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:1371",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:159",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:159",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:239",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:239",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:589",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:589",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "transactions:89",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "transactions",
+          "source_record_id": "transactions:89",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "hub": "person:105",
+        "direction": "fan_in",
+        "counterparty_count": 6,
+        "counterparties": [
+          "person:41",
+          "person:72",
+          "person:123",
+          "person:127",
+          "person:190",
+          "person:255"
+        ],
+        "transaction_count": 6,
+        "total_amount_inr": 1691303.71,
+        "threshold": 5
+      }
+    }
+  ],
+  "filters": {
+    "pattern_type": "TRANSACTION_FAN_IN",
+    "entity_id": null
+  },
+  "note": "Pattern ids are content-addressed (sha256 of pattern type + sorted entity ids + sorted evidence ids) and therefore stable across restarts. A category with zero detections is reported as zero in /summary rather than filled with an example."
+}

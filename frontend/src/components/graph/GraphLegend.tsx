@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 
-import { CheckToggle, Divider, EntityBadge, Tooltip } from '@/components/ui';
+import { CheckToggle, Divider, EntityBadge, InfoHint, Tooltip } from '@/components/ui';
 import { cn } from '@/utils/cn';
 import { formatCount, sortedCounts } from '@/utils/format';
 import { relationshipStyle } from '@/utils/entity';
@@ -57,7 +57,7 @@ export function GraphLegend({
   const relationshipRows = sortedCounts(edgeCounts);
 
   return (
-    <div className={cn('space-y-4', className)} data-testid="graph-legend">
+    <div className={cn('grid gap-4 sm:grid-cols-2', className)} data-testid="graph-legend">
       {/* ------------------------------------------------------ entity types */}
       <section>
         <Divider label="Entity types" className="mb-2" />
@@ -76,10 +76,9 @@ export function GraphLegend({
             ))}
           </ul>
         )}
-        <p className="text-ink-4 mt-2 text-2xs leading-relaxed">
-          Node shape and colour both encode the entity type, so the graph still reads without
-          colour. Node size is the entity's degree within this view — a structural count of links,
-          not a ranking of a person.
+        <p className="text-ink-4 mt-2 flex items-center gap-1.5 text-2xs">
+          Node size = degree in this view.
+          <InfoHint content="Degree is a structural count of links, not a ranking of a person. Node shape and colour both encode the entity type, so the legend survives a projector and colour blindness." />
         </p>
       </section>
 
@@ -126,10 +125,9 @@ export function GraphLegend({
             </ul>
           </>
         )}
-        <p className="text-ink-4 mt-2 text-2xs leading-relaxed">
-          A dashed line marks a relationship that was <em className="not-italic font-semibold">derived</em>{' '}
-          — inferred from shared attributes or asserted by narrative text — rather than directly
-          observed in a source record.
+        <p className="text-ink-4 mt-2 flex items-center gap-1.5 text-2xs">
+          Dashed = derived, not observed.
+          <InfoHint content="A dashed line is inferred from shared attributes or asserted by narrative text. A solid line was observed in a dataset row." />
         </p>
       </section>
     </div>

@@ -86,7 +86,7 @@ describe('GraphImpactPanel — the structured graph is untouched', () => {
     expect(screen.getByText('not modified')).toBeInTheDocument();
     expect(screen.getByText('structured_graph_mutated: false')).toBeInTheDocument();
     expect(
-      screen.getByText(/held in a separate narrative graph and is never merged into/i),
+      screen.getByText(/held in a separate narrative graph, never merged into/i),
     ).toBeInTheDocument();
   });
 
@@ -290,7 +290,7 @@ describe('GraphImpactPanel — the separate narrative graph', () => {
 
     expect(screen.getByText('Narrative graph edges (0)')).toBeInTheDocument();
     expect(
-      screen.getByText(/this is a zero in its own right — not a\s+missing value/i),
+      screen.getByText(/a zero in its own right, not a\s+missing value/i),
     ).toBeInTheDocument();
   });
 });

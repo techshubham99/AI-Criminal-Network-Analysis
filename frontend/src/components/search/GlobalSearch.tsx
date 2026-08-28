@@ -8,7 +8,7 @@ import { useAsync } from '@/hooks/useAsync';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import type { NodeOut } from '@/types/api';
 import { cn } from '@/utils/cn';
-import { firIdFromEntityId, personIdFromEntityId } from '@/utils/entity';
+import { firIdFromEntityId, personIdFromEntityId, splitEntityId } from '@/utils/entity';
 import { formatCount } from '@/utils/format';
 
 import { SearchResultList } from './SearchResultList';
@@ -44,9 +44,9 @@ const MIN_QUERY_LENGTH = 2;
  * list's props are a fixed contract with no slot for an id prefix — so the two
  * files share this convention deliberately.
  */
-const LISTBOX_ID = 'cna-dropdown-search-listbox';
+const LISTBOX_ID = 'tracex-dropdown-search-listbox';
 const optionDomId = (entityId: string) =>
-  `cna-dropdown-search-option-${entityId.replace(/[^A-Za-z0-9]+/g, '-')}`;
+  `tracex-dropdown-search-option-${entityId.replace(/[^A-Za-z0-9]+/g, '-')}`;
 
 /** The route a result opens, or null when its id cannot be converted safely. */
 function routeForNode(node: NodeOut): string | null {
@@ -60,7 +60,12 @@ function routeForNode(node: NodeOut): string | null {
     const firId = firIdFromEntityId(node.entity_id);
     return firId === null ? null : `/fir/${firId}`;
   }
-  // PHONE / AADHAAR / LOCATION / CELL_TOWER: prefixed id, as a query parameter.
+  if (type === 'LOCATION') {
+    const parts = splitEntityId(node.entity_id);
+    const locationId = parts && /^\d+$/.test(parts.key) ? parts.key : null;
+    if (locationId !== null) return `/locations?location=${locationId}`;
+  }
+  // PHONE / AADHAAR / CELL_TOWER: prefixed id, as a query parameter.
   return `/evidence?entity=${encodeURIComponent(node.entity_id)}`;
 }
 
@@ -239,7 +244,7 @@ export function GlobalSearch({ className }: { className?: string }) {
               : undefined
           }
           aria-autocomplete="list"
-          aria-describedby="cna-search-help"
+          aria-describedby="tracex-search-help"
           autoComplete="off"
           spellCheck={false}
           value={query}
@@ -268,7 +273,7 @@ export function GlobalSearch({ className }: { className?: string }) {
         </span>
       </div>
 
-      <p id="cna-search-help" className="sr-only">
+      <p id="tracex-search-help" className="sr-only">
         Type at least {MIN_QUERY_LENGTH} characters. Use the up and down arrow keys to move through
         results, Enter to open one, Escape to close.
       </p>

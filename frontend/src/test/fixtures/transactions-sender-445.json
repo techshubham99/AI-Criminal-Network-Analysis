@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "txn_id": 1172,
+      "sender_id": 445,
+      "receiver_id": 359,
+      "amount_inr": 434600.16,
+      "txn_time": "2026-08-25T05:13:59",
+      "mode": "NEFT",
+      "bank_ref": "KPGY7831597572927"
+    },
+    {
+      "txn_id": 1258,
+      "sender_id": 445,
+      "receiver_id": 189,
+      "amount_inr": 205622.31,
+      "txn_time": "2026-08-15T07:54:47",
+      "mode": "CARD",
+      "bank_ref": "JSNF2494510462506"
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "page_size": 200,
+    "total": 2,
+    "total_pages": 1,
+    "has_next": false,
+    "has_prev": false
+  }
+}

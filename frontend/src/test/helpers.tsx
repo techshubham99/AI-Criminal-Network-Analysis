@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ReactElement, ReactNode } from 'react';
-import { act, render, type RenderOptions } from '@testing-library/react';
+import { act, render, screen, type RenderOptions } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 
@@ -44,6 +44,28 @@ import patternsPage1 from './fixtures/intelligence-patterns.json';
 import patternsCycle from './fixtures/intelligence-patterns-cycle.json';
 import patternsEmpty from './fixtures/intelligence-patterns-empty.json';
 import patternDetail from './fixtures/intelligence-pattern-detail.json';
+// Record listings — the corpus-wide browse behind Communication, Financial and
+// Location Intelligence, plus the person-scoped slices those pages request once a
+// subject is selected.
+import personsPage1 from './fixtures/persons-page1.json';
+import personsCityMumbai from './fixtures/persons-city-mumbai.json';
+import callsPage1 from './fixtures/calls-page1.json';
+import callsCaller445 from './fixtures/calls-caller-445.json';
+import callsCallee445 from './fixtures/calls-callee-445.json';
+import transactionsPage1 from './fixtures/transactions-page1.json';
+import transactionsSender445 from './fixtures/transactions-sender-445.json';
+import transactionsReceiver445 from './fixtures/transactions-receiver-445.json';
+import locationsPage1 from './fixtures/locations-page1.json';
+// One recording per pattern type the domain pages filter on. Without these a
+// filtered request would fall through to the unfiltered list — and that list is
+// all BRIDGE_ENTITY, so a page would show a pattern of the wrong type.
+import patternsCommunication from './fixtures/patterns-communication.json';
+import patternsMultiChannel from './fixtures/patterns-multi-channel-relationship.json';
+import patternsFanIn from './fixtures/patterns-fan-in.json';
+import patternsFanOut from './fixtures/patterns-transaction-fan-out.json';
+import patternsConcentration from './fixtures/patterns-transaction-concentration.json';
+import patternsLocationCohort from './fixtures/patterns-location-cohort.json';
+import patternsSharedLocation from './fixtures/patterns-shared-location-pair.json';
 import error404Person from './fixtures/error-404-person.json';
 import error404Pattern from './fixtures/error-404-pattern.json';
 import error400Depth from './fixtures/error-400-depth.json';
@@ -121,6 +143,22 @@ export const fixtures = {
   patternsCycle,
   patternsEmpty,
   patternDetail,
+  personsPage1,
+  personsCityMumbai,
+  callsPage1,
+  callsCaller445,
+  callsCallee445,
+  transactionsPage1,
+  transactionsSender445,
+  transactionsReceiver445,
+  locationsPage1,
+  patternsCommunication,
+  patternsMultiChannel,
+  patternsFanIn,
+  patternsFanOut,
+  patternsConcentration,
+  patternsLocationCohort,
+  patternsSharedLocation,
   error404Person,
   error404Pattern,
   error400Depth,
@@ -148,6 +186,11 @@ export type FixtureRoute = {
   body: unknown;
   status?: number;
 };
+
+/** Location 23 — Mumbai — lifted out of the 200-row locations recording. */
+const locationRecord23 = (locationsPage1 as { items: Array<{ location_id: number }> }).items.find(
+  (item) => item.location_id === 23,
+);
 
 /** The default routing table: real recorded responses for the app's real URLs. */
 export function defaultRoutes(): FixtureRoute[] {
@@ -183,6 +226,23 @@ export function defaultRoutes(): FixtureRoute[] {
     { match: '/api/v1/firs', body: firsPage1 },
     { match: '/api/v1/persons/445', body: personRecord445 },
     { match: '/api/v1/locations/178', body: locationRecord178 },
+    // `/persons/445` reports `location_id: 23`, so the person-scoped Location
+    // screen asks for that record by id. The 200-row locations recording already
+    // holds that row, so it is served from there rather than re-recorded.
+    { match: '/api/v1/locations/23', body: locationRecord23 },
+    // Record listings. Person-scoped slices come first: `caller_id` and `callee_id`
+    // are different questions with different recordings, and the general list route
+    // would otherwise answer both. Both general routes sit after the `/{id}` detail
+    // routes above for the same reason.
+    { match: /\/api\/v1\/calls\?[^]*caller_id=445/, body: callsCaller445 },
+    { match: /\/api\/v1\/calls\?[^]*callee_id=445/, body: callsCallee445 },
+    { match: '/api/v1/calls', body: callsPage1 },
+    { match: /\/api\/v1\/transactions\?[^]*sender_id=445/, body: transactionsSender445 },
+    { match: /\/api\/v1\/transactions\?[^]*receiver_id=445/, body: transactionsReceiver445 },
+    { match: '/api/v1/transactions', body: transactionsPage1 },
+    { match: /\/api\/v1\/persons\?[^]*city=Mumbai/, body: personsCityMumbai },
+    { match: '/api/v1/persons', body: personsPage1 },
+    { match: '/api/v1/locations', body: locationsPage1 },
     // Phase 4 intelligence. Order matters twice over: `/persons/top` must be
     // matched before the numeric person routes (it is not a person id), and
     // `/{id}/explain` before `/{id}`. The pattern-detail route is a regex so the
@@ -204,6 +264,16 @@ export function defaultRoutes(): FixtureRoute[] {
       match: /\/api\/v1\/intelligence\/patterns\?[^]*pattern_type=TRANSACTION_CYCLE/,
       body: patternsCycle,
     },
+    // One route per type the domain pages ask for, each a recording of that exact
+    // filter. TRANSACTION_FAN_IN and TRANSACTION_FAN_OUT are separate detections and
+    // separate recordings; neither answers for the other.
+    { match: /pattern_type=COMMUNICATION_ANOMALY/, body: patternsCommunication },
+    { match: /pattern_type=MULTI_CHANNEL_RELATIONSHIP/, body: patternsMultiChannel },
+    { match: /pattern_type=TRANSACTION_FAN_IN/, body: patternsFanIn },
+    { match: /pattern_type=TRANSACTION_FAN_OUT/, body: patternsFanOut },
+    { match: /pattern_type=TRANSACTION_CONCENTRATION/, body: patternsConcentration },
+    { match: /pattern_type=LOCATION_COHORT/, body: patternsLocationCohort },
+    { match: /pattern_type=SHARED_LOCATION_PAIR/, body: patternsSharedLocation },
     { match: /\/api\/v1\/intelligence\/patterns\/[^?]+/, body: patternDetail },
     { match: '/api/v1/intelligence/patterns', body: patternsPage1 },
     // Phase 4.6 ingestion — the only writes in the app. `installFetch` matches on
@@ -362,4 +432,20 @@ export function renderWithRouter(
     return <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>;
   }
   return render(ui, { wrapper: Wrapper, ...options });
+}
+
+/**
+ * The `<StatTile>` carrying the given label.
+ *
+ * A label is not unique on a page — "Locations" is both a tile and a table's
+ * heading — so this walks up from every matching text node to a tile container
+ * instead of assuming the first match is the one wanted.
+ */
+export function statTile(label: string): HTMLElement {
+  const found = screen
+    .getAllByText(label)
+    .map((node) => node.closest('[data-testid="stat-tile"]'))
+    .find((node): node is HTMLElement => node !== null);
+  if (!found) throw new Error(`No stat tile labelled "${label}"`);
+  return found;
 }

@@ -80,6 +80,12 @@ export function IngestVerdict({ record }: { record: IngestRecordOut }): ReactEle
 
       {accepted.length > 0 ? (
         <RelationshipLines title="Accepted" rows={accepted} accepted />
+      ) : record.status === 'ACCEPTED' || record.status === 'REVIEW_REQUIRED' ? (
+        /* A record can land without a link. Saying so is the point: the pipeline
+           never forces the new row into an existing network to look connected. */
+        <p className="text-ink-3 text-xs" data-testid="no-validated-connection">
+          No validated connection found
+        </p>
       ) : null}
       {refused.length > 0 ? <RelationshipLines title="Not accepted" rows={refused} /> : null}
 

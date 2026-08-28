@@ -21,13 +21,13 @@ import { entityColor } from '@/utils/entity';
  * id, so a dropdown and a page list can coexist without colliding.
  */
 
-/** `person:445` -> `cna-dropdown-search-option-person-445` */
+/** `person:445` -> `tracex-dropdown-search-option-person-445` */
 function optionDomId(variant: 'dropdown' | 'page', entityId: string): string {
-  return `cna-${variant}-search-option-${entityId.replace(/[^A-Za-z0-9]+/g, '-')}`;
+  return `tracex-${variant}-search-option-${entityId.replace(/[^A-Za-z0-9]+/g, '-')}`;
 }
 
 function listboxDomId(variant: 'dropdown' | 'page'): string {
-  return `cna-${variant}-search-listbox`;
+  return `tracex-${variant}-search-listbox`;
 }
 
 /**
@@ -36,12 +36,14 @@ function listboxDomId(variant: 'dropdown' | 'page'): string {
  * This backend's network endpoint is person-rooted
  * (`/graph/persons/{id}/network`), so a phone, Aadhaar, location or tower cannot
  * be a network root. Rather than hide that, every non-person row says where it
- * actually goes. FIR results open the FIR narrative view.
+ * actually goes: an FIR to its narrative view, a location to Location
+ * Intelligence, and every identifier to its provenance.
  */
 function destinationHint(entityType: string | null | undefined): string | null {
   const type = (entityType ?? '').toUpperCase();
   if (type === 'PERSON') return null;
   if (type === 'FIR') return 'Opens FIR narrative';
+  if (type === 'LOCATION') return 'Opens Location Intelligence';
   return 'Opens in Evidence & Provenance';
 }
 

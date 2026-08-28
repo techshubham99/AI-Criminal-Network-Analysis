@@ -176,7 +176,7 @@ describe('the ground-truth overlay is never requested', () => {
   });
 });
 
-describe('Phase 5 has not begun', () => {
+describe('the frontend never scores risk, and never hashes evidence itself', () => {
   it('no risk-score or threat-score field exists', () => {
     // Phase 4 publishes an explainable investigation-priority score, not a risk
     // or threat score. The prose "not a risk score" is allowed and expected; an
@@ -189,6 +189,10 @@ describe('Phase 5 has not begun', () => {
   });
 
   it('no audit ledger or chain-of-custody hashing is wired up', () => {
+    // Integrity is the backend's job: the UI reads one verdict from
+    // `audit/verify` and computes no hash of its own. `Blockchain` stays
+    // forbidden as a name — the backend is a local hash chain, and nothing here
+    // may imply otherwise.
     for (const file of CODE) {
       const code = stripComments(file.text);
       expect(code, file.path).not.toMatch(/\bBlockchain\b|\bledgerEntry\b|\bmerkle/i);
@@ -241,23 +245,42 @@ describe('everything stays local', () => {
 });
 
 describe('routes only exist where a backend does', () => {
-  it('App.tsx declares exactly the five supported screens plus a fallback', () => {
+  it('App.tsx declares exactly the supported screens plus a fallback', () => {
     const app = APP.find((f) => f.path === 'App.tsx')!;
     const paths = [...app.text.matchAll(/<Route\s+path="([^"]+)"/g)].map((m) => m[1]);
     expect(new Set(paths)).toEqual(
       new Set([
         '/',
+        '/investigations',
         '/network',
         '/network/:personId',
         '/fir',
         '/fir/:firId',
+        // Communication, Financial and Locations are independent domain areas,
+        // each backed by its own record and intelligence endpoints — not
+        // aliases that re-render the network screen.
+        '/communication',
+        '/financial',
+        '/locations',
         '/evidence',
         '/alerts',
-        // A redirect alias, not a sixth screen.
+        // A redirect alias, not another screen.
         '/firs',
         '*',
       ]),
     );
+  });
+
+  it('the domain routes render their own page, not the network screen', () => {
+    const app = APP.find((f) => f.path === 'App.tsx')!;
+    for (const [path, element] of [
+      ['/communication', 'CommunicationPage'],
+      ['/financial', 'FinancialPage'],
+      ['/locations', 'LocationsPage'],
+      ['/evidence', 'EvidencePage'],
+    ]) {
+      expect(app.text, path).toContain(`path="${path}" element={<${element} />}`);
+    }
   });
 
   it('the only extra path is a redirect, not a screen with no backend', () => {

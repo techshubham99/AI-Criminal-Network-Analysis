@@ -225,8 +225,30 @@ export interface LocationRecord {
   city: string;
   latitude: number;
   longitude: number;
+  /** City-centroid coordinate. The only pair this UI ever plots. */
   canonical_lat: number;
   canonical_lng: number;
+}
+
+/** One row of the `calls` table, as `GET /calls` returns it. */
+export interface CallRecord {
+  call_id: number;
+  caller_id: number;
+  callee_id: number;
+  start_time: string;
+  duration_sec: number;
+  cell_tower_id: number;
+}
+
+/** One row of the `transactions` table, as `GET /transactions` returns it. */
+export interface TransactionRecord {
+  txn_id: number;
+  sender_id: number;
+  receiver_id: number;
+  amount_inr: number;
+  txn_time: string;
+  mode: string;
+  bank_ref: string;
 }
 
 /* ======================================================================

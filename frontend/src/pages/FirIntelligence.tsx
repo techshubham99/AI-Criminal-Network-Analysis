@@ -1,9 +1,13 @@
 /**
- * FirIntelligence — one FIR, read twice.
+ * FirIntelligence — the FIR list, and one FIR read twice.
  *
- * The page exists to answer a single question honestly: what does the FIR *record*
- * say, and what does a deterministic reader claim the FIR *narrative* says? Those
- * are two different kinds of fact and the layout never lets them blur:
+ * With no `:firId` the page is the list: the structured `firs` table full width,
+ * or a narrative search over extracted entities. Selecting an FIR replaces the
+ * list with the record; neither view is squeezed into a rail beside the other.
+ *
+ * The detail view exists to answer a single question honestly: what does the FIR
+ * *record* say, and what does a deterministic reader claim the FIR *narrative*
+ * says? Those are two different kinds of fact and the layout never lets them blur:
  *
  *   SECTION 1   the structured columns of the `firs` row. Recorded values.
  *   SECTIONS 2-5 everything the Phase 3 NLP layer derived from the free text —
@@ -24,7 +28,7 @@
  * path. Prefixed entity ids appear only where they belong: in a query string
  * (`/evidence?entity=location:178`) and in the ids the backend hands back.
  */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -34,6 +38,7 @@ import { EntityTable } from '@/components/nlp/EntityTable';
 import { GraphImpactPanel } from '@/components/nlp/GraphImpactPanel';
 import { NarrativeViewer } from '@/components/nlp/NarrativeViewer';
 import { RelationshipList } from '@/components/nlp/RelationshipList';
+import { Cell, DataTable, Pager, PersonRef } from '@/components/records';
 import {
   Badge,
   Button,
@@ -50,7 +55,6 @@ import {
   PanelHeader,
   ProvenanceTag,
   RelationshipBadge,
-  SectionHeading,
   SegmentedControl,
   Skeleton,
   SkeletonRows,
@@ -61,13 +65,16 @@ import {
 import { useAsync } from '@/hooks/useAsync';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useInvestigation } from '@/hooks/useInvestigation';
+import { usePersonNames } from '@/hooks/usePersonNames';
 import type { EntityOut, FIR, NlpSearchResponse, PageMeta, SearchHitOut } from '@/types/api';
 import { cn } from '@/utils/cn';
 import { formatCount, formatDateTime, humanizeToken, sortedCounts, truncate } from '@/utils/format';
 
-/** Rail page sizes. Kept small so the rail never out-scrolls the main column. */
-const RECORDS_PAGE_SIZE = 10;
+/** A full-width table can show more rows than a rail could. */
+const RECORDS_PAGE_SIZE = 20;
 const SEARCH_PAGE_SIZE = 10;
+/** The backend caps a page at 200, which is the whole `locations` table here. */
+const LOCATION_INDEX_SIZE = 200;
 /** `/nlp/search` returns HTTP 422 for an empty query, so the box waits for input. */
 const MIN_QUERY_LENGTH = 2;
 
@@ -106,127 +113,82 @@ export function FirIntelligence(): ReactElement {
 
   const recordNotFound = record.error?.status === 404;
 
-  return (
-    <div className="space-y-4">
-      <SectionHeading
-        title="FIR Intelligence"
-        subtitle="Reports as filed, beside what deterministic narrative extraction reads out of them."
-        actions={
-          firId !== null ? (
-            <Badge tone="cyan" title="The FIR currently open">
-              FIR {firId}
-            </Badge>
-          ) : null
-        }
-      />
-
-      <ProvenanceLegend />
-
-      <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[21rem_minmax(0,1fr)]">
-        <FirSelectorRail selectedFirId={firId} />
-
-        <div className="min-w-0 space-y-4">
-          {!hasParam ? (
-            <Panel>
-              <PanelBody>
-                <EmptyState
-                  title="No FIR selected"
-                  description="Pick an FIR from the list on the left, or search the narrative text for a name, phone, Aadhaar or place. The selected FIR opens at its own address — /fir/79 — so it can be linked to directly in a briefing."
-                  icon="empty"
-                />
-              </PanelBody>
-            </Panel>
-          ) : !isNumericParam || firId === null ? (
-            <NotFoundPanel
-              heading="Invalid FIR reference"
-              message={`"${rawFirId}" is not an FIR id. This route takes the numeric row id, for example /fir/79 — the prefixed form "fir:79" belongs in query parameters and relationship ids, never in a path.`}
-              onBack={() => navigate('/fir')}
-            />
-          ) : recordNotFound ? (
-            <NotFoundPanel
-              heading={`FIR ${firId} was not found`}
-              message={
-                record.error?.message ??
-                'The backend has no FIR record with that id. It reported 404 rather than an empty record, which means the id does not exist in this dataset.'
-              }
-              onBack={() => navigate('/fir')}
-              onRetry={record.retry}
-            />
-          ) : (
-            <>
-              <FirRecordPanel
-                record={record.data}
-                isLoading={record.isLoading}
-                error={record.error}
-                onRetry={record.retry}
-              />
-              <ExtractionSections firId={firId} />
-              <RelationshipsSection firId={firId} />
-              <GraphImpactSection firId={firId} />
-            </>
-          )}
-        </div>
+  /* Default state: the FIR list *is* the page. Selecting one replaces it with the
+     full record, so neither view is squeezed into a rail beside the other. */
+  if (!hasParam) {
+    return (
+      <div className="space-y-3 animate-fade-in">
+        <h1 className="text-ink text-base font-bold tracking-tight">FIR Intelligence</h1>
+        <FirBrowser />
       </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3 animate-fade-in">
+      <div className="flex items-center gap-2">
+        <Link
+          to="/fir"
+          className="text-ink-3 hover:text-cyan-300 border-line hover:border-line-accent rounded-sm border px-2 py-1 text-2xs font-semibold transition-colors"
+        >
+          ← FIRs
+        </Link>
+        <h1 className="text-ink text-base font-bold tracking-tight">
+          FIR {isNumericParam ? firId : rawFirId}
+        </h1>
+      </div>
+
+      {!isNumericParam || firId === null ? (
+        <NotFoundPanel
+          heading="Invalid FIR reference"
+          message={`"${rawFirId}" is not a valid FIR id.`}
+          onBack={() => navigate('/fir')}
+        />
+      ) : recordNotFound ? (
+        <NotFoundPanel
+          heading={`FIR ${firId} not found`}
+          message={record.error?.message ?? 'No FIR record with that id.'}
+          onBack={() => navigate('/fir')}
+          onRetry={record.retry}
+        />
+      ) : (
+        <div className="min-w-0 space-y-4">
+          <FirRecordPanel
+            record={record.data}
+            isLoading={record.isLoading}
+            error={record.error}
+            onRetry={record.retry}
+          />
+          <ExtractionSections firId={firId} />
+          <RelationshipsSection firId={firId} />
+          <GraphImpactSection firId={firId} />
+        </div>
+      )}
     </div>
   );
 }
 
-/* ==================================================================== legend */
+/* ============================================================== FIR browser */
 
-/**
- * The page's contract with the viewer, stated before any data is shown. Both
- * ProvenanceTag variants appear here so the tags that follow are already known
- * by the time they are used as shorthand in a panel header.
- */
-function ProvenanceLegend(): ReactElement {
-  return (
-    <Panel>
-      <PanelBody className="grid grid-cols-1 gap-x-6 gap-y-3 px-4 py-3 lg:grid-cols-2">
-        <div className="flex gap-3">
-          <ProvenanceTag provenance="structured" />
-          <p className="text-ink-3 min-w-0 flex-1 text-xs leading-relaxed">
-            <strong className="text-ink-2 font-semibold">Section 1 only.</strong> The columns of the
-            FIR row itself — id, date, complainant, accused and location. Recorded dataset values,
-            read straight out of the record with no inference.
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <ProvenanceTag provenance="narrative" />
-          <p className="text-ink-3 min-w-0 flex-1 text-xs leading-relaxed">
-            <strong className="text-ink-2 font-semibold">Sections 2–5.</strong> Everything the NLP
-            layer takes out of the narrative's free text, by regex and named rules with quoted
-            trigger phrases. It is held in a{' '}
-            <strong className="text-ink-2 font-semibold">separate narrative graph</strong> and is
-            never merged into the observed graph, so no section below can change what the structured
-            evidence says.
-          </p>
-        </div>
-      </PanelBody>
-    </Panel>
-  );
-}
+type BrowseMode = 'records' | 'narrative';
 
-/* ================================================================ left rail */
-
-type RailMode = 'records' | 'narrative';
-
-const RAIL_MODES = [
-  { value: 'records' as RailMode, label: 'FIR records', title: 'Browse the structured FIR table' },
+const BROWSE_MODES = [
+  { value: 'records' as BrowseMode, label: 'FIR records', title: 'Browse the structured FIR table' },
   {
-    value: 'narrative' as RailMode,
+    value: 'narrative' as BrowseMode,
     label: 'Narrative search',
     title: 'Search entities extracted from FIR narrative text',
   },
 ];
 
 /**
- * FirSelectorRail — two ways to reach an FIR, kept visibly distinct because they
- * are not the same query. "FIR records" pages the structured `firs` table.
- * "Narrative search" searches the *extracted entities* over narrative text, so
- * its hits are narrative-derived and tagged as such.
+ * FirBrowser — two ways to reach an FIR, kept visibly distinct because they are
+ * not the same query. "FIR records" pages the structured `firs` table. "Narrative
+ * search" searches the *extracted entities* over narrative text, so its hits are
+ * narrative-derived and tagged as such.
  */
-function FirSelectorRail({ selectedFirId }: { selectedFirId: number | null }): ReactElement {
-  const [mode, setMode] = useState<RailMode>('records');
+function FirBrowser(): ReactElement {
+  const [mode, setMode] = useState<BrowseMode>('records');
   const [recordsPage, setRecordsPage] = useState(1);
   const [query, setQuery] = useState('');
   const [searchPage, setSearchPage] = useState(1);
@@ -253,32 +215,47 @@ function FirSelectorRail({ selectedFirId }: { selectedFirId: number | null }): R
     { enabled: mode === 'narrative' && searchReady },
   );
 
-  return (
-    <Panel as="aside" className="xl:sticky xl:top-1">
-      <PanelHeader
-        title="FIR selector"
-        subtitle={
-          mode === 'records'
-            ? 'The structured FIR table, paged as the backend returns it.'
-            : 'Entities the extractor found in FIR narrative text.'
-        }
-        actions={<ProvenanceTag provenance={mode === 'records' ? 'structured' : 'narrative'} short />}
-      />
+  // An FIR row carries `location_id`, not a place. One request resolves the whole
+  // table's worth of ids to the city the backend recorded for each.
+  const locations = useAsync(
+    (signal) => api.listLocations({ page_size: LOCATION_INDEX_SIZE }, { signal }),
+    [],
+    { enabled: mode === 'records' },
+  );
 
-      <div className="border-line border-b px-3 py-2.5">
-        <SegmentedControl
-          options={RAIL_MODES}
-          value={mode}
-          onChange={setMode}
-          label="FIR selector mode"
-        />
-      </div>
+  const locationIndex = useMemo(() => {
+    const index = new Map<number, string>();
+    for (const location of locations.data?.items ?? []) {
+      index.set(location.location_id, `${location.city}, ${location.state}`);
+    }
+    return index;
+  }, [locations.data]);
+
+  return (
+    <Panel>
+      <PanelHeader
+        title="FIRs"
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <SegmentedControl
+              options={BROWSE_MODES}
+              value={mode}
+              onChange={setMode}
+              label="FIR search mode"
+            />
+            <ProvenanceTag
+              provenance={mode === 'records' ? 'structured' : 'narrative'}
+              short
+            />
+          </div>
+        }
+      />
 
       {mode === 'records' ? (
         <RecordsList
-          selectedFirId={selectedFirId}
           items={firs.data?.items ?? null}
           meta={firs.data?.meta ?? null}
+          locationIndex={locationIndex}
           isInitialLoading={firs.isInitialLoading}
           isLoading={firs.isLoading}
           error={firs.error}
@@ -287,7 +264,6 @@ function FirSelectorRail({ selectedFirId }: { selectedFirId: number | null }): R
         />
       ) : (
         <NarrativeSearchList
-          selectedFirId={selectedFirId}
           query={query}
           onQueryChange={setQuery}
           searchReady={searchReady}
@@ -304,25 +280,28 @@ function FirSelectorRail({ selectedFirId }: { selectedFirId: number | null }): R
   );
 }
 
+/** The structured `firs` table: one row per FIR, the columns it actually holds. */
 function RecordsList({
-  selectedFirId,
   items,
   meta,
+  locationIndex,
   isInitialLoading,
   isLoading,
   error,
   onRetry,
   onPage,
 }: {
-  selectedFirId: number | null;
   items: FIR[] | null;
   meta: PageMeta | null;
+  locationIndex: ReadonlyMap<number, string>;
   isInitialLoading: boolean;
   isLoading: boolean;
   error: ApiError | null;
   onRetry: () => void;
   onPage: (page: number) => void;
 }): ReactElement {
+  const names = usePersonNames();
+
   if (isInitialLoading) {
     return (
       <PanelBody>
@@ -342,10 +321,7 @@ function RecordsList({
   if (!items || items.length === 0) {
     return (
       <PanelBody>
-        <EmptyState
-          title="This page of the FIR table is empty"
-          description="The request succeeded and returned no rows. Step back a page, or check the dataset's FIR count on the command centre."
-        />
+        <EmptyState title="No FIRs on this page" description="No data available." />
       </PanelBody>
     );
   }
@@ -353,57 +329,46 @@ function RecordsList({
   return (
     <>
       {/* `isLoading` after the first load dims the stale page instead of
-          collapsing the rail to a skeleton — the operator keeps their place.
-          The list scrolls inside a bounded box so the pager below it stays
-          reachable on a 1280×800 projector. */}
-      <ul
-        className={cn(
-          'divide-line/70 max-h-[24rem] divide-y overflow-y-auto transition-opacity',
-          isLoading && 'opacity-55',
-        )}
-      >
-        {items.map((fir) => (
-          <li key={fir.fir_id}>
-            <FirRow fir={fir} selected={fir.fir_id === selectedFirId} />
-          </li>
-        ))}
-      </ul>
+          collapsing to a skeleton — the operator keeps their place. */}
+      <div className={cn('transition-opacity', isLoading && 'opacity-55')}>
+        <DataTable head={['FIR', 'Date', 'Complainant', 'Accused', 'Location', 'Narrative']}>
+          {items.map((fir) => (
+            <tr key={fir.fir_id} className="hover:bg-panel-2 transition-colors">
+              <Cell>
+                <Link
+                  to={`/fir/${fir.fir_id}`}
+                  className="text-ink hover:text-cyan-300 font-mono text-xs font-semibold underline decoration-dotted underline-offset-2"
+                >
+                  {fir.fir_id}
+                </Link>
+              </Cell>
+              <Cell>
+                <span className="text-ink-3 font-mono text-2xs whitespace-nowrap">
+                  {formatDateTime(fir.date)}
+                </span>
+              </Cell>
+              <Cell>
+                <PersonRef personId={fir.complainant_id} names={names} />
+              </Cell>
+              <Cell>
+                <PersonRef personId={fir.accused_id} names={names} />
+              </Cell>
+              <Cell>
+                {locationIndex.get(fir.location_id) ?? <Mono>location:{fir.location_id}</Mono>}
+              </Cell>
+              <Cell className="text-ink-3 max-w-[26rem] min-w-[16rem]">
+                {truncate(fir.narrative ?? '', 130) || '—'}
+              </Cell>
+            </tr>
+          ))}
+        </DataTable>
+      </div>
       <Pager meta={meta} onPage={onPage} isLoading={isLoading} unit="FIRs" />
     </>
   );
 }
 
-/** One row of the structured FIR table: id, date, and the narrative's opening. */
-function FirRow({ fir, selected }: { fir: FIR; selected: boolean }): ReactElement {
-  return (
-    <Link
-      to={`/fir/${fir.fir_id}`}
-      aria-current={selected ? 'page' : undefined}
-      className={cn(
-        'group block border-l-2 px-3 py-2.5 transition-colors',
-        selected
-          ? 'border-l-cyan-500 bg-panel-3'
-          : 'hover:bg-panel-2 focus-visible:bg-panel-2 border-l-transparent',
-      )}
-    >
-      <div className="flex items-baseline justify-between gap-2">
-        <span
-          className={cn(
-            'font-mono text-xs font-semibold',
-            selected ? 'text-cyan-200' : 'text-ink group-hover:text-cyan-200',
-          )}
-        >
-          FIR {fir.fir_id}
-        </span>
-        <span className="text-ink-4 shrink-0 font-mono text-2xs">{formatDateTime(fir.date)}</span>
-      </div>
-      <p className="text-ink-3 mt-1 text-2xs leading-snug">{truncate(fir.narrative ?? '', 96)}</p>
-    </Link>
-  );
-}
-
 function NarrativeSearchList({
-  selectedFirId,
   query,
   onQueryChange,
   searchReady,
@@ -415,7 +380,6 @@ function NarrativeSearchList({
   onRetry,
   onPage,
 }: {
-  selectedFirId: number | null;
   query: string;
   onQueryChange: (value: string) => void;
   searchReady: boolean;
@@ -434,7 +398,7 @@ function NarrativeSearchList({
       <div className="border-line border-b px-3 py-2.5">
         <label htmlFor="fir-narrative-search" className="field-label flex items-center gap-1.5">
           <span>Search narrative text</span>
-          <InfoHint content="Searches the entities the extractor pulled out of every FIR narrative — names, phone numbers, Aadhaar numbers, dates and places — not the raw sentence text. A hit means the extractor claimed that mention in that FIR." />
+          <InfoHint content="Searches the entities extracted from FIR narratives — names, phone numbers, Aadhaar numbers, dates and places — not the raw sentence text." />
         </label>
         <div className="relative mt-1.5">
           <input
@@ -457,11 +421,7 @@ function NarrativeSearchList({
 
       {!searchReady ? (
         <PanelBody>
-          <EmptyState
-            icon="search"
-            title={`Type at least ${MIN_QUERY_LENGTH} characters`}
-            description="The backend rejects an empty narrative query with HTTP 422 rather than returning the whole corpus, so this box waits for input before it asks."
-          />
+          <EmptyState icon="search" title={`Type at least ${MIN_QUERY_LENGTH} characters`} />
         </PanelBody>
       ) : error ? (
         <PanelBody>
@@ -476,7 +436,7 @@ function NarrativeSearchList({
           <EmptyState
             icon="search"
             title={`No extracted entity matches “${response.query}”`}
-            description="Zero hits is an answer: the extractor claimed no mention matching this text in any FIR narrative. It does not mean the string is absent from the raw sentences — only that no entity was extracted from it."
+            description="No data available."
           />
         </PanelBody>
       ) : (
@@ -496,23 +456,17 @@ function NarrativeSearchList({
                 ))}
               </ul>
             ) : null}
-            {response.searched_fields && response.searched_fields.length > 0 ? (
-              <p className="text-ink-4 text-2xs leading-snug">
-                Fields searched:{' '}
-                <span className="font-mono">{response.searched_fields.join(', ')}</span>
-              </p>
-            ) : null}
           </div>
 
           <ul
             className={cn(
-              'divide-line/70 max-h-[20rem] divide-y overflow-y-auto transition-opacity',
+              'divide-line/70 max-h-[32rem] divide-y overflow-y-auto transition-opacity',
               isLoading && 'opacity-55',
             )}
           >
             {response.items.map((hit, index) => (
               <li key={`${hit.fir_id}-${hit.entity.character_start}-${hit.entity.character_end}-${index}`}>
-                <SearchHitRow hit={hit} selected={hit.fir_id === selectedFirId} />
+                <SearchHitRow hit={hit} />
               </li>
             ))}
           </ul>
@@ -525,26 +479,15 @@ function NarrativeSearchList({
 }
 
 /** One `/nlp/search` hit: which FIR, which field matched, and the mention itself. */
-function SearchHitRow({ hit, selected }: { hit: SearchHitOut; selected: boolean }): ReactElement {
+function SearchHitRow({ hit }: { hit: SearchHitOut }): ReactElement {
   const { entity, resolution } = hit;
   return (
     <Link
       to={`/fir/${hit.fir_id}`}
-      aria-current={selected ? 'page' : undefined}
-      className={cn(
-        'group block border-l-2 px-3 py-2.5 transition-colors',
-        selected
-          ? 'border-l-cyan-500 bg-panel-3'
-          : 'hover:bg-panel-2 focus-visible:bg-panel-2 border-l-transparent',
-      )}
+      className="group hover:bg-panel-2 focus-visible:bg-panel-2 block border-l-2 border-l-transparent px-3 py-2.5 transition-colors"
     >
       <div className="flex items-center justify-between gap-2">
-        <span
-          className={cn(
-            'font-mono text-xs font-semibold',
-            selected ? 'text-cyan-200' : 'text-ink group-hover:text-cyan-200',
-          )}
-        >
+        <span className="text-ink group-hover:text-cyan-200 font-mono text-xs font-semibold">
           FIR {hit.fir_id}
         </span>
         <EntityBadge entityType={entity.entity_type} className="shrink-0" />
@@ -567,44 +510,6 @@ function SearchHitRow({ hit, selected }: { hit: SearchHitOut; selected: boolean 
         )}
       </div>
     </Link>
-  );
-}
-
-/** Previous/Next driven strictly by the backend's own `has_prev` / `has_next`. */
-function Pager({
-  meta,
-  onPage,
-  isLoading,
-  unit,
-}: {
-  meta: PageMeta | null;
-  onPage: (page: number) => void;
-  isLoading: boolean;
-  unit: string;
-}): ReactElement | null {
-  if (!meta) return null;
-  return (
-    <div className="border-line flex items-center justify-between gap-2 border-t px-3 py-2">
-      <Button
-        size="sm"
-        onClick={() => onPage(Math.max(1, meta.page - 1))}
-        disabled={!meta.has_prev || isLoading}
-        aria-label="Previous page"
-      >
-        Prev
-      </Button>
-      <span className="text-ink-4 text-center font-mono text-2xs tabular-nums">
-        {meta.page} / {meta.total_pages} · {formatCount(meta.total)} {unit}
-      </span>
-      <Button
-        size="sm"
-        onClick={() => onPage(meta.page + 1)}
-        disabled={!meta.has_next || isLoading}
-        aria-label="Next page"
-      >
-        Next
-      </Button>
-    </div>
   );
 }
 
@@ -633,7 +538,7 @@ function FirRecordPanel({
     <Panel>
       <PanelHeader
         title={<SectionTitle ordinal="01">FIR record</SectionTitle>}
-        subtitle="The columns of this row as filed. Recorded values — not extracted, not inferred."
+        subtitle="As filed. Recorded values, not extracted."
         actions={<ProvenanceTag provenance="structured" short />}
       />
       <PanelBody>
@@ -675,17 +580,6 @@ function FirRecordPanel({
                 hint="The dataset citation for this row — table name and primary key. Every fact in this section can be traced back to it."
               />
             </KeyValueList>
-
-            <p className="text-ink-4 text-2xs leading-relaxed">
-              The id columns hold plain integers — the bold values above — and this backend's paths
-              take that form, which is why the accused link points at{' '}
-              <span className="font-mono">/network/{record.accused_id}</span>. The grey{' '}
-              <span className="font-mono">person:{record.accused_id}</span> beside it is the same row
-              under the name the graph uses in its own responses; that prefixed form belongs in a
-              query parameter, never in a path. Opening a person shows their observed network, where
-              centrality and connection counts are structural measures over synthetic data — not
-              measures of guilt.
-            </p>
           </div>
         )}
       </PanelBody>
@@ -783,7 +677,7 @@ function ExtractionSections({ firId }: { firId: number }): ReactElement {
       <Panel>
         <PanelHeader
           title={<SectionTitle ordinal="02">Original narrative</SectionTitle>}
-          subtitle="The narrative column reproduced verbatim. The text is part of the record; every highlight over it is an extraction claim about that text."
+          subtitle="Verbatim text. Every highlight is an extraction claim."
           actions={<ProvenanceTag provenance="narrative" short />}
         />
         <PanelBody>
@@ -799,12 +693,14 @@ function ExtractionSections({ firId }: { firId: number }): ReactElement {
           ) : !data ? (
             <EmptyState title="No extraction response for this FIR" />
           ) : (
-            <NarrativeViewer
-              narrative={data.narrative}
-              entities={flattened}
-              activeEntityIndex={activeEntityIndex}
-              onActiveEntityChange={setActiveEntityIndex}
-            />
+            <ExpandableNarrative>
+              <NarrativeViewer
+                narrative={data.narrative}
+                entities={flattened}
+                activeEntityIndex={activeEntityIndex}
+                onActiveEntityChange={setActiveEntityIndex}
+              />
+            </ExpandableNarrative>
           )}
         </PanelBody>
       </Panel>
@@ -812,7 +708,7 @@ function ExtractionSections({ firId }: { firId: number }): ReactElement {
       <Panel>
         <PanelHeader
           title={<SectionTitle ordinal="03">Extracted entities</SectionTitle>}
-          subtitle="Every mention the extractor claimed, and what happened when it tried to tie that mention to a node in the structured graph."
+          subtitle="Every claimed mention, and how it resolved."
           actions={<ProvenanceTag provenance="narrative" short />}
         />
         <PanelBody className="space-y-3.5">
@@ -879,11 +775,6 @@ function ExtractionSections({ firId }: { firId: number }): ReactElement {
                       </li>
                     ))}
                   </ul>
-                  <p className="text-ink-4 text-2xs leading-relaxed">
-                    The backend lists these itself rather than omitting them, so an absence stays
-                    visible as an absence. Where such a type has no node in the Phase 2 graph at all,
-                    nothing on this page renders it as present.
-                  </p>
                 </div>
               ) : null}
 
@@ -895,11 +786,6 @@ function ExtractionSections({ firId }: { firId: number }): ReactElement {
                 onActiveEntityChange={setActiveEntityIndex}
               />
 
-              <p className="text-ink-4 text-2xs leading-relaxed">
-                Selecting a row highlights the exact characters it came from in section 2, and
-                selecting a highlight selects its row. Confidence values are fixed tiers set by the
-                rule that fired — not a trained model's probability.
-              </p>
             </>
           )}
         </PanelBody>
@@ -923,7 +809,7 @@ function RelationshipsSection({ firId }: { firId: number }): ReactElement {
     <Panel>
       <PanelHeader
         title={<SectionTitle ordinal="04">Extracted relationships</SectionTitle>}
-        subtitle="Claims the narrative makes, admitted only when an explicit trigger phrase fired a named rule with role-bound endpoints."
+        subtitle="Admitted only when a named rule fired."
         actions={<ProvenanceTag provenance="narrative" short />}
       />
       <PanelBody className="space-y-3.5">
@@ -1019,7 +905,7 @@ function GraphImpactSection({ firId }: { firId: number }): ReactElement {
       <Panel>
         <PanelHeader
           title={<SectionTitle ordinal="05">Graph impact</SectionTitle>}
-          subtitle="What this narrative proposed to the graph, and what the validator admitted or refused."
+          subtitle="Proposed, then admitted or refused."
           actions={<ProvenanceTag provenance="narrative" short />}
         />
         <PanelBody className="space-y-3">
@@ -1047,6 +933,46 @@ function GraphImpactSection({ firId }: { firId: number }): ReactElement {
 }
 
 /* =================================================================== shared */
+
+/**
+ * A collapsed reading box. Long narrative text is clamped so the sections under
+ * it stay reachable, and the toggle appears only when there is more text than the
+ * box already shows — measured, not guessed from a character count.
+ */
+function ExpandableNarrative({ children }: { children: ReactNode }): ReactElement {
+  const box = useRef<HTMLDivElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [overflows, setOverflows] = useState(false);
+
+  useEffect(() => {
+    const element = box.current;
+    if (!element) return;
+    setOverflows(element.scrollHeight > element.clientHeight + 4);
+  }, []);
+
+  return (
+    <div>
+      <div
+        ref={box}
+        className={cn('relative', !expanded && 'max-h-72 overflow-hidden')}
+        data-testid="fir-narrative-box"
+      >
+        {children}
+        {!expanded && overflows ? (
+          <div
+            aria-hidden
+            className="from-panel absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t to-transparent"
+          />
+        ) : null}
+      </div>
+      {overflows ? (
+        <Button size="sm" className="mt-2" onClick={() => setExpanded((value) => !value)}>
+          {expanded ? 'Show less' : 'Show all'}
+        </Button>
+      ) : null}
+    </div>
+  );
+}
 
 /** Numbered section label, so a spoken walkthrough can point at a section. */
 function SectionTitle({

@@ -3,25 +3,16 @@ import { Link, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
 import { AppShell } from '@/layouts/AppShell';
 import { CommandCenter } from '@/pages/CommandCenter';
+import { InvestigationsPage } from '@/pages/InvestigationsPage';
 import { NetworkInvestigation } from '@/pages/NetworkInvestigation';
 import { FirIntelligence } from '@/pages/FirIntelligence';
+import { CommunicationPage } from '@/pages/CommunicationPage';
+import { FinancialPage } from '@/pages/FinancialPage';
+import { LocationsPage } from '@/pages/LocationsPage';
 import { EvidencePage } from '@/pages/EvidencePage';
 import { AlertsPage } from '@/pages/AlertsPage';
-import { Button, EmptyState, SectionHeading } from '@/components/ui';
+import { Button, EmptyState } from '@/components/ui';
 
-/**
- * Routes.
- *
- * Every route here is backed by verified backend endpoints — there are no
- * placeholder screens. The audit ledger belongs to a later phase and deliberately
- * has no nav entry.
- *
- * The network and FIR views take an optional path parameter so an investigation
- * is deep-linkable and the browser's back button steps through the trail. Both
- * params are the backend's NUMERIC row id (`/network/445`, `/fir/79`), matching
- * the path-parameter form those endpoints actually parse — see the TWO ID FORMS
- * note in `src/api/endpoints.ts`. Nothing URL-encoded ever needs to appear here.
- */
 function ShellLayout() {
   return (
     <AppShell>
@@ -36,13 +27,16 @@ export function App() {
       <Routes>
         <Route element={<ShellLayout />}>
           <Route path="/" element={<CommandCenter />} />
+          <Route path="/investigations" element={<InvestigationsPage />} />
           <Route path="/network" element={<NetworkInvestigation />} />
           <Route path="/network/:personId" element={<NetworkInvestigation />} />
           <Route path="/fir" element={<FirIntelligence />} />
           <Route path="/fir/:firId" element={<FirIntelligence />} />
+          <Route path="/communication" element={<CommunicationPage />} />
+          <Route path="/financial" element={<FinancialPage />} />
+          <Route path="/locations" element={<LocationsPage />} />
           <Route path="/evidence" element={<EvidencePage />} />
           <Route path="/alerts" element={<AlertsPage />} />
-          {/* Keep old-style singular paths working rather than 404ing a demo. */}
           <Route path="/firs" element={<Navigate to="/fir" replace />} />
           <Route path="*" element={<RouteNotFound />} />
         </Route>
@@ -53,26 +47,18 @@ export function App() {
 
 function RouteNotFound() {
   return (
-    <div className="space-y-5">
-      <SectionHeading title="Screen not found" subtitle="That address does not match any view." />
-      <EmptyState
-        title="No such screen"
-        description="Use the sidebar to reach Command Center, Network, FIR Intelligence, Evidence or Alerts."
-        action={
-          <Link to="/">
-            <Button variant="primary">Return to Command Center</Button>
-          </Link>
-        }
-      />
-    </div>
+    <EmptyState
+      title="Page not found"
+      description="Use the sidebar to navigate."
+      action={
+        <Link to="/">
+          <Button variant="primary">Command Center</Button>
+        </Link>
+      }
+    />
   );
 }
 
-/**
- * A render-time failure should degrade to a readable message instead of a blank
- * page — a white screen during a demo is indistinguishable from a crashed backend,
- * and the two need very different responses.
- */
 class AppErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   constructor(props: { children: ReactNode }) {
     super(props);
@@ -84,8 +70,6 @@ class AppErrorBoundary extends Component<{ children: ReactNode }, { error: Error
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    // Component stack only — never log response payloads, which can carry
-    // personal data from the case records.
     console.error('Render failure in', info.componentStack?.split('\n')[1]?.trim(), error.message);
   }
 
@@ -95,17 +79,19 @@ class AppErrorBoundary extends Component<{ children: ReactNode }, { error: Error
       <div className="bg-void flex min-h-screen items-center justify-center p-8">
         <div
           role="alert"
-          className="border-alert-500/35 bg-alert-900/25 max-w-xl rounded-lg border px-5 py-5"
+          className="border-alert-500/30 bg-alert-900/20 max-w-lg rounded-lg border px-5 py-5"
         >
           <p className="text-alert-300 text-sm font-semibold">Interface error</p>
-          <p className="text-ink-2 mt-2 text-xs leading-relaxed">
-            A view failed to render. The backend is unaffected — reload the page to recover.
+          <p className="text-ink-3 mt-2 text-xs leading-relaxed">
+            A view failed to render. Reload to recover.
           </p>
-          <p className="text-ink-4 mt-2 font-mono text-2xs break-words">{this.state.error.message}</p>
+          <p className="text-ink-4 mt-2 font-mono text-2xs break-words">
+            {this.state.error.message}
+          </p>
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="border-alert-500/40 bg-alert-500/10 text-alert-300 hover:bg-alert-500/18 mt-4 rounded-sm border px-2.5 py-1 text-xs font-semibold transition-colors"
+            className="border-alert-500/35 bg-alert-500/10 text-alert-300 hover:bg-alert-500/18 mt-4 rounded-sm border px-3 py-1.5 text-xs font-semibold transition-colors"
           >
             Reload
           </button>

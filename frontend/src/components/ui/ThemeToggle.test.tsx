@@ -4,7 +4,7 @@
  * Three things are worth pinning down, and they are the three that break:
  *
  *  1. DARK IS THE DEFAULT. With nothing stored, `<html>` carries `data-theme="dark"`.
- *  2. THE CHOICE PERSISTS. A click writes `cna.theme`, so a reload does not undo it.
+ *  2. THE CHOICE PERSISTS. A click writes `tracex.theme`, so a reload does not undo it.
  *  3. ONE STORE, MANY BUTTONS. The theme lives outside React, so every mounted
  *     toggle reflects the same value — a header toggle and a stray second copy
  *     cannot disagree.

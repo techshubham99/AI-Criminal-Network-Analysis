@@ -202,7 +202,9 @@ describe('error handling', () => {
     expect(apiError.isNetworkError).toBe(true);
     expect(apiError.kind).toBe('offline');
     expect(apiError.status).toBe(0);
-    expect(apiError.message).toMatch(/FastAPI server is running locally/);
+    // The message names the thing the operator can actually change — the
+    // configured base URL — because the backend need not be local.
+    expect(apiError.message).toMatch(/configured API base URL/);
   });
 
   it('decodes the backend error envelope for a 404', async () => {

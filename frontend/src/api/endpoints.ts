@@ -39,6 +39,7 @@
 import { post, request } from './client';
 import type {
   CallIn,
+  CallRecord,
   ChainVerificationOut,
   CommunitiesResponse,
   DataSummaryResponse,
@@ -72,6 +73,7 @@ import type {
   SearchResponse,
   TopPersonsResponse,
   TransactionIn,
+  TransactionRecord,
 } from '@/types/api';
 
 export interface Signalled {
@@ -285,6 +287,63 @@ export const getPersonRecord = (personId: number, o: Signalled = {}) =>
 /** `GET /api/v1/locations/{location_id}` — the raw structured location record. */
 export const getLocationRecord = (locationId: number, o: Signalled = {}) =>
   request<LocationRecord>(`locations/${locationId}`, { signal: o.signal });
+
+/* --------------------------------------------------- structured record lists -- */
+/*
+ * The paged record tables behind the Communication, Financial and Location
+ * screens. Every filter below is a query parameter the backend declares; there is
+ * no client-side substitute for one it does not offer, and `page_size` is capped
+ * at 200 server-side (`MAX_PAGE_SIZE`), so a caller asking for more gets a 422
+ * rather than a silently truncated page.
+ */
+
+export interface PersonQuery {
+  page?: number;
+  page_size?: number;
+  /** Case-insensitive substring match on `name`. */
+  q?: string;
+  city?: string;
+  state?: string;
+}
+
+/** `GET /api/v1/persons` — the paged `persons` table. */
+export const listPersons = (query: PersonQuery = {}, o: Signalled = {}) =>
+  request<Page<Person>>('persons', { params: { ...query }, signal: o.signal });
+
+export interface CallQuery {
+  page?: number;
+  page_size?: number;
+  caller_id?: number;
+  callee_id?: number;
+}
+
+/** `GET /api/v1/calls` — the paged `calls` table, optionally by either party. */
+export const listCalls = (query: CallQuery = {}, o: Signalled = {}) =>
+  request<Page<CallRecord>>('calls', { params: { ...query }, signal: o.signal });
+
+export interface TransactionQuery {
+  page?: number;
+  page_size?: number;
+  sender_id?: number;
+  receiver_id?: number;
+  /** One of the modes the dataset actually uses: UPI, NEFT, IMPS, CASH, CARD. */
+  mode?: string;
+}
+
+/** `GET /api/v1/transactions` — the paged `transactions` table. */
+export const listTransactions = (query: TransactionQuery = {}, o: Signalled = {}) =>
+  request<Page<TransactionRecord>>('transactions', { params: { ...query }, signal: o.signal });
+
+export interface LocationQuery {
+  page?: number;
+  page_size?: number;
+  city?: string;
+  state?: string;
+}
+
+/** `GET /api/v1/locations` — the paged `locations` table. */
+export const listLocations = (query: LocationQuery = {}, o: Signalled = {}) =>
+  request<Page<LocationRecord>>('locations', { params: { ...query }, signal: o.signal });
 
 /* ------------------------------------------- Phase 4.6 — live ingestion -- */
 /*

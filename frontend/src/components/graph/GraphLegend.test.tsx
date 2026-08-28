@@ -112,7 +112,7 @@ describe('GraphLegend — entity types on the canvas', () => {
   it('explains node size as structure, not as a ranking of a person', () => {
     renderLegend();
     expect(
-      screen.getByText(/a structural count of links,\s+not a ranking of a person/i),
+      screen.getByText(/a structural count of links, not a ranking of a person/i),
     ).toBeInTheDocument();
     // Shape as well as colour, so the graph survives a projector and colour blindness.
     expect(
@@ -197,7 +197,7 @@ describe('GraphLegend — a line has to say what it is', () => {
     expect(
       screen.getByText(/inferred from shared attributes or asserted by narrative text/i),
     ).toBeInTheDocument();
-    expect(screen.getByText('derived')).toBeInTheDocument();
+    expect(screen.getByText(/Dashed = derived, not observed/i)).toBeInTheDocument();
   });
 
   it('never offers the generator’s ring label as a filter', () => {

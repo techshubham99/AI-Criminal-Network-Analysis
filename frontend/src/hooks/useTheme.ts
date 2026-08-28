@@ -16,7 +16,7 @@ import { useSyncExternalStore } from 'react';
 export type Theme = 'dark' | 'light';
 
 /** Namespaced so it cannot collide with anything else on localhost. */
-export const THEME_STORAGE_KEY = 'cna.theme';
+export const THEME_STORAGE_KEY = 'tracex.theme';
 
 /** Dark is the product default; light is opt-in. */
 export const DEFAULT_THEME: Theme = 'dark';

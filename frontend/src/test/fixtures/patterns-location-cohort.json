@@ -1,0 +1,988 @@
+{
+  "total": 23,
+  "count": 10,
+  "offset": 0,
+  "limit": 10,
+  "patterns": [
+    {
+      "pattern_id": "location_cohort~08bdc57951ab7d27",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:118",
+        "person:166",
+        "person:226",
+        "person:321",
+        "person:412",
+        "person:454"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.2,
+      "explanation": "5 persons are registered at the single canonical location location:118 (Chennai, Tamil Nadu), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:118",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:118",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:166",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:166",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:226",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:226",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:321",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:321",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:412",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:412",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:454",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:454",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:118",
+        "location_label": "Chennai, Tamil Nadu",
+        "member_count": 5,
+        "members": [
+          "person:166",
+          "person:226",
+          "person:321",
+          "person:412",
+          "person:454"
+        ],
+        "min_group": 5
+      }
+    },
+    {
+      "pattern_id": "location_cohort~0aba5371787a1175",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:49",
+        "person:117",
+        "person:187",
+        "person:241",
+        "person:293",
+        "person:316",
+        "person:55"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.4,
+      "explanation": "6 persons are registered at the single canonical location location:49 (Hyderabad, Telangana), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:49",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:49",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:117",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:117",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:187",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:187",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:241",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:241",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:293",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:293",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:316",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:316",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:55",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:55",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:49",
+        "location_label": "Hyderabad, Telangana",
+        "member_count": 6,
+        "members": [
+          "person:55",
+          "person:117",
+          "person:187",
+          "person:241",
+          "person:293",
+          "person:316"
+        ],
+        "min_group": 5
+      }
+    },
+    {
+      "pattern_id": "location_cohort~0eb74c395112ceae",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:10",
+        "person:183",
+        "person:339",
+        "person:340",
+        "person:341",
+        "person:468",
+        "person:79"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.4,
+      "explanation": "6 persons are registered at the single canonical location location:10 (New Delhi, Delhi), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:10",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:10",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:183",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:183",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:339",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:339",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:340",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:340",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:341",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:341",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:468",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:468",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:79",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:79",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:10",
+        "location_label": "New Delhi, Delhi",
+        "member_count": 6,
+        "members": [
+          "person:79",
+          "person:183",
+          "person:339",
+          "person:340",
+          "person:341",
+          "person:468"
+        ],
+        "min_group": 5
+      }
+    },
+    {
+      "pattern_id": "location_cohort~151b3b78372b4a66",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:167",
+        "person:220",
+        "person:282",
+        "person:338",
+        "person:457",
+        "person:72"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.2,
+      "explanation": "5 persons are registered at the single canonical location location:167 (Jaipur, Rajasthan), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:167",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:167",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:220",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:220",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:282",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:282",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:338",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:338",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:457",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:457",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:72",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:72",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:167",
+        "location_label": "Jaipur, Rajasthan",
+        "member_count": 5,
+        "members": [
+          "person:72",
+          "person:220",
+          "person:282",
+          "person:338",
+          "person:457"
+        ],
+        "min_group": 5
+      }
+    },
+    {
+      "pattern_id": "location_cohort~27f4a4a7ca5f2fbe",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:121",
+        "person:221",
+        "person:222",
+        "person:370",
+        "person:406",
+        "person:47",
+        "person:62"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.4,
+      "explanation": "6 persons are registered at the single canonical location location:121 (Jaipur, Rajasthan), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:121",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:121",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:221",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:221",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:222",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:222",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:370",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:370",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:406",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:406",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:47",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:47",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:62",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:62",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:121",
+        "location_label": "Jaipur, Rajasthan",
+        "member_count": 6,
+        "members": [
+          "person:47",
+          "person:62",
+          "person:221",
+          "person:222",
+          "person:370",
+          "person:406"
+        ],
+        "min_group": 5
+      }
+    },
+    {
+      "pattern_id": "location_cohort~32e252ab82dad3de",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:74",
+        "person:337",
+        "person:421",
+        "person:80",
+        "person:88",
+        "person:94"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.2,
+      "explanation": "5 persons are registered at the single canonical location location:74 (Bengaluru, Karnataka), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:74",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:74",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:337",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:337",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:421",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:421",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:80",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:80",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:88",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:88",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:94",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:94",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:74",
+        "location_label": "Bengaluru, Karnataka",
+        "member_count": 5,
+        "members": [
+          "person:80",
+          "person:88",
+          "person:94",
+          "person:337",
+          "person:421"
+        ],
+        "min_group": 5
+      }
+    },
+    {
+      "pattern_id": "location_cohort~474c187c4d910e86",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:147",
+        "person:147",
+        "person:167",
+        "person:229",
+        "person:24",
+        "person:91"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.2,
+      "explanation": "5 persons are registered at the single canonical location location:147 (Chennai, Tamil Nadu), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:147",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:147",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:147",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:147",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:167",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:167",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:229",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:229",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:24",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:24",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:91",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:91",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:147",
+        "location_label": "Chennai, Tamil Nadu",
+        "member_count": 5,
+        "members": [
+          "person:24",
+          "person:91",
+          "person:147",
+          "person:167",
+          "person:229"
+        ],
+        "min_group": 5
+      }
+    },
+    {
+      "pattern_id": "location_cohort~485f0a166086a014",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:85",
+        "person:121",
+        "person:242",
+        "person:334",
+        "person:344",
+        "person:435",
+        "person:483",
+        "person:77"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.6,
+      "explanation": "7 persons are registered at the single canonical location location:85 (Bhopal, Madhya Pradesh), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:85",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:85",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:121",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:121",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:242",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:242",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:334",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:334",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:344",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:344",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:435",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:435",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:483",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:483",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:77",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:77",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:85",
+        "location_label": "Bhopal, Madhya Pradesh",
+        "member_count": 7,
+        "members": [
+          "person:77",
+          "person:121",
+          "person:242",
+          "person:334",
+          "person:344",
+          "person:435",
+          "person:483"
+        ],
+        "min_group": 5
+      }
+    },
+    {
+      "pattern_id": "location_cohort~5469ae14abd4e12c",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:20",
+        "person:173",
+        "person:177",
+        "person:361",
+        "person:415",
+        "person:437"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.2,
+      "explanation": "5 persons are registered at the single canonical location location:20 (New Delhi, Delhi), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:20",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:20",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:173",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:173",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:177",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:177",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:361",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:361",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:415",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:415",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:437",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:437",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:20",
+        "location_label": "New Delhi, Delhi",
+        "member_count": 5,
+        "members": [
+          "person:173",
+          "person:177",
+          "person:361",
+          "person:415",
+          "person:437"
+        ],
+        "min_group": 5
+      }
+    },
+    {
+      "pattern_id": "location_cohort~560112167487797c",
+      "pattern_type": "LOCATION_COHORT",
+      "entity_ids": [
+        "location:179",
+        "person:23",
+        "person:237",
+        "person:331",
+        "person:402",
+        "person:425"
+      ],
+      "relationship_types": [
+        "CO_LOCATED",
+        "LOCATED_AT"
+      ],
+      "source_datasets": [
+        "locations",
+        "persons"
+      ],
+      "severity": 0.2,
+      "explanation": "5 persons are registered at the single canonical location location:179 (Kolkata, West Bengal), against a configured cohort threshold of 5. This is the canonical location id from the dataset, not a proximity guess from raw coordinates. Shared registration is a shared address and nothing more is claimed by it.",
+      "structured_evidence": [
+        {
+          "evidence_id": "locations:179",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "locations",
+          "source_record_id": "locations:179",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:23",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:23",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:237",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:237",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:331",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:331",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:402",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:402",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        },
+        {
+          "evidence_id": "persons:425",
+          "evidence_class": "STRUCTURED",
+          "source_dataset": "persons",
+          "source_record_id": "persons:425",
+          "confidence": 1.0,
+          "confidence_basis": "structured_record",
+          "evidence_text": null
+        }
+      ],
+      "nlp_evidence": [],
+      "detail": {
+        "location_entity_id": "location:179",
+        "location_label": "Kolkata, West Bengal",
+        "member_count": 5,
+        "members": [
+          "person:23",
+          "person:237",
+          "person:331",
+          "person:402",
+          "person:425"
+        ],
+        "min_group": 5
+      }
+    }
+  ],
+  "filters": {
+    "pattern_type": "LOCATION_COHORT",
+    "entity_id": null
+  },
+  "note": "Pattern ids are content-addressed (sha256 of pattern type + sorted entity ids + sorted evidence ids) and therefore stable across restarts. A category with zero detections is reported as zero in /summary rather than filled with an example."
+}

@@ -57,7 +57,14 @@ export function LiveIndicator({
         className,
       )}
     >
-      <span aria-hidden="true" className={cn('size-2 shrink-0 rounded-full', DOT[status])} />
+      <span
+        aria-hidden="true"
+        className={cn(
+          'relative size-2 shrink-0 rounded-full',
+          DOT[status],
+          status === 'live' && 'pulse-dot',
+        )}
+      />
       <span className={cn('text-2xs font-semibold whitespace-nowrap', TEXT[status])}>
         {LABEL[status]}
       </span>

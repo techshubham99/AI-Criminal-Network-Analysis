@@ -1,0 +1,212 @@
+{
+  "items": [
+    {
+      "call_id": 1,
+      "caller_id": 418,
+      "callee_id": 197,
+      "start_time": "2026-08-16T18:18:39",
+      "duration_sec": 2075,
+      "cell_tower_id": 9109
+    },
+    {
+      "call_id": 2,
+      "caller_id": 210,
+      "callee_id": 351,
+      "start_time": "2026-08-11T10:33:42",
+      "duration_sec": 2913,
+      "cell_tower_id": 8272
+    },
+    {
+      "call_id": 3,
+      "caller_id": 251,
+      "callee_id": 86,
+      "start_time": "2026-07-27T10:01:52",
+      "duration_sec": 131,
+      "cell_tower_id": 4613
+    },
+    {
+      "call_id": 4,
+      "caller_id": 150,
+      "callee_id": 17,
+      "start_time": "2026-08-03T19:27:54",
+      "duration_sec": 2207,
+      "cell_tower_id": 5729
+    },
+    {
+      "call_id": 5,
+      "caller_id": 87,
+      "callee_id": 400,
+      "start_time": "2026-08-09T02:09:21",
+      "duration_sec": 3046,
+      "cell_tower_id": 9115
+    },
+    {
+      "call_id": 6,
+      "caller_id": 282,
+      "callee_id": 262,
+      "start_time": "2026-08-24T01:41:50",
+      "duration_sec": 472,
+      "cell_tower_id": 5389
+    },
+    {
+      "call_id": 7,
+      "caller_id": 397,
+      "callee_id": 279,
+      "start_time": "2026-08-01T11:52:40",
+      "duration_sec": 1507,
+      "cell_tower_id": 9880
+    },
+    {
+      "call_id": 8,
+      "caller_id": 422,
+      "callee_id": 388,
+      "start_time": "2026-08-14T21:37:34",
+      "duration_sec": 2949,
+      "cell_tower_id": 8231
+    },
+    {
+      "call_id": 9,
+      "caller_id": 280,
+      "callee_id": 112,
+      "start_time": "2026-08-07T11:41:44",
+      "duration_sec": 424,
+      "cell_tower_id": 5055
+    },
+    {
+      "call_id": 10,
+      "caller_id": 153,
+      "callee_id": 448,
+      "start_time": "2026-07-27T02:52:48",
+      "duration_sec": 1847,
+      "cell_tower_id": 5305
+    },
+    {
+      "call_id": 11,
+      "caller_id": 179,
+      "callee_id": 442,
+      "start_time": "2026-07-28T17:24:06",
+      "duration_sec": 1803,
+      "cell_tower_id": 2923
+    },
+    {
+      "call_id": 12,
+      "caller_id": 398,
+      "callee_id": 416,
+      "start_time": "2026-08-23T21:28:47",
+      "duration_sec": 3325,
+      "cell_tower_id": 6744
+    },
+    {
+      "call_id": 13,
+      "caller_id": 441,
+      "callee_id": 364,
+      "start_time": "2026-08-18T18:12:23",
+      "duration_sec": 1758,
+      "cell_tower_id": 3719
+    },
+    {
+      "call_id": 14,
+      "caller_id": 316,
+      "callee_id": 72,
+      "start_time": "2026-08-24T15:06:49",
+      "duration_sec": 3337,
+      "cell_tower_id": 4390
+    },
+    {
+      "call_id": 15,
+      "caller_id": 413,
+      "callee_id": 31,
+      "start_time": "2026-08-03T05:03:17",
+      "duration_sec": 2185,
+      "cell_tower_id": 5605
+    },
+    {
+      "call_id": 16,
+      "caller_id": 306,
+      "callee_id": 276,
+      "start_time": "2026-08-13T17:11:12",
+      "duration_sec": 2888,
+      "cell_tower_id": 5794
+    },
+    {
+      "call_id": 17,
+      "caller_id": 149,
+      "callee_id": 294,
+      "start_time": "2026-07-31T00:43:39",
+      "duration_sec": 3519,
+      "cell_tower_id": 9428
+    },
+    {
+      "call_id": 18,
+      "caller_id": 461,
+      "callee_id": 348,
+      "start_time": "2026-08-07T18:15:30",
+      "duration_sec": 560,
+      "cell_tower_id": 7743
+    },
+    {
+      "call_id": 19,
+      "caller_id": 471,
+      "callee_id": 31,
+      "start_time": "2026-08-03T08:12:29",
+      "duration_sec": 3556,
+      "cell_tower_id": 3078
+    },
+    {
+      "call_id": 20,
+      "caller_id": 360,
+      "callee_id": 444,
+      "start_time": "2026-08-19T22:55:27",
+      "duration_sec": 604,
+      "cell_tower_id": 6277
+    },
+    {
+      "call_id": 21,
+      "caller_id": 425,
+      "callee_id": 127,
+      "start_time": "2026-07-31T02:57:59",
+      "duration_sec": 2774,
+      "cell_tower_id": 7434
+    },
+    {
+      "call_id": 22,
+      "caller_id": 251,
+      "callee_id": 73,
+      "start_time": "2026-08-12T02:45:59",
+      "duration_sec": 1105,
+      "cell_tower_id": 7786
+    },
+    {
+      "call_id": 23,
+      "caller_id": 193,
+      "callee_id": 232,
+      "start_time": "2026-07-29T14:26:31",
+      "duration_sec": 3259,
+      "cell_tower_id": 2525
+    },
+    {
+      "call_id": 24,
+      "caller_id": 207,
+      "callee_id": 264,
+      "start_time": "2026-07-29T14:07:09",
+      "duration_sec": 2850,
+      "cell_tower_id": 7046
+    },
+    {
+      "call_id": 25,
+      "caller_id": 233,
+      "callee_id": 487,
+      "start_time": "2026-08-12T22:41:03",
+      "duration_sec": 2388,
+      "cell_tower_id": 1040
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "page_size": 25,
+    "total": 2000,
+    "total_pages": 80,
+    "has_next": true,
+    "has_prev": false
+  }
+}

@@ -105,12 +105,19 @@ describe('SearchResultList — where each row opens', () => {
     expect(screen.getByText('Opens FIR narrative')).toBeInTheDocument();
   });
 
-  it('says a non-person, non-FIR row opens Evidence, not a network', () => {
-    // A phone cannot root /graph/persons/{id}/network, so it must not promise to.
-    const nonPersons = ['PHONE', 'AADHAAR', 'LOCATION', 'CELL_TOWER'].map(nodeOfType);
-    renderList({ results: nonPersons });
+  it('says a location row opens Location Intelligence, not a network', () => {
+    // A location cannot root /graph/persons/{id}/network, and it has a product
+    // area of its own, so it must promise neither a graph nor Evidence.
+    renderList({ results: [nodeOfType('LOCATION')] });
+    expect(screen.getByText('Opens Location Intelligence')).toBeInTheDocument();
+  });
 
-    expect(screen.getAllByText('Opens in Evidence & Provenance')).toHaveLength(nonPersons.length);
+  it('says an identifier row opens Evidence, not a network', () => {
+    // A phone cannot root /graph/persons/{id}/network, so it must not promise to.
+    const identifiers = ['PHONE', 'AADHAAR', 'CELL_TOWER'].map(nodeOfType);
+    renderList({ results: identifiers });
+
+    expect(screen.getAllByText('Opens in Evidence & Provenance')).toHaveLength(identifiers.length);
   });
 
   it('hands the whole node back, so the caller does not re-parse an id', () => {
@@ -126,26 +133,26 @@ describe('SearchResultList — where each row opens', () => {
 describe('SearchResultList — the keyboard contract', () => {
   it('exposes the listbox under an id the combobox can point at', () => {
     renderList();
-    expect(screen.getByRole('listbox')).toHaveAttribute('id', 'cna-dropdown-search-listbox');
+    expect(screen.getByRole('listbox')).toHaveAttribute('id', 'tracex-dropdown-search-listbox');
     expect(screen.getByRole('listbox')).toHaveAccessibleName('Entity search results');
   });
 
   it('gives each option a deterministic id derived from its entity id', () => {
     renderList();
-    // person:445 -> cna-dropdown-search-option-person-445. aria-activedescendant
+    // person:445 -> tracex-dropdown-search-option-person-445. aria-activedescendant
     // needs an id the owning combobox can compute without a callback.
     expect(screen.getByText('Ojas Kuruvilla').closest('[role="option"]')).toHaveAttribute(
       'id',
-      'cna-dropdown-search-option-person-445',
+      'tracex-dropdown-search-option-person-445',
     );
   });
 
   it('keeps the two surfaces’ ids apart, so both can be mounted at once', () => {
     renderList({ variant: 'page' });
-    expect(screen.getByRole('listbox')).toHaveAttribute('id', 'cna-page-search-listbox');
+    expect(screen.getByRole('listbox')).toHaveAttribute('id', 'tracex-page-search-listbox');
     expect(screen.getByText('Ojas Kuruvilla').closest('[role="option"]')).toHaveAttribute(
       'id',
-      'cna-page-search-option-person-445',
+      'tracex-page-search-option-person-445',
     );
   });
 

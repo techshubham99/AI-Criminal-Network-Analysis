@@ -81,7 +81,14 @@
       "Bash(PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m pytest tests/test_audit_api.py::test_a_rejected_submission_is_audited_but_has_no_verifiable_record -q -p no:randomly)",
       "Bash(PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -c ' *)",
       "Bash(PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m pytest tests/test_audit_api.py tests/test_audit.py -q)",
-      "Bash(PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m pytest -q)"
+      "Bash(PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m pytest -q)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(curl -s \"http://127.0.0.1:8000/api/v1/locations?page=1&page_size=1\")",
+      "Bash(grep -n \"^/\\\\* =\\\\|^function \\\\|^const \\\\|^type \" src/pages/FirIntelligence.tsx)",
+      "Bash(grep -oE \"\\(request|post\\)<[^>]*>\\\\\\(\\\\s*$|'[a-z0-9/{}._-]+'\" src/api/endpoints.ts)",
+      "Bash(PYTHONIOENCODING=utf-8 \"../backend/.venv/Scripts/python.exe\" _facts.py)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(grep -oE \"src[/\\\\\\\\][A-Za-z0-9_/\\\\\\\\.-]*\\\\.test\\\\.tsx?\" _verify.log)"
     ],
     "defaultMode": "auto"
   }

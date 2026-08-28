@@ -38,6 +38,7 @@ import {
 import { AlertsPage } from '@/pages/AlertsPage';
 
 import { AddIntelligence, toPersonRef } from './AddIntelligence';
+import { AddIntelligenceButton } from './AddIntelligenceButton';
 import { IngestVerdict } from './IngestVerdict';
 import { LiveIndicator } from './LiveIndicator';
 
@@ -362,13 +363,27 @@ describe('the live channel refreshes the screen it belongs to', () => {
     expect(rankingCalls()).toHaveLength(before + 1);
   });
 
-  it('offers the write surface on the screen that shows the priorities', async () => {
+  it('offers the write surface once, from the header, and not a second time on a page', async () => {
+    installFetch();
+    installEventSource();
+    renderWithRouter(<AddIntelligenceButton />);
+
+    // Closed by default: the button is compact, and the intake is a modal.
+    expect(screen.queryByTestId('add-intelligence')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('open-intake'));
+
+    const modal = await screen.findByTestId('intake-modal');
+    expect(within(modal).getByTestId('add-intelligence')).toBeInTheDocument();
+    expect(within(modal).getByText('Synthetic data only')).toBeInTheDocument();
+  });
+
+  it('does not duplicate the intake onto the priorities screen', async () => {
     installFetch();
     installEventSource();
     renderWithRouter(<AlertsPage />, { route: '/alerts' });
 
-    await waitFor(() => expect(screen.getByTestId('add-intelligence')).toBeInTheDocument());
-    expect(within(screen.getByTestId('add-intelligence')).getByText('Synthetic data only'))
-      .toBeInTheDocument();
+    // The queue has to have rendered, or "no intake here" would be vacuous.
+    await waitFor(() => expect(screen.getByTestId('priority-panel')).toBeInTheDocument());
+    expect(screen.queryByTestId('add-intelligence')).not.toBeInTheDocument();
   });
 });

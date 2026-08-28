@@ -116,10 +116,8 @@ export function GraphImpactPanel({ impact, className }: GraphImpactPanelProps): 
             ) : (
               <>
                 The structured evidence graph was <strong className="text-ink font-semibold">not
-                modified</strong>. <Mono>structured_graph_mutated: false</Mono>. Every
-                narrative-derived edge is held in a separate narrative graph and is never merged into
-                the observed Phase 2 graph, so nothing on this page can change what the structured
-                evidence says.
+                modified</strong>. <Mono>structured_graph_mutated: false</Mono>. Narrative-derived
+                edges are held in a separate narrative graph, never merged into the observed graph.
               </>
             )}
           </Claim>
@@ -251,8 +249,7 @@ export function GraphImpactPanel({ impact, className }: GraphImpactPanelProps): 
           <Divider label={`Narrative graph edges (${formatCount(narrativeEdges.length)})`} />
           {narrativeEdges.length === 0 ? (
             <p className="text-ink-3 text-xs leading-relaxed">
-              This FIR contributed no edge to the narrative graph. The narrative graph is a separate
-              structure from the observed Phase 2 graph, so this is a zero in its own right — not a
+              This FIR contributed no edge to the narrative graph — a zero in its own right, not a
               missing value.
             </p>
           ) : (

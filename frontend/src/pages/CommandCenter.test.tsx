@@ -98,14 +98,12 @@ describe('CommandCenter — the dashboard is the backend, formatted', () => {
     }
   });
 
-  it('states that Phase 4 risk scoring does not exist in this build', async () => {
+  it('labels the structural leads panel as centrality, never as a risk score', async () => {
     installFetch();
     renderWithRouter(<CommandCenter />);
 
-    await waitFor(() =>
-      expect(screen.getByText(/Phase 4 risk scoring is not implemented/i)).toBeInTheDocument(),
-    );
-    expect(screen.getByText('NOT A RISK SCORE')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Top by PageRank')).toBeInTheDocument());
+    expect(screen.queryByText(/risk score/i)).not.toBeInTheDocument();
   });
 
   it('reports a dead backend per request, with a retry, instead of an empty page', async () => {

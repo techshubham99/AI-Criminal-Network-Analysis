@@ -7,8 +7,11 @@
  * backend's error envelope is decoded, and no component anywhere that can
  * quietly reach the network on its own.
  *
- * There are no external services. The base URL is same-origin by default and
- * the Vite dev-server proxies it to the local FastAPI backend.
+ * The base URL is environment-configured, never compiled in: `VITE_API_BASE_URL`
+ * names the deployed API, and when it is unset the client falls back to a
+ * same-origin relative path that the Vite dev-server proxy forwards. The same
+ * build therefore runs locally or against a remote API with no code change.
+ * There are no third-party services.
  *
  * Almost all of this backend is read-only. The one exception is Phase 4.6's
  * ingestion routes (`POST /ingest/*`), which is why {@link HttpMethod} exists
@@ -17,7 +20,10 @@
  */
 import type { ApiErrorEnvelope } from '@/types/api';
 
-/** Same-origin by default; the dev-server proxy forwards to the backend. */
+/**
+ * The API root. Set `VITE_API_BASE_URL` to point at a deployed backend; unset,
+ * requests are same-origin relative and the dev-server proxy forwards them.
+ */
 export const API_BASE_URL: string =
   (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, '') || '/api/v1';
 
@@ -174,7 +180,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
     if (isAbortError(cause)) throw cause;
     throw new ApiError({
       message:
-        'Cannot reach the analysis backend. Confirm the FastAPI server is running locally.',
+        'Cannot reach the analysis backend at this address. Check the configured API base URL and that the service is reachable.',
       status: 0,
       code: 'network_error',
       detail: cause instanceof Error ? cause.message : String(cause),

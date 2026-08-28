@@ -1,7 +1,7 @@
-import { useState, type ReactElement } from 'react';
+import { useMemo, useState, type ReactElement } from 'react';
 
 import { api } from '@/api';
-import { PATTERN_TYPES } from '@/types/api';
+import { PATTERN_TYPES, type PatternListResponse } from '@/types/api';
 import {
   Badge,
   EmptyState,
@@ -18,6 +18,34 @@ import { formatCount, formatMetric, truncate } from '@/utils/format';
 import { patternTypeLabel } from './labels';
 
 /**
+ * One response per category, merged into one.
+ *
+ * The categories are disjoint, so `total` is their sum — the number of patterns
+ * the backend holds across the categories this screen covers. `limit` is applied
+ * after the merge, so the panel shows the most severe across all of them rather
+ * than the whole of the first category's page.
+ */
+function mergePages(
+  pages: PatternListResponse[],
+  limit: number,
+  entityId: string | null,
+): PatternListResponse {
+  const patterns = [...pages.flatMap((page) => page.patterns)]
+    .sort((a, b) => b.severity - a.severity)
+    .slice(0, limit);
+
+  return {
+    total: pages.reduce((sum, page) => sum + page.total, 0),
+    count: patterns.length,
+    offset: 0,
+    limit,
+    patterns,
+    filters: { pattern_type: null, entity_id: entityId },
+    note: pages[0]?.note ?? '',
+  };
+}
+
+/**
  * Detected patterns, filtered by type and optionally scoped to one entity.
  *
  * The type filter is populated from the nine categories the backend detects, not
@@ -32,6 +60,8 @@ export function PatternList({
   onSelect,
   className,
   refreshKey = 0,
+  types = PATTERN_TYPES,
+  title = 'Patterns',
 }: {
   entityId?: string;
   limit?: number;
@@ -40,16 +70,40 @@ export function PatternList({
   className?: string;
   /** Bumped by the caller after a live event: refetches in place, no skeleton. */
   refreshKey?: number;
+  /**
+   * The categories this instance offers. Defaults to all nine. A domain screen
+   * narrows it to its own categories — and then "All" means all of *those*, so
+   * the list never silently mixes in a category the screen does not claim.
+   */
+  types?: readonly string[];
+  title?: string;
 }): ReactElement {
   const [patternType, setPatternType] = useState('');
+  const scoped = types.length < PATTERN_TYPES.length;
+  const typesKey = types.join(',');
 
   const list = useAsync(
-    (signal) =>
-      api.listPatterns(
-        { pattern_type: patternType || undefined, entity_id: entityId, limit },
-        { signal },
-      ),
-    [patternType, entityId, limit, refreshKey],
+    async (signal) => {
+      if (patternType || !scoped) {
+        return api.listPatterns(
+          { pattern_type: patternType || undefined, entity_id: entityId, limit },
+          { signal },
+        );
+      }
+      /*
+       * A narrowed screen asks for each of its own categories explicitly. The
+       * unfiltered list is ordered by severity across all nine, so a screen that
+       * shows two of them can find none of its own in that page and would report
+       * "no patterns detected" while the backend holds hundreds.
+       */
+      const pages = await Promise.all(
+        types.map((type) =>
+          api.listPatterns({ pattern_type: type, entity_id: entityId, limit }, { signal }),
+        ),
+      );
+      return mergePages(pages, limit, entityId ?? null);
+    },
+    [patternType, entityId, limit, refreshKey, typesKey],
   );
 
   const filter = (
@@ -63,7 +117,7 @@ export function PatternList({
         className="border-line-strong bg-inset text-ink-2 focus-visible:border-cyan-500 h-7 rounded-sm border px-1.5 text-2xs font-semibold"
       >
         <option value="">All</option>
-        {PATTERN_TYPES.map((type) => (
+        {types.map((type) => (
           <option key={type} value={type}>
             {patternTypeLabel(type)}
           </option>
@@ -72,18 +126,34 @@ export function PatternList({
     </label>
   );
 
+  /*
+   * With a narrowed `types` list the backend's unfiltered response still spans
+   * every category, so the out-of-scope rows are dropped here as a guard.
+   */
   const data = list.data;
-  const subtitle = data ? `${formatCount(data.count)} of ${formatCount(data.total)}` : undefined;
+  const allowed = useMemo(() => new Set(types), [types]);
+  const patterns = useMemo(
+    () =>
+      data
+        ? patternType
+          ? data.patterns
+          : data.patterns.filter((pattern) => allowed.has(pattern.pattern_type))
+        : [],
+    [data, patternType, allowed],
+  );
+  const subtitle = data
+    ? `${formatCount(patterns.length)} of ${formatCount(data.total)}`
+    : undefined;
 
   return (
     <Panel className={cn('flex min-w-0 flex-col', className)} data-testid="pattern-list">
-      <PanelHeader title="Patterns" subtitle={subtitle} accent actions={filter} />
+      <PanelHeader title={title} subtitle={subtitle} accent actions={filter} />
       <PanelBody className="min-h-0 flex-1 overflow-y-auto">
         {list.isInitialLoading ? <SkeletonRows rows={5} /> : null}
 
         {list.error ? <ErrorState error={list.error} onRetry={list.retry} /> : null}
 
-        {data && data.patterns.length === 0 ? (
+        {data && patterns.length === 0 ? (
           <EmptyState
             title="No patterns detected"
             description={
@@ -94,9 +164,9 @@ export function PatternList({
           />
         ) : null}
 
-        {data && data.patterns.length > 0 ? (
+        {data && patterns.length > 0 ? (
           <ul className="space-y-1.5">
-            {data.patterns.map((pattern) => {
+            {patterns.map((pattern) => {
               const active = pattern.pattern_id === selectedId;
               return (
                 <li key={pattern.pattern_id}>

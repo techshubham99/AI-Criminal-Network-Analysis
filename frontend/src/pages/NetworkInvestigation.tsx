@@ -1,41 +1,18 @@
 /**
- * NetworkInvestigation — the flagship screen (spec §5).
+ * The investigation workspace — one subject, one full page.
  *
- * One subject, one graph, one evidence trail. The page is a thin orchestrator:
- * it converts a route parameter into the two requests this backend actually
- * offers for a person-rooted network, filters what came back, and hands the
- * result to the graph components. It computes no analytics of its own and
- * invents no fields.
+ * Without a person id: subject search. With one: a header carrying the subject,
+ * their priority band and their key counts, then a tab bar over eight views. The
+ * active tab owns the main content; the graph is the page, not a thumbnail beside
+ * a rail, and selected entity/edge detail arrives in a drawer over it.
  *
- * Four decisions worth knowing before reading the code:
- *
- *  1. THE TWO ID FORMS. The route carries the backend's NUMERIC person id
- *     (`/network/445`) because `/graph/persons/{id}/network` parses that segment
- *     as an integer and answers HTTP 422 for `person:445`. Everything displayed
- *     — and `focusEntityId` — uses the PREFIXED id the response itself speaks,
- *     read from `meta`/`anchor` rather than rebuilt by string concatenation.
- *
- *  2. NO OVERLAY, EVER. `include_overlay` is pinned false in the request and
- *     there is no control for it. `SAME_RING` is the synthetic generator's own
- *     answer key, not evidence; the edge list is additionally filtered on
- *     `is_overlay` so it cannot reach the canvas even if the backend's default
- *     ever changed.
- *
- *  3. RESPONSES ARE MATCHED TO THE SUBJECT BEFORE THEY ARE DRAWN. `useAsync`
- *     keeps the previous payload while the next request is in flight, which is
- *     exactly what a depth switch needs (the old graph stays on screen instead
- *     of flashing empty) and exactly what a *subject* switch must not have
- *     (person A's graph under person B's name). Both payloads are therefore
- *     gated on the anchor's own id matching the requested one.
- *
- *  4. FILTERING HIDES ORPHANS. Turning off a relationship type removes its
- *     edges; any attribute node that was only held on screen by those edges is
- *     dropped with them, so the canvas never fills with floating dots. The
- *     anchor is the one node that always stays.
+ * The Communication, Financial and Locations tabs render the very components
+ * their own routes render, scoped to this subject — one implementation per
+ * product area, not a second abbreviated copy of each.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, ReactElement, ReactNode } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { api } from '@/api';
 import type { ApiError } from '@/api/client';
@@ -47,7 +24,7 @@ import {
   NodeDetailsPanel,
 } from '@/components/graph';
 import type { NetworkGraphHandle } from '@/components/graph';
-import { ActivityTimeline, PersonIntelligence } from '@/components/intelligence';
+import { ActivityTimeline, BAND_TONE, PersonIntelligence } from '@/components/intelligence';
 import { SearchResultList } from '@/components/search/SearchResultList';
 import {
   Badge,
@@ -60,9 +37,7 @@ import {
   Panel,
   PanelBody,
   PanelHeader,
-  ProvenanceTag,
   RelationshipBadge,
-  SectionHeading,
   Skeleton,
   SkeletonRows,
   Spinner,
@@ -71,82 +46,130 @@ import {
 import { useAsync } from '@/hooks/useAsync';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useInvestigation } from '@/hooks/useInvestigation';
-import type { EdgeOut, NodeOut, PersonDetailResponse } from '@/types/api';
+import { PersonCommunication } from '@/pages/CommunicationPage';
+import { PersonFinancial } from '@/pages/FinancialPage';
+import { PersonLocations } from '@/pages/LocationsPage';
+import type { EdgeOut, NodeOut, PersonDetailResponse, PriorityScoreOut } from '@/types/api';
 import { cn } from '@/utils/cn';
 import { personIdFromEntityId } from '@/utils/entity';
 import { formatCount, humanizeToken, sortedCounts } from '@/utils/format';
 import { flattenScalars, readBoolean, readNumber } from '@/utils/records';
 
-/* The graph is the dominant element on this page: a tall canvas that still has
-   a floor on a short laptop screen. The right-hand rail is matched to it on
-   `lg` so it scrolls independently instead of stretching the page. */
-const CANVAS_HEIGHT = 'h-[62vh] min-h-[480px]';
-
-/** `ring_id` arrives inside `attributes`; it is held out of the observed rows. */
+/** The graph owns the main content area, so it is sized against the viewport. */
+const CANVAS_HEIGHT = 'h-[68vh] min-h-[520px]';
 const OVERLAY_ATTRIBUTE_KEYS = ['ring_id', 'ground_truth_ring_id'];
-
-/** The generator's ground-truth edge type. Never counted as observed evidence. */
 const OVERLAY_EDGE_TYPE = 'SAME_RING';
-
-/** Backend caps search at 50; 10 persons is a comfortable page list. */
 const SEARCH_LIMIT = 20;
 const MIN_QUERY_LENGTH = 2;
 
-/**
- * Deterministic listbox/option ids, mirroring the scheme documented in
- * `SearchResultList` (and duplicated in `GlobalSearch`): the component's props
- * are a fixed contract with no slot for an id prefix, so the convention is
- * shared rather than passed.
- */
-const PAGE_LISTBOX_ID = 'cna-page-search-listbox';
+const PAGE_LISTBOX_ID = 'tracex-page-search-listbox';
 const pageOptionDomId = (entityId: string) =>
-  `cna-page-search-option-${entityId.replace(/[^A-Za-z0-9]+/g, '-')}`;
+  `tracex-page-search-option-${entityId.replace(/[^A-Za-z0-9]+/g, '-')}`;
 
-const NEUTRAL_FRAMING =
-  'This view shows entities that are structurally connected to the subject in the observed synthetic data, as investigation leads. Connectivity is not culpability: nothing here asserts that any person or group is criminal.';
+type WorkspaceTab =
+  | 'overview'
+  | 'network'
+  | 'communication'
+  | 'financial'
+  | 'locations'
+  | 'fir'
+  | 'timeline'
+  | 'evidence';
+
+const TAB_LABELS: Array<{ id: WorkspaceTab; label: string; icon: ReactNode }> = [
+  { id: 'overview', label: 'Overview', icon: <OverviewIcon /> },
+  { id: 'network', label: 'Network', icon: <NetworkIcon /> },
+  { id: 'communication', label: 'Communication', icon: <CommsIcon /> },
+  { id: 'financial', label: 'Financial', icon: <FinancialIcon /> },
+  { id: 'locations', label: 'Locations', icon: <LocationIcon /> },
+  { id: 'fir', label: 'FIR', icon: <FirIcon /> },
+  { id: 'timeline', label: 'Timeline', icon: <TimelineIcon /> },
+  { id: 'evidence', label: 'Evidence', icon: <EvidenceIcon /> },
+];
+
+function OverviewIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="size-3.5">
+      <rect x="2" y="2" width="5" height="5" rx="0.8" /><rect x="9" y="2" width="5" height="5" rx="0.8" />
+      <rect x="2" y="9" width="5" height="5" rx="0.8" /><rect x="9" y="9" width="5" height="5" rx="0.8" />
+    </svg>
+  );
+}
+function NetworkIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden className="size-3.5">
+      <circle cx="4" cy="5" r="1.8" /><circle cx="12" cy="3.5" r="1.8" /><circle cx="8" cy="13" r="1.8" />
+      <path d="M5.5 5.5 10.5 4.5M5.5 6.5 7.5 11.5M11 5 9 11" />
+    </svg>
+  );
+}
+function CommsIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="size-3.5">
+      <path d="M14 10.8a1.4 1.4 0 0 1-1.4 1.4H4.2L1.8 14.6V4.2a1.4 1.4 0 0 1 1.4-1.4h9.4a1.4 1.4 0 0 1 1.4 1.4z" />
+    </svg>
+  );
+}
+function FinancialIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="size-3.5">
+      <line x1="8" y1="1" x2="8" y2="15" /><path d="M11.5 3.5H6.3a3 3 0 0 0 0 6h3.4a3 3 0 0 1 0 6H4" />
+    </svg>
+  );
+}
+function LocationIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="size-3.5">
+      <path d="M8 1.5a5 5 0 0 1 5 5c0 4-5 8-5 8s-5-4-5-8a5 5 0 0 1 5-5z" />
+      <circle cx="8" cy="6.5" r="2" />
+    </svg>
+  );
+}
+function FirIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="size-3.5">
+      <path d="M9.5 2H5A1.2 1.2 0 0 0 3.8 3.2v9.6A1.2 1.2 0 0 0 5 14h6a1.2 1.2 0 0 0 1.2-1.2V5z" />
+      <path d="M9.5 2v3H12.2M5.5 8.5h5M5.5 11h3" />
+    </svg>
+  );
+}
+function TimelineIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden className="size-3.5">
+      <line x1="8" y1="2" x2="8" y2="14" /><circle cx="8" cy="4.5" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="8" cy="8" r="1.5" fill="currentColor" stroke="none" /><circle cx="8" cy="11.5" r="1.5" fill="currentColor" stroke="none" />
+      <line x1="4" y1="4.5" x2="6.5" y2="4.5" /><line x1="4" y1="8" x2="6.5" y2="8" /><line x1="4" y1="11.5" x2="6.5" y2="11.5" />
+    </svg>
+  );
+}
+function EvidenceIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="size-3.5">
+      <path d="M8 2a6 6 0 0 1 6 6M2 8a6 6 0 0 1 6-6" /><path d="M4.5 8a3.5 3.5 0 0 1 7 0v1.6" />
+      <path d="M6.5 8a1.5 1.5 0 0 1 3 0v3M8 13.5V8" />
+    </svg>
+  );
+}
 
 /* ========================================================================== */
 /* Page                                                                       */
 /* ========================================================================== */
 
-export function NetworkInvestigation(): ReactElement {
+export function NetworkInvestigation({ defaultTab }: { defaultTab?: WorkspaceTab }): ReactElement {
   const { personId: personIdParam } = useParams();
   const navigate = useNavigate();
 
-  /* The path parameter is a plain integer. A non-numeric value is a not-found
-     state rather than a request: `/graph/persons/person:445/network` is an
-     HTTP 422, so firing it would only turn a bad URL into a backend error. */
   const personId =
     personIdParam !== undefined && /^\d+$/.test(personIdParam) ? Number(personIdParam) : null;
   const invalidParam = personIdParam !== undefined && personId === null;
 
   return (
     <div className="space-y-4">
-      <SectionHeading
-        title="Network Investigation"
-        subtitle={NEUTRAL_FRAMING}
-        actions={
-          personId !== null ? (
-            <Button variant="secondary" size="sm" onClick={() => navigate('/network')}>
-              Change subject
-            </Button>
-          ) : null
-        }
-      />
-
       {invalidParam ? (
         <EmptyState
           icon="search"
           title="That is not a person id"
-          description={
-            <>
-              This app's network routes carry the backend's own numeric person id — for example{' '}
-              <Mono>/network/445</Mono>. The path segment of{' '}
-              <Mono>/graph/persons/{'{person_id}'}/network</Mono> is parsed as an integer, so a
-              prefixed id such as <Mono>person:445</Mono> is rejected with HTTP 422. No request was
-              sent for <Mono className="break-all">{personIdParam}</Mono>.
-            </>
-          }
+          description="This route carries a numeric person id. Search for a person by name."
           action={
             <Button variant="primary" onClick={() => navigate('/network')}>
               Search for a person
@@ -156,21 +179,16 @@ export function NetworkInvestigation(): ReactElement {
       ) : personId === null ? (
         <SubjectPicker />
       ) : (
-        <NetworkView personId={personId} />
+        <NetworkView personId={personId} defaultTab={defaultTab} />
       )}
     </div>
   );
 }
 
 /* ========================================================================== */
-/* No subject yet — a person search                                           */
+/* No subject — subject picker                                                 */
 /* ========================================================================== */
 
-/**
- * The network endpoint is person-rooted, so an investigation has to start from a
- * person. That limitation is stated rather than hidden, and non-person matches
- * are held out of the list instead of being rendered as rows that cannot open.
- */
 function SubjectPicker(): ReactElement {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -188,8 +206,6 @@ function SubjectPicker(): ReactElement {
     { enabled: canSearch },
   );
 
-  /* The response echoes the query it answered, which is the cheapest possible
-     guard against rendering the previous term's hits under the current one. */
   const results = useMemo(
     () => (data && data.query === debounced ? data.results : []),
     [data, debounced],
@@ -201,9 +217,7 @@ function SubjectPicker(): ReactElement {
   );
   const otherCount = results.length - personRows.length;
 
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [debounced]);
+  useEffect(() => { setActiveIndex(0); }, [debounced]);
 
   const clampedActive =
     personRows.length === 0 ? -1 : Math.min(Math.max(activeIndex, 0), personRows.length - 1);
@@ -211,7 +225,6 @@ function SubjectPicker(): ReactElement {
   const select = useCallback(
     (node: NodeOut) => {
       const nextId = personIdFromEntityId(node.entity_id);
-      // A non-person result cannot root a person-rooted network; skip it.
       if (nextId === null) return;
       navigate(`/network/${nextId}`);
     },
@@ -229,20 +242,9 @@ function SubjectPicker(): ReactElement {
         event.preventDefault();
         setActiveIndex((i) => (Math.max(i, 0) - 1 + personRows.length) % personRows.length);
         break;
-      case 'Home':
-        event.preventDefault();
-        setActiveIndex(0);
-        break;
-      case 'End':
-        event.preventDefault();
-        setActiveIndex(personRows.length - 1);
-        break;
       case 'Enter': {
         const row = clampedActive >= 0 ? personRows[clampedActive] : undefined;
-        if (row) {
-          event.preventDefault();
-          select(row);
-        }
+        if (row) { event.preventDefault(); select(row); }
         break;
       }
       case 'Escape':
@@ -254,8 +256,6 @@ function SubjectPicker(): ReactElement {
     }
   };
 
-  // The debounce has not caught up with the field, so no request has been made
-  // for what is on screen yet — distinct from "loading".
   const settling = trimmed.length >= MIN_QUERY_LENGTH && debounced !== trimmed;
   const invalidQuery = error !== null && error.status === 422;
   const hardError = error !== null && !invalidQuery;
@@ -263,175 +263,152 @@ function SubjectPicker(): ReactElement {
   const listVisible = personRows.length > 0 && !settling;
 
   return (
-    <Panel>
-      <PanelHeader
-        title="Select an investigation subject"
-        subtitle="Search persons by name."
-      />
-      <PanelBody className="px-4 py-4">
-        <label className="field-label" htmlFor="cna-network-subject-search">
-          Person name
-        </label>
-        <div className="relative mt-1.5">
-          <span
-            aria-hidden
-            className="text-ink-4 pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="size-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-            >
-              <circle cx="10.5" cy="10.5" r="6.25" />
-              <path d="m15.2 15.2 4.3 4.3" strokeLinecap="round" />
-            </svg>
-          </span>
-          <input
-            id="cna-network-subject-search"
-            ref={inputRef}
-            type="search"
-            role="combobox"
-            aria-expanded={listVisible}
-            aria-controls={listVisible ? PAGE_LISTBOX_ID : undefined}
-            aria-activedescendant={
-              listVisible && clampedActive >= 0
-                ? pageOptionDomId(personRows[clampedActive].entity_id)
-                : undefined
-            }
-            aria-autocomplete="list"
-            aria-describedby="cna-network-subject-help"
-            autoComplete="off"
-            spellCheck={false}
-            value={query}
-            placeholder="e.g. Ojas"
-            onChange={(event) => setQuery(event.target.value)}
-            onKeyDown={onKeyDown}
-            className={cn(
-              'bg-inset border-line-strong text-ink placeholder:text-ink-4 h-9 w-full rounded-sm border pr-9 pl-8 font-sans text-xs transition-colors',
-              'hover:border-line-accent focus:border-cyan-600/60',
-              '[&::-webkit-search-cancel-button]:hidden',
-            )}
-          />
-          <span className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2">
-            {isLoading || settling ? <Spinner className="size-3" label="Searching" /> : null}
-          </span>
-        </div>
-        <p id="cna-network-subject-help" className="text-ink-4 mt-1.5 text-2xs">
-          Type at least {MIN_QUERY_LENGTH} characters. Arrow keys move through results, Enter opens
-          one.
-        </p>
+    <div className="mx-auto max-w-xl pt-10">
+      <div className="animate-fade-in mb-6 text-center">
+        <h1 className="text-ink text-lg font-bold tracking-tight">Network</h1>
+      </div>
 
-        <div className="mt-4">
-          {trimmed.length === 0 ? (
-            <EmptyState
-              icon="graph"
-              title="An investigation starts from a person"
-              description={
-                <>
-                  This backend's network endpoint is person-rooted —{' '}
-                  <Mono>/graph/persons/{'{person_id}'}/network</Mono> — so a phone, Aadhaar id,
-                  location or cell tower cannot be the root of a graph. Those entities appear{' '}
-                  <em className="not-italic font-semibold">inside</em> a person's network, and can be
-                  examined on the Evidence &amp; Provenance screen. Search for a person above to
-                  begin.
-                </>
+      <Panel>
+        <PanelBody className="px-5 py-5">
+          <label className="field-label" htmlFor="tracex-network-subject-search">
+            Subject search
+          </label>
+          <div className="relative mt-2">
+            <span aria-hidden className="text-ink-4 pointer-events-none absolute top-1/2 left-3 -translate-y-1/2">
+              <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <circle cx="10.5" cy="10.5" r="6.25" />
+                <path d="m15.2 15.2 4.3 4.3" strokeLinecap="round" />
+              </svg>
+            </span>
+            <input
+              id="tracex-network-subject-search"
+              ref={inputRef}
+              type="search"
+              role="combobox"
+              aria-expanded={listVisible}
+              aria-controls={listVisible ? PAGE_LISTBOX_ID : undefined}
+              aria-activedescendant={
+                listVisible && clampedActive >= 0
+                  ? pageOptionDomId(personRows[clampedActive].entity_id)
+                  : undefined
               }
+              aria-autocomplete="list"
+              autoComplete="off"
+              spellCheck={false}
+              value={query}
+              placeholder="Search by person name…"
+              onChange={(event) => setQuery(event.target.value)}
+              onKeyDown={onKeyDown}
+              className={cn(
+                'bg-inset border-line-strong text-ink placeholder:text-ink-4 h-10 w-full rounded-sm border pr-9 pl-9 font-sans text-sm transition-colors',
+                'hover:border-line-accent focus:border-cyan-600/60',
+                '[&::-webkit-search-cancel-button]:hidden',
+              )}
             />
-          ) : trimmed.length < MIN_QUERY_LENGTH ? (
-            <p className="text-ink-3 text-xs">
-              Type at least {MIN_QUERY_LENGTH} characters to search the graph.
-            </p>
-          ) : invalidQuery ? (
-            <p className="text-ink-3 text-xs">
-              The backend rejected this as an empty or invalid query, so nothing was searched.
-            </p>
-          ) : hardError ? (
-            <ErrorState error={error} onRetry={retry} />
-          ) : settling || isLoading ? (
-            <SkeletonRows rows={5} />
-          ) : emptyAnswer ? (
-            <EmptyState
-              icon="search"
-              title="No person matches that name"
-              description={
-                <>
-                  Nothing in the graph's person records matches{' '}
-                  <span className="text-ink-2 font-mono">{debounced}</span>.
-                  {otherCount > 0 ? (
-                    <>
-                      {' '}
-                      The search did return {formatCount(otherCount)} non-person{' '}
-                      {otherCount === 1 ? 'match' : 'matches'} — those open on the Evidence &amp;
-                      Provenance screen, because a network can only be rooted at a person.
-                    </>
-                  ) : null}
-                </>
-              }
-            />
-          ) : (
-            <>
-              <SearchResultList
-                results={personRows}
-                activeIndex={clampedActive}
-                onSelect={select}
-                onHoverIndex={setActiveIndex}
-                variant="page"
-                className={isLoading ? 'opacity-60 transition-opacity' : undefined}
-              />
-              <p className="text-ink-4 mt-3 text-2xs leading-relaxed">
-                {formatCount(personRows.length)} person{personRows.length === 1 ? '' : 's'} shown
-                {otherCount > 0
-                  ? ` · ${formatCount(otherCount)} non-person ${
-                      otherCount === 1 ? 'match' : 'matches'
-                    } held back, because the network endpoint is person-rooted`
-                  : ''}
-                .
+            <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2">
+              {isLoading || settling ? <Spinner className="size-3" label="Searching" /> : null}
+            </span>
+          </div>
+
+          <div className="mt-4">
+            {trimmed.length === 0 ? (
+              <p className="text-ink-4 py-4 text-center text-xs">
+                Type a name to search the graph corpus.
               </p>
-            </>
-          )}
-        </div>
-      </PanelBody>
-    </Panel>
+            ) : trimmed.length < MIN_QUERY_LENGTH ? (
+              <p className="text-ink-3 py-2 text-xs">Type at least {MIN_QUERY_LENGTH} characters.</p>
+            ) : invalidQuery ? (
+              <p className="text-ink-3 py-2 text-xs">Invalid query.</p>
+            ) : hardError ? (
+              <ErrorState error={error} onRetry={retry} compact />
+            ) : settling || isLoading ? (
+              <SkeletonRows rows={5} />
+            ) : emptyAnswer ? (
+              <p className="text-ink-3 py-4 text-center text-xs">
+                No person matches <Mono>{debounced}</Mono>.
+                {otherCount > 0 ? ` ${otherCount} non-person result(s) found — search evidence instead.` : ''}
+              </p>
+            ) : (
+              <>
+                <SearchResultList
+                  results={personRows}
+                  activeIndex={clampedActive}
+                  onSelect={select}
+                  onHoverIndex={setActiveIndex}
+                  variant="page"
+                  className={isLoading ? 'opacity-60 transition-opacity' : undefined}
+                />
+                {otherCount > 0 ? (
+                  <p className="text-ink-4 mt-2 text-2xs">
+                    {otherCount} non-person result(s) not shown.
+                  </p>
+                ) : null}
+              </>
+            )}
+          </div>
+        </PanelBody>
+      </Panel>
+    </div>
   );
 }
 
 /* ========================================================================== */
-/* The investigation itself                                                   */
+/* Investigation workspace                                                     */
 /* ========================================================================== */
 
-function NetworkView({ personId }: { personId: number }): ReactElement {
+function NetworkView({ personId, defaultTab }: { personId: number; defaultTab?: WorkspaceTab }): ReactElement {
   const navigate = useNavigate();
   const { setSubject } = useInvestigation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const graphRef = useRef<NetworkGraphHandle>(null);
 
+  // Tab state from URL search param
+  const tabParam = searchParams.get('tab') as WorkspaceTab | null;
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>(
+    tabParam ?? defaultTab ?? 'overview',
+  );
+
+  const handleTabChange = useCallback((tab: WorkspaceTab) => {
+    setActiveTab(tab);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set('tab', tab);
+      return next;
+    }, { replace: true });
+  }, [setSearchParams]);
+
+  // Sync URL → state
+  useEffect(() => {
+    const urlTab = searchParams.get('tab') as WorkspaceTab | null;
+    if (urlTab && urlTab !== activeTab) setActiveTab(urlTab);
+  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Graph state (used when Network tab is active)
   const [depth, setDepth] = useState<1 | 2>(1);
   const [personsOnly, setPersonsOnly] = useState(false);
-  /** `null` means "every relationship type the response contains" — so a type
-      that only appears at depth 2 arrives enabled rather than silently hidden. */
   const [enabledTypes, setEnabledTypes] = useState<string[] | null>(null);
   const [selectedNode, setSelectedNode] = useState<NodeOut | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<EdgeOut | null>(null);
 
-  /* Both requests take the NUMBER. `include_overlay` is stated explicitly so the
-     absence of ground-truth edges is a visible decision, not a default. */
   const detail = useAsync((signal) => api.getPersonDetail(personId, { signal }), [personId]);
+  /* The header's priority band. The Overview tab reads the full breakdown itself. */
+  const priority = useAsync(
+    (signal) => api.getPersonIntelligence(personId, { signal }),
+    [personId],
+  );
   const network = useAsync(
     (signal) =>
-      api.getPersonNetwork(
-        personId,
-        { depth, persons_only: personsOnly, include_overlay: false },
-        { signal },
-      ),
+      api.getPersonNetwork(personId, { depth, persons_only: personsOnly, include_overlay: false }, { signal }),
     [personId, depth, personsOnly],
   );
 
-  /* Gate both payloads on the anchor's own id. A depth change keeps the previous
-     graph on screen (same person); a subject change does not. */
   const detailData =
     detail.data && personIdFromEntityId(detail.data.person.entity_id) === personId
       ? detail.data
+      : null;
+  const priorityData =
+    priority.data && priority.data.priority.person_id === personId
+      ? priority.data.priority
       : null;
   const networkData =
     network.data && personIdFromEntityId(network.data.anchor.entity_id) === personId
@@ -442,33 +419,23 @@ function NetworkView({ personId }: { personId: number }): ReactElement {
   const anchorEntityId = anchor?.entity_id ?? null;
   const anchorLabel = anchor?.label ?? null;
 
-  /* ------------------------------------------------ shell investigation subject */
   useEffect(() => {
     if (!anchorEntityId || !anchorLabel) return;
-    // The PREFIXED id the response itself reported — never rebuilt from the route.
     setSubject({ entityId: anchorEntityId, label: anchorLabel, kind: 'person' });
   }, [anchorEntityId, anchorLabel, setSubject]);
 
-  // `setSubject` is referentially stable, so this cleanup runs on unmount only.
   useEffect(() => () => setSubject(null), [setSubject]);
 
-  /* ------------------------------------------------------------------- filters */
-  // A new request is a new answer: the previous type filter and selection no
-  // longer describe anything on screen.
   useEffect(() => {
     setEnabledTypes(null);
     setSelectedNode(null);
     setSelectedEdge(null);
   }, [personId, depth, personsOnly]);
 
-  /* Overlay edges are never requested. This filter is the second line of
-     defence: SAME_RING is the generator's answer key and must not be drawable. */
   const observedEdges = useMemo(
     () =>
       networkData
-        ? networkData.edges.filter(
-            (edge) => !edge.is_overlay && edge.relationship_type !== OVERLAY_EDGE_TYPE,
-          )
+        ? networkData.edges.filter((e) => !e.is_overlay && e.relationship_type !== OVERLAY_EDGE_TYPE)
         : [],
     [networkData],
   );
@@ -486,15 +453,10 @@ function NetworkView({ personId }: { personId: number }): ReactElement {
   const enabledSet = useMemo(() => new Set(enabledList), [enabledList]);
 
   const filteredEdges = useMemo(
-    () => observedEdges.filter((edge) => enabledSet.has(edge.relationship_type)),
+    () => observedEdges.filter((e) => enabledSet.has(e.relationship_type)),
     [observedEdges, enabledSet],
   );
 
-  /**
-   * Visible nodes = the endpoints of the surviving edges, plus the anchor.
-   * Without this, hiding OWNS_PHONE / LOCATED_AT would leave the phone and
-   * location nodes floating unattached in the middle of the canvas.
-   */
   const visibleNodes = useMemo(() => {
     if (!networkData) return [] as NodeOut[];
     const keep = new Set<string>();
@@ -504,482 +466,698 @@ function NetworkView({ personId }: { personId: number }): ReactElement {
     }
     keep.add(networkData.anchor.entity_id);
     const kept = networkData.nodes.filter((node) => keep.has(node.entity_id));
-    // The anchor is in `nodes` on this backend; the guard keeps the focus node
-    // present even so, because a graph with no anchor is unreadable.
-    if (!kept.some((node) => node.entity_id === networkData.anchor.entity_id)) {
-      kept.unshift(networkData.anchor);
-    }
+    if (!kept.some((node) => node.entity_id === networkData.anchor.entity_id)) kept.unshift(networkData.anchor);
     return kept;
   }, [networkData, filteredEdges]);
 
   const nodeTypeCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    for (const node of visibleNodes) {
-      counts[node.entity_type] = (counts[node.entity_type] ?? 0) + 1;
-    }
+    for (const node of visibleNodes) counts[node.entity_type] = (counts[node.entity_type] ?? 0) + 1;
     return counts;
   }, [visibleNodes]);
 
   const hiddenEdgeCount = observedEdges.length - filteredEdges.length;
   const hiddenNodeCount = Math.max(0, (networkData?.nodes.length ?? 0) - visibleNodes.length);
 
-  /* --------------------------------------------------------------- selection */
-  const visibleNodeIds = useMemo(
-    () => new Set(visibleNodes.map((node) => node.entity_id)),
-    [visibleNodes],
-  );
-  const visibleEdgeIds = useMemo(
-    () => new Set(filteredEdges.map((edge) => edge.relationship_id)),
-    [filteredEdges],
-  );
+  const visibleNodeIds = useMemo(() => new Set(visibleNodes.map((n) => n.entity_id)), [visibleNodes]);
+  const visibleEdgeIds = useMemo(() => new Set(filteredEdges.map((e) => e.relationship_id)), [filteredEdges]);
 
-  /* Derived, not stored: an element the filter or a new response removed from the
-     canvas must not keep a details panel open beside it. */
-  const activeNode =
-    selectedNode && visibleNodeIds.has(selectedNode.entity_id) ? selectedNode : null;
-  const activeEdge =
-    selectedEdge && visibleEdgeIds.has(selectedEdge.relationship_id) ? selectedEdge : null;
+  const activeNode = selectedNode && visibleNodeIds.has(selectedNode.entity_id) ? selectedNode : null;
+  const activeEdge = selectedEdge && visibleEdgeIds.has(selectedEdge.relationship_id) ? selectedEdge : null;
 
-  // One panel at a time: a node selection clears the edge and vice versa.
   const handleSelectNode = useCallback((node: NodeOut | null) => {
-    setSelectedEdge(null);
-    setSelectedNode(node);
+    setSelectedEdge(null); setSelectedNode(node);
   }, []);
   const handleSelectEdge = useCallback((edge: EdgeOut | null) => {
-    setSelectedNode(null);
-    setSelectedEdge(edge);
+    setSelectedNode(null); setSelectedEdge(edge);
   }, []);
 
-  const toggleEdgeType = useCallback(
-    (edgeType: string) => {
-      setEnabledTypes((previous) => {
-        const base = previous ?? availableTypes;
-        return base.includes(edgeType)
-          ? base.filter((type) => type !== edgeType)
-          : [...base, edgeType];
-      });
-    },
-    [availableTypes],
-  );
+  const toggleEdgeType = useCallback((edgeType: string) => {
+    setEnabledTypes((prev) => {
+      const base = prev ?? availableTypes;
+      return base.includes(edgeType) ? base.filter((t) => t !== edgeType) : [...base, edgeType];
+    });
+  }, [availableTypes]);
 
-  const setAllEdgeTypes = useCallback((enabled: boolean) => {
-    // `null` rather than a copy of the list, so "All" also covers types that
-    // appear only after the next response.
-    setEnabledTypes(enabled ? null : []);
-  }, []);
+  const setAllEdgeTypes = useCallback((enabled: boolean) => setEnabledTypes(enabled ? null : []), []);
 
-  /* ------------------------------------------------------------- navigation */
-  const handleInvestigate = useCallback(
-    (personEntityId: string) => {
-      // The callback hands over a PREFIXED id; the route needs the integer.
-      const nextId = personIdFromEntityId(personEntityId);
-      if (nextId === null) return;
-      navigate(`/network/${nextId}`);
-    },
-    [navigate],
-  );
+  const handleInvestigate = useCallback((personEntityId: string) => {
+    const nextId = personIdFromEntityId(personEntityId);
+    if (nextId === null) return;
+    navigate(`/network/${nextId}`);
+  }, [navigate]);
 
   const handleOpenFir = useCallback((firId: number) => navigate(`/fir/${firId}`), [navigate]);
-
-  /* ---------------------------------------------------------- graph controls */
   const handleFit = useCallback(() => graphRef.current?.fit(), []);
   const handleZoomIn = useCallback(() => graphRef.current?.zoomIn(), []);
   const handleZoomOut = useCallback(() => graphRef.current?.zoomOut(), []);
   const handleRelayout = useCallback(() => graphRef.current?.relayout(), []);
 
-  /* ------------------------------------------------------------------ states */
   const graphError = network.status === 'error' ? network.error : null;
-  // No matching payload and no error: either the first load or a subject switch.
   const showGraphSkeleton = !networkData && !graphError;
   const emptyAnswer = networkData !== null && observedEdges.length === 0;
-
   const responseNodeCount = readNumber(networkData?.meta, 'node_count') ?? visibleNodes.length;
   const responseEdgeCount = readNumber(networkData?.meta, 'edge_count') ?? observedEdges.length;
   const truncated = readBoolean(networkData?.meta, 'truncated') ?? false;
+  const duplicateFailure = graphError !== null && detail.error !== null && graphError.status === detail.error.status;
 
-  /* Both requests failing with the same status is one fact (usually a 404 for an
-     unknown id), so it is reported once, by the larger panel. */
-  const duplicateFailure =
-    graphError !== null && detail.error !== null && graphError.status === detail.error.status;
+  if (graphError && graphError.status === 404) {
+    return (
+      <div className="space-y-4">
+        <GraphRequestError error={graphError} onRetry={network.retry} />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-4">
-      {/* ------------------------------------------------------ subject header */}
-      {detailData ? (
-        <SubjectHeader detail={detailData} />
-      ) : detail.status === 'error' ? (
-        duplicateFailure ? null : (
-          <ErrorState
-            error={detail.error}
-            onRetry={detail.retry}
-            title="Subject record unavailable"
-            compact
-          />
-        )
-      ) : (
-        <SubjectHeaderSkeleton />
-      )}
+    <div className="space-y-3 animate-fade-in" data-testid="investigation-workspace">
+      {/* Investigation header */}
+      <InvestigationHeader
+        detail={detailData}
+        priority={priorityData}
+        isLoading={detail.isInitialLoading}
+        error={detail.error && !duplicateFailure ? detail.error : null}
+        onRetry={detail.retry}
+        onBack={() => navigate('/network')}
+      />
 
-      {/* --------------------------------------------- Phase 4 priority strip */}
-      {/* A summary above the canvas, not a replacement for it: the graph and the
-          entity/evidence panels below are untouched. */}
-      <PersonIntelligence personId={personId} />
-
-      {/* --------------------------------------------------------- main layout */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_17.5rem] xl:grid-cols-[minmax(0,1fr)_21rem]">
-        {/* Graph first in source order, so the stacked layout below `lg` leads
-            with the canvas rather than with the legend. */}
-        <div className="min-w-0 space-y-2.5">
-          <GraphToolbar
-            depth={depth}
-            onDepthChange={setDepth}
-            personsOnly={personsOnly}
-            onPersonsOnlyChange={setPersonsOnly}
-            nodeCount={responseNodeCount}
-            edgeCount={responseEdgeCount}
-            truncated={truncated}
-            isLoading={network.isLoading}
-            onFit={handleFit}
-            onZoomIn={handleZoomIn}
-            onZoomOut={handleZoomOut}
-            onRelayout={handleRelayout}
-          />
-
-          {graphError ? (
-            <GraphRequestError error={graphError} onRetry={network.retry} />
-          ) : showGraphSkeleton ? (
-            <CanvasSkeleton />
-          ) : emptyAnswer ? (
-            <div className={cn('flex items-center justify-center', CANVAS_HEIGHT)}>
-              <EmptyState
-                icon="graph"
-                title="No relationships at this depth"
-                description={
-                  <>
-                    The person record exists and was returned, but the backend reports no observed
-                    relationships for{' '}
-                    {depth === 1 ? 'direct links' : 'either hop'} with the current settings. This is
-                    an answer, not a failure — some records in this synthetic corpus are isolated.
-                    {personsOnly
-                      ? ' The persons-only projection is on, which hides phone, Aadhaar, location and cell-tower links; turning it off may reveal some.'
-                      : ''}
-                  </>
-                }
-                action={
-                  <div className="flex flex-wrap items-center justify-center gap-2">
-                    {depth === 1 ? (
-                      <Button variant="primary" size="sm" onClick={() => setDepth(2)}>
-                        Try 2 hops
-                      </Button>
-                    ) : null}
-                    {personsOnly ? (
-                      <Button variant="secondary" size="sm" onClick={() => setPersonsOnly(false)}>
-                        Turn off persons-only
-                      </Button>
-                    ) : null}
-                  </div>
-                }
-              />
-            </div>
-          ) : (
-            <NetworkGraph
-              ref={graphRef}
-              nodes={visibleNodes}
-              edges={filteredEdges}
-              /* The PREFIXED anchor id from the response — the form the node
-                 elements actually carry. */
-              focusEntityId={anchorEntityId}
-              selectedNodeId={activeNode?.entity_id ?? null}
-              selectedEdgeId={activeEdge?.relationship_id ?? null}
-              onSelectNode={handleSelectNode}
-              onSelectEdge={handleSelectEdge}
-              className={cn(
-                CANVAS_HEIGHT,
-                // A refresh dims the previous graph instead of blanking it.
-                network.isLoading && 'opacity-60 transition-opacity',
-              )}
-            />
-          )}
-
-          {/* Live readout of what the canvas is actually showing, plus the
-              filter's cost, which must never be silent. */}
-          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
-            <p className="text-ink-4 text-2xs leading-relaxed">
-              Lines are relationships recorded in the synthetic source data. Position in the layout
-              carries no meaning beyond connectivity, and node size is degree within this view — a
-              structural count, not a ranking of a person.
-            </p>
-            {hiddenEdgeCount > 0 ? (
-              <span className="flex shrink-0 items-center gap-2">
-                <Badge tone="neutral">
-                  {formatCount(hiddenEdgeCount)} of {formatCount(observedEdges.length)} edges hidden
-                  by filter
-                </Badge>
-                {hiddenNodeCount > 0 ? (
-                  <span className="text-ink-4 font-mono text-2xs">
-                    {formatCount(hiddenNodeCount)} orphaned {hiddenNodeCount === 1 ? 'node' : 'nodes'}{' '}
-                    dropped
-                  </span>
-                ) : null}
-                <Button variant="ghost" size="sm" onClick={() => setAllEdgeTypes(true)}>
-                  Show all
-                </Button>
-              </span>
-            ) : null}
-          </div>
-
-          <span role="status" aria-live="polite" className="sr-only">
-            {networkData
-              ? `${formatCount(visibleNodes.length)} entities and ${formatCount(
-                  filteredEdges.length,
-                )} relationships shown.`
-              : ''}
-          </span>
-        </div>
-
-        {/* --------------------------------------------------------- side rail */}
-        <aside className={cn('flex min-h-0 flex-col gap-4 lg:h-[62vh] lg:min-h-[480px]')}>
-          <Panel className="shrink-0">
-            <PanelHeader
-              title="Legend & filter"
-              subtitle="Untick a relationship type to take it off the canvas."
-            />
-            <PanelBody className="max-h-[22rem] overflow-y-auto px-3 py-3 lg:max-h-[15rem]">
-              <GraphLegend
-                nodeCounts={nodeTypeCounts}
-                edgeCounts={edgeTypeCounts}
-                enabledEdgeTypes={enabledList}
-                onToggleEdgeType={toggleEdgeType}
-                onSetAllEdgeTypes={setAllEdgeTypes}
-              />
-            </PanelBody>
-          </Panel>
-
-          {/* Only one of the two panels is ever mounted — a node selection and an
-              edge selection are mutually exclusive by construction above. */}
-          <div className="min-h-0 lg:flex-1">
-            {activeNode ? (
-              <NodeDetailsPanel
-                node={activeNode}
-                onClose={() => setSelectedNode(null)}
-                onInvestigate={handleInvestigate}
-                onOpenFir={handleOpenFir}
-                className="max-lg:h-[30rem]"
-              />
-            ) : activeEdge ? (
-              <EdgeEvidencePanel
-                edge={activeEdge}
-                onClose={() => setSelectedEdge(null)}
-                className="max-lg:h-[30rem]"
-              />
-            ) : (
-              <Panel className="h-full">
-                <PanelHeader
-                  title="Entity & evidence"
-                  subtitle="Nothing selected on the canvas yet."
-                />
-                <PanelBody className="px-3 py-3">
-                  <EmptyState
-                    icon="graph"
-                    title="Select something on the graph"
-                    description={
-                      <>
-                        Click an entity for its record, source dataset and structural position. Click
-                        a relationship for the dataset rows it was derived from. Keyboard: tab into
-                        the canvas, then <Mono>+</Mono> / <Mono>-</Mono> to zoom, <Mono>0</Mono> to
-                        fit, arrows to pan.
-                      </>
-                    }
-                  />
-                </PanelBody>
-              </Panel>
-            )}
-          </div>
-        </aside>
+      {/* Tab bar */}
+      <div className="tab-bar bg-panel border-line rounded-t-lg border px-2">
+        {TAB_LABELS.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            onClick={() => handleTabChange(tab.id)}
+            className="tab-item"
+            id={`tab-${tab.id}`}
+          >
+            {tab.icon}
+            {tab.label}
+          </button>
+        ))}
       </div>
 
-      {/* ------------------------------------------------------------ timeline */}
-      {/* Dated relationships only, taken from the same filtered edge list the
-          canvas draws — so the timeline and the graph can never disagree, and
-          nothing is placed on it that the backend did not date. */}
+      {/* Main content — the active tab */}
+      <div className="animate-fade-in min-w-0" key={activeTab}>
+        {activeTab === 'overview' && (
+          <OverviewTab
+            personId={personId}
+            edges={filteredEdges}
+            nodes={visibleNodes}
+            anchorEntityId={anchorEntityId}
+          />
+        )}
+
+        {activeTab === 'network' && (
+          <NetworkTab
+            graphRef={graphRef}
+            depth={depth}
+            setDepth={setDepth}
+            personsOnly={personsOnly}
+            setPersonsOnly={setPersonsOnly}
+            visibleNodes={visibleNodes}
+            filteredEdges={filteredEdges}
+            anchorEntityId={anchorEntityId}
+            activeNode={activeNode}
+            activeEdge={activeEdge}
+            handleSelectNode={handleSelectNode}
+            handleSelectEdge={handleSelectEdge}
+            network={network}
+            graphError={graphError}
+            showGraphSkeleton={showGraphSkeleton}
+            emptyAnswer={emptyAnswer}
+            responseNodeCount={responseNodeCount}
+            responseEdgeCount={responseEdgeCount}
+            truncated={truncated}
+            nodeTypeCounts={nodeTypeCounts}
+            edgeTypeCounts={edgeTypeCounts}
+            enabledList={enabledList}
+            toggleEdgeType={toggleEdgeType}
+            setAllEdgeTypes={setAllEdgeTypes}
+            hiddenEdgeCount={hiddenEdgeCount}
+            hiddenNodeCount={hiddenNodeCount}
+            observedEdges={observedEdges}
+            handleInvestigate={handleInvestigate}
+            handleOpenFir={handleOpenFir}
+            handleFit={handleFit}
+            handleZoomIn={handleZoomIn}
+            handleZoomOut={handleZoomOut}
+            handleRelayout={handleRelayout}
+          />
+        )}
+
+        {/* The domain components return a bare list of panels, so the tab supplies
+            the spacing the standalone route's own page wrapper supplies there. */}
+        {activeTab === 'communication' && (
+          <div className="space-y-4" data-testid="communication-view">
+            <PersonCommunication personId={personId} />
+          </div>
+        )}
+
+        {activeTab === 'financial' && (
+          <div className="space-y-4" data-testid="financial-view">
+            <PersonFinancial personId={personId} />
+          </div>
+        )}
+
+        {activeTab === 'locations' && (
+          <div className="space-y-4" data-testid="locations-view">
+            <PersonLocations personId={personId} />
+          </div>
+        )}
+
+        {activeTab === 'fir' && <FirTab personId={personId} onOpenFir={handleOpenFir} />}
+
+        {activeTab === 'timeline' && anchorEntityId ? (
+          <ActivityTimeline
+            edges={filteredEdges}
+            nodes={visibleNodes}
+            anchorEntityId={anchorEntityId}
+          />
+        ) : activeTab === 'timeline' ? (
+          <Panel>
+            <PanelBody>
+              <EmptyState title="No dated relationships" description="No data available." />
+            </PanelBody>
+          </Panel>
+        ) : null}
+
+        {activeTab === 'evidence' && <EvidenceTab filteredEdges={filteredEdges} />}
+      </div>
+    </div>
+  );
+}
+
+/* ========================================================================== */
+/* Investigation header                                                        */
+/* ========================================================================== */
+
+function InvestigationHeader({
+  detail,
+  priority,
+  isLoading,
+  error,
+  onRetry,
+  onBack,
+}: {
+  detail: PersonDetailResponse | null;
+  priority: PriorityScoreOut | null;
+  isLoading: boolean;
+  error: ApiError | null;
+  onRetry: () => void;
+  onBack: () => void;
+}): ReactElement {
+  if (isLoading) {
+    return (
+      <div className="panel px-4 py-3">
+        <div className="flex flex-wrap items-center gap-4">
+          <Skeleton className="h-6 w-52" />
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!detail) {
+    if (error) return <ErrorState error={error} onRetry={onRetry} compact />;
+    return <></>;
+  }
+
+  const person = detail.person;
+  const attributes = person.attributes;
+  const attrRows = flattenScalars(attributes)
+    .filter(([key]) => !OVERLAY_ATTRIBUTE_KEYS.includes(key))
+    .slice(0, 4);
+  const counts = detail.relationship_counts ?? {};
+  const observedCountRows = sortedCounts(counts).filter(([type]) => type !== OVERLAY_EDGE_TYPE);
+  const observedTotal = observedCountRows.reduce((t, [, c]) => t + c, 0);
+
+  return (
+    <div className="panel elevation-2 px-4 py-3 animate-slide-up" data-testid="investigation-header">
+      <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label="Back to search"
+            className="border-line text-ink-4 hover:text-ink hover:border-line-strong flex size-7 shrink-0 items-center justify-center rounded-sm border transition-colors"
+          >
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" className="size-3.5">
+              <path d="M10 4 6 8l4 4" />
+            </svg>
+          </button>
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <h1 className="text-ink truncate text-xl font-bold tracking-tight" data-testid="subject-name">
+                {person.label}
+              </h1>
+              {priority ? (
+                <span className="flex items-center gap-1.5" data-testid="subject-priority">
+                  <Badge tone={BAND_TONE[priority.band]}>{priority.band}</Badge>
+                  <span className="text-ink font-mono text-sm font-semibold tabular-nums">
+                    {Math.round(priority.score)}
+                  </span>
+                </span>
+              ) : null}
+            </div>
+            <div className="mt-0.5 flex items-center gap-2">
+              <EntityBadge entityType={person.entity_type} />
+              <Mono className="text-2xs">{person.entity_id}</Mono>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <StatInline label="Neighbours" value={formatCount(detail.neighbor_count)} />
+          <StatInline label="Links" value={formatCount(observedTotal)} />
+          {attrRows.map(([key, value]) => (
+            <StatInline key={key} label={humanizeToken(key)} value={String(value)} />
+          ))}
+        </div>
+      </div>
+
+      {observedCountRows.length > 0 && (
+        <div className="border-line mt-2.5 flex flex-wrap items-center gap-1.5 border-t pt-2.5">
+          {observedCountRows.map(([type, count]) => (
+            <span key={type} className="flex items-center gap-1">
+              <RelationshipBadge relationshipType={type} />
+              <span className="text-ink-4 font-mono text-2xs tabular-nums">{count}</span>
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ========================================================================== */
+/* Overview Tab                                                                */
+/* ========================================================================== */
+
+function OverviewTab({
+  personId,
+  edges,
+  nodes,
+  anchorEntityId,
+}: {
+  personId: number;
+  edges: EdgeOut[];
+  nodes: NodeOut[];
+  anchorEntityId: string | null;
+}): ReactElement {
+  return (
+    <div className="space-y-4">
+      <PersonIntelligence personId={personId} />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <KeyRelationships edges={edges} nodes={nodes} anchorEntityId={anchorEntityId} />
+        <OverviewMetrics personId={personId} />
+      </div>
       {anchorEntityId ? (
-        <ActivityTimeline
-          edges={filteredEdges}
-          nodes={visibleNodes}
-          anchorEntityId={anchorEntityId}
-        />
+        <ActivityTimeline edges={edges} nodes={nodes} anchorEntityId={anchorEntityId} />
       ) : null}
     </div>
   );
 }
 
+/**
+ * The strongest links out of the subject, ranked by how many source records back
+ * them. The ranking is a record count, not a judgement about either party.
+ */
+function KeyRelationships({
+  edges,
+  nodes,
+  anchorEntityId,
+}: {
+  edges: EdgeOut[];
+  nodes: NodeOut[];
+  anchorEntityId: string | null;
+}): ReactElement {
+  const rows = useMemo(() => {
+    if (!anchorEntityId) return [];
+    const labels = new Map(nodes.map((node) => [node.entity_id, node.label]));
+    return edges
+      .filter((edge) => !edge.is_overlay && edge.relationship_type !== OVERLAY_EDGE_TYPE)
+      .map((edge) => {
+        const otherId =
+          edge.source_entity_id === anchorEntityId ? edge.target_entity_id : edge.source_entity_id;
+        return {
+          id: edge.relationship_id,
+          otherId,
+          label: labels.get(otherId) ?? otherId,
+          type: edge.relationship_type,
+          records: edge.evidence_count ?? edge.evidence?.length ?? 0,
+        };
+      })
+      .sort((a, b) => b.records - a.records)
+      .slice(0, 8);
+  }, [edges, nodes, anchorEntityId]);
+
+  return (
+    <Panel data-testid="key-relationships">
+      <PanelHeader title="Key relationships" accent />
+      <PanelBody padded={false}>
+        {rows.length === 0 ? (
+          <EmptyState title="No relationships" description="No data available." />
+        ) : (
+          <ul className="divide-line divide-y">
+            {rows.map((row) => (
+              <li
+                key={row.id}
+                className="flex items-center justify-between gap-3 px-3.5 py-2"
+                data-testid="key-relationship-row"
+              >
+                <div className="flex min-w-0 items-center gap-2">
+                  <RelationshipBadge relationshipType={row.type} />
+                  <span className="text-ink truncate text-xs font-medium" title={row.otherId}>
+                    {row.label}
+                  </span>
+                </div>
+                <span className="text-ink-3 shrink-0 font-mono text-2xs tabular-nums">
+                  {formatCount(row.records)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </PanelBody>
+    </Panel>
+  );
+}
+
+function OverviewMetrics({ personId }: { personId: number }): ReactElement {
+  const analytics = useAsync((signal) => api.getPersonAnalytics(personId, { signal }), [personId]);
+
+  if (analytics.isInitialLoading) return <Panel><PanelBody><SkeletonRows rows={5} /></PanelBody></Panel>;
+  if (analytics.error) return <ErrorState error={analytics.error} onRetry={analytics.retry} compact />;
+  if (!analytics.data) return <></>;
+
+  const data = analytics.data;
+  const metrics = [
+    { label: 'Degree', value: formatCount(data.degree), hint: 'Total connections' },
+    { label: 'PageRank', value: typeof data.pagerank === 'number' ? data.pagerank.toFixed(6) : '—', hint: 'Structural importance' },
+    { label: 'Betweenness', value: typeof data.betweenness === 'number' ? data.betweenness.toFixed(4) : '—', hint: 'Bridge metric' },
+    { label: 'Degree Centrality', value: typeof data.degree_centrality === 'number' ? data.degree_centrality.toFixed(4) : '—', hint: 'Normalized degree' },
+    { label: 'Community', value: data.community_id ?? '—', hint: 'Detected community' },
+  ];
+
+  return (
+    <Panel>
+      <PanelHeader title="Network Metrics" accent />
+      <PanelBody className="divide-line divide-y">
+        {metrics.map((m) => (
+          <div key={m.label} className="metric-row">
+            <span className="field-label flex items-center gap-1">
+              {m.label}
+              <InfoHint content={m.hint} />
+            </span>
+            <span className="text-ink font-mono text-xs tabular-nums">{m.value}</span>
+          </div>
+        ))}
+      </PanelBody>
+    </Panel>
+  );
+}
+
 /* ========================================================================== */
-/* Subject header                                                             */
+/* Network Tab (hero graph)                                                    */
 /* ========================================================================== */
 
-/** One labelled scalar, for the header's attribute strip. */
-function Field({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: ReactNode;
-  hint?: ReactNode;
-}): ReactElement {
+interface NetworkTabProps {
+  graphRef: React.RefObject<NetworkGraphHandle | null>;
+  depth: 1 | 2;
+  setDepth: (d: 1 | 2) => void;
+  personsOnly: boolean;
+  setPersonsOnly: (v: boolean) => void;
+  visibleNodes: NodeOut[];
+  filteredEdges: EdgeOut[];
+  anchorEntityId: string | null;
+  activeNode: NodeOut | null;
+  activeEdge: EdgeOut | null;
+  handleSelectNode: (n: NodeOut | null) => void;
+  handleSelectEdge: (e: EdgeOut | null) => void;
+  network: { isLoading: boolean; status: string; retry: () => void };
+  graphError: ApiError | null;
+  showGraphSkeleton: boolean;
+  emptyAnswer: boolean;
+  responseNodeCount: number;
+  responseEdgeCount: number;
+  truncated: boolean;
+  nodeTypeCounts: Record<string, number>;
+  edgeTypeCounts: Record<string, number>;
+  enabledList: string[];
+  toggleEdgeType: (t: string) => void;
+  setAllEdgeTypes: (enabled: boolean) => void;
+  hiddenEdgeCount: number;
+  hiddenNodeCount: number;
+  observedEdges: EdgeOut[];
+  handleInvestigate: (id: string) => void;
+  handleOpenFir: (id: number) => void;
+  handleFit: () => void;
+  handleZoomIn: () => void;
+  handleZoomOut: () => void;
+  handleRelayout: () => void;
+}
+
+function NetworkTab(props: NetworkTabProps): ReactElement {
+  const {
+    graphRef, depth, setDepth, personsOnly, setPersonsOnly,
+    visibleNodes, filteredEdges, anchorEntityId, activeNode, activeEdge,
+    handleSelectNode, handleSelectEdge, network, graphError,
+    showGraphSkeleton, emptyAnswer, responseNodeCount, responseEdgeCount,
+    truncated, nodeTypeCounts, edgeTypeCounts, enabledList, toggleEdgeType,
+    setAllEdgeTypes, hiddenEdgeCount, hiddenNodeCount, observedEdges,
+    handleInvestigate, handleOpenFir, handleFit, handleZoomIn, handleZoomOut,
+    handleRelayout,
+  } = props;
+
   return (
-    <div className="flex min-w-0 items-baseline gap-1.5">
-      <span className="field-label flex items-center gap-1 whitespace-nowrap">
-        {label}
-        {hint ? <InfoHint content={hint} /> : null}
+    <div className="min-w-0 space-y-2">
+      <GraphToolbar
+        depth={depth}
+        onDepthChange={setDepth}
+        personsOnly={personsOnly}
+        onPersonsOnlyChange={setPersonsOnly}
+        nodeCount={responseNodeCount}
+        edgeCount={responseEdgeCount}
+        truncated={truncated}
+        isLoading={network.isLoading}
+        onFit={handleFit}
+        onZoomIn={handleZoomIn}
+        onZoomOut={handleZoomOut}
+        onRelayout={handleRelayout}
+      />
+
+      {/* The canvas owns the width; selection detail arrives over it, not beside it. */}
+      <div className="relative min-w-0">
+        {graphError ? (
+          <GraphRequestError error={graphError} onRetry={network.retry} />
+        ) : showGraphSkeleton ? (
+          <CanvasSkeleton />
+        ) : emptyAnswer ? (
+          <div className={cn('flex items-center justify-center', CANVAS_HEIGHT)}>
+            <EmptyState
+              icon="graph"
+              title="No relationships at this depth"
+              description="No observed relationships found. Try 2 hops or disable persons-only."
+              action={
+                <div className="flex gap-2">
+                  {depth === 1 && <Button variant="primary" size="sm" onClick={() => setDepth(2)}>Try 2 hops</Button>}
+                  {personsOnly && <Button variant="secondary" size="sm" onClick={() => setPersonsOnly(false)}>All entities</Button>}
+                </div>
+              }
+            />
+          </div>
+        ) : (
+          <NetworkGraph
+            ref={graphRef}
+            nodes={visibleNodes}
+            edges={filteredEdges}
+            focusEntityId={anchorEntityId}
+            selectedNodeId={activeNode?.entity_id ?? null}
+            selectedEdgeId={activeEdge?.relationship_id ?? null}
+            onSelectNode={handleSelectNode}
+            onSelectEdge={handleSelectEdge}
+            className={cn(CANVAS_HEIGHT, network.isLoading && 'opacity-60 transition-opacity')}
+          />
+        )}
+
+        {activeNode || activeEdge ? (
+          <div
+            className="elevation-3 absolute inset-y-2 right-2 z-20 w-[26rem] max-w-[calc(100%-1rem)] overflow-y-auto rounded-lg animate-slide-in"
+            data-testid="graph-drawer"
+          >
+            {activeNode ? (
+              <NodeDetailsPanel
+                node={activeNode}
+                onClose={() => handleSelectNode(null)}
+                onInvestigate={handleInvestigate}
+                onOpenFir={handleOpenFir}
+                className="min-h-full"
+              />
+            ) : activeEdge ? (
+              <EdgeEvidencePanel
+                edge={activeEdge}
+                onClose={() => handleSelectEdge(null)}
+                className="min-h-full"
+              />
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+
+      {hiddenEdgeCount > 0 ? (
+        <div className="flex items-center gap-2">
+          <Badge tone="neutral">{formatCount(hiddenEdgeCount)} of {formatCount(observedEdges.length)} edges hidden</Badge>
+          {hiddenNodeCount > 0 && <span className="text-ink-4 font-mono text-2xs">{formatCount(hiddenNodeCount)} orphaned nodes dropped</span>}
+          <Button variant="ghost" size="sm" onClick={() => setAllEdgeTypes(true)}>Show all</Button>
+        </div>
+      ) : null}
+
+      {/* Compact filter strip, under the canvas rather than squeezing it. */}
+      <Panel>
+        <PanelHeader title="Filters" />
+        <PanelBody className="px-3 py-2.5">
+          <GraphLegend
+            nodeCounts={nodeTypeCounts}
+            edgeCounts={edgeTypeCounts}
+            enabledEdgeTypes={enabledList}
+            onToggleEdgeType={toggleEdgeType}
+            onSetAllEdgeTypes={setAllEdgeTypes}
+          />
+        </PanelBody>
+      </Panel>
+
+      <span role="status" aria-live="polite" className="sr-only">
+        {filteredEdges.length > 0 ? `${formatCount(visibleNodes.length)} entities and ${formatCount(filteredEdges.length)} relationships shown.` : ''}
       </span>
-      <span className="text-ink-2 truncate font-mono text-xs">{value}</span>
     </div>
   );
 }
 
-/**
- * The subject strip above the graph. Every value comes from
- * `GET /graph/persons/{id}` — the person node, its relationship counts and the
- * backend's neighbour count. `ring_id` and `SAME_RING` are pulled out of both
- * lists and reported separately, tagged, with the reason stated in words.
- */
-function SubjectHeader({ detail }: { detail: PersonDetailResponse }): ReactElement {
-  const person = detail.person;
-  const attributes = person.attributes;
+/* ========================================================================== */
+/* FIR Tab                                                                     */
+/* ========================================================================== */
 
-  const attributeRows = useMemo(
-    () =>
-      flattenScalars(attributes)
-        .filter(([key]) => !OVERLAY_ATTRIBUTE_KEYS.includes(key))
-        .map(([key, value]) => ({ key, label: humanizeToken(key), value })),
-    [attributes],
+function FirTab({
+  personId,
+  onOpenFir,
+}: {
+  personId: number;
+  onOpenFir: (firId: number) => void;
+}): ReactElement {
+  // Show FIR nodes from a 2-hop network that includes FIR entities
+  const network = useAsync(
+    (signal) => api.getPersonNetwork(personId, { depth: 2, include_overlay: false }, { signal }),
+    [personId],
   );
 
-  // Presence, not truthiness: `ring_id: null` is the generator saying it placed
-  // this person in no ring, and `flattenScalars` drops nulls.
-  const overlayRing = useMemo(() => {
-    if (!attributes) return null;
-    const key = OVERLAY_ATTRIBUTE_KEYS.find((candidate) => candidate in attributes);
-    if (!key) return null;
-    const raw = attributes[key];
-    return { key, value: raw === null || raw === undefined ? 'null' : String(raw) };
-  }, [attributes]);
+  if (network.isInitialLoading) return <Panel><PanelBody><SkeletonRows rows={5} /></PanelBody></Panel>;
+  if (network.error) return <ErrorState error={network.error} onRetry={network.retry} compact />;
+  if (!network.data) return <></>;
 
-  const counts = detail.relationship_counts ?? {};
-  const observedCountRows = sortedCounts(counts).filter(([type]) => type !== OVERLAY_EDGE_TYPE);
-  const observedTotal = observedCountRows.reduce((total, [, count]) => total + count, 0);
-  const overlayEdgeCount = counts[OVERLAY_EDGE_TYPE];
+  const firNodes = network.data.nodes.filter((n) => n.entity_type?.toUpperCase() === 'FIR');
+  const firEdges = network.data.edges.filter((e) => !e.is_overlay && (e.relationship_type === 'NAMED_IN_FIR' || e.relationship_type === 'REPORTED_AGAINST'));
+
+  if (firNodes.length === 0) {
+    return (
+      <Panel>
+        <PanelBody>
+          <EmptyState icon="graph" title="No FIR records linked" description="No FIR entities found in this person's network." />
+        </PanelBody>
+      </Panel>
+    );
+  }
 
   return (
     <Panel>
-      <PanelBody className="px-4 py-3.5">
-        <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1.5">
-            <EntityBadge entityType={person.entity_type} />
-            <h2 className="text-ink min-w-0 truncate text-base font-semibold tracking-tight">
-              {person.label}
-            </h2>
-            <Mono className="break-all">{person.entity_id}</Mono>
-            <ProvenanceTag provenance="structured" short />
-          </div>
-
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-            <StatInline
-              label="Neighbours"
-              value={formatCount(detail.neighbor_count)}
-              hint="The backend's own count of distinct entities directly linked to this person in the full graph. It is a whole-graph figure, so it can legitimately exceed the number of nodes drawn here — this view is depth-limited and capped."
-            />
-            <StatInline
-              label="Observed links"
-              value={formatCount(observedTotal)}
-              hint="Sum of this person's relationship counts by type, as reported by the backend, with the synthetic SAME_RING overlay excluded."
-            />
-          </div>
-        </div>
-
-        {/* ------------------------------------------- observed attribute strip */}
-        <div className="border-line mt-3 flex flex-wrap items-baseline gap-x-5 gap-y-1.5 border-t pt-3">
-          {attributeRows.map((row) => (
-            <Field key={row.key} label={row.label} value={row.value} />
-          ))}
-          <Field
-            label="Source"
-            value={
-              <>
-                {person.source_dataset ?? '—'}
-                {person.source_record_id ? ` · ${person.source_record_id}` : ''}
-              </>
-            }
-            hint="The exact row in the original synthetic dataset this entity was materialised from, read as table:row_id. It is how anything shown here can be traced back to a source record."
-          />
-        </div>
-
-        {/* --------------------------------------------- observed link type mix */}
-        {observedCountRows.length > 0 ? (
-          <div className="mt-3 flex flex-wrap items-center gap-1.5">
-            {observedCountRows.map(([type, count]) => (
-              <span key={type} className="flex items-center gap-1">
-                <RelationshipBadge relationshipType={type} />
-                <span className="text-ink-3 font-mono text-2xs tabular-nums">{count}</span>
-              </span>
-            ))}
-          </div>
-        ) : null}
-
-        {/* ------------------------------------- ground-truth overlay, held apart */}
-        {overlayRing || typeof overlayEdgeCount === 'number' ? (
-          <div className="border-overlay/35 bg-overlay/10 mt-3 rounded-md border border-dashed px-3 py-2.5">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-              <ProvenanceTag provenance="overlay" />
-              <span className="field-label">Ground-truth overlay · synthetic data only</span>
-              {overlayRing ? (
-                <Field label={humanizeToken(overlayRing.key)} value={overlayRing.value} />
-              ) : null}
-              {typeof overlayEdgeCount === 'number' ? (
-                <Field label="SAME_RING links" value={formatCount(overlayEdgeCount)} />
-              ) : null}
+      <PanelHeader title={`FIR Records · ${firNodes.length}`} accent />
+      <PanelBody className="divide-line divide-y">
+        {firNodes.map((node) => {
+          const firEdge = firEdges.find((e) =>
+            e.source_entity_id === node.entity_id || e.target_entity_id === node.entity_id,
+          );
+          return (
+            <div key={node.entity_id} className="flex items-center justify-between py-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <EntityBadge entityType="FIR" />
+                  <span className="text-ink text-xs font-semibold">{node.label}</span>
+                </div>
+                {firEdge && (
+                  <RelationshipBadge relationshipType={firEdge.relationship_type} className="mt-1" />
+                )}
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const parts = node.entity_id.split(':');
+                  const id = parts[1] ? Number(parts[1]) : null;
+                  if (id !== null && !isNaN(id)) onOpenFir(id);
+                }}
+              >
+                Open →
+              </Button>
             </div>
-            <p className="text-ink-3 mt-2 text-2xs leading-relaxed">
-              These are the data generator's own ground-truth labels: the fabricated ring it placed
-              this person into, and the links it drew from that label. They exist only because this
-              dataset is synthetic. They are not evidence, no analytic in this system reads them, and
-              they are excluded from the graph below and from every count above — nothing anywhere in
-              this interface is ranked, clustered, filtered or coloured by them. A real case file has
-              no such column.
-              {overlayRing?.value === 'null'
-                ? ' A null value means the generator did not place this person in any ring.'
-                : ''}
-            </p>
-          </div>
-        ) : null}
-      </PanelBody>
-    </Panel>
-  );
-}
-
-function SubjectHeaderSkeleton(): ReactElement {
-  return (
-    <Panel>
-      <PanelBody className="px-4 py-3.5">
-        <div className="flex flex-wrap items-center gap-3">
-          <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-4 w-40" />
-          <Skeleton className="h-4 w-24" />
-        </div>
-        <div className="border-line mt-3 flex flex-wrap gap-4 border-t pt-3">
-          <Skeleton className="h-3 w-28" />
-          <Skeleton className="h-3 w-32" />
-          <Skeleton className="h-3 w-24" />
-          <Skeleton className="h-3 w-44" />
-        </div>
+          );
+        })}
       </PanelBody>
     </Panel>
   );
 }
 
 /* ========================================================================== */
-/* Canvas states                                                              */
+/* Evidence Tab                                                                */
+/* ========================================================================== */
+
+function EvidenceTab({
+  filteredEdges,
+}: {
+  filteredEdges: EdgeOut[];
+}): ReactElement {
+  if (filteredEdges.length === 0) {
+    return (
+      <Panel>
+        <PanelBody>
+          <EmptyState icon="graph" title="No relationship evidence" description="No data available." />
+        </PanelBody>
+      </Panel>
+    );
+  }
+
+  return (
+    <Panel>
+      <PanelHeader title={`Relationship Evidence · ${filteredEdges.length}`} accent />
+      <PanelBody className="divide-line max-h-[60vh] divide-y overflow-y-auto">
+        {filteredEdges.slice(0, 50).map((edge) => (
+          <div key={edge.relationship_id} className="py-2.5">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <RelationshipBadge relationshipType={edge.relationship_type} />
+              <span className="text-ink-4 font-mono text-2xs">{edge.source_entity_id}</span>
+              <span className="text-ink-4 text-2xs">→</span>
+              <span className="text-ink-4 font-mono text-2xs">{edge.target_entity_id}</span>
+            </div>
+            {edge.evidence && edge.evidence.length > 0 && (
+              <p className="text-ink-4 mt-0.5 font-mono text-2xs">
+                Evidence: {edge.evidence.slice(0, 3).join(', ')}
+                {edge.evidence.length > 3 ? ` +${edge.evidence.length - 3}` : ''}
+              </p>
+            )}
+          </div>
+        ))}
+        {filteredEdges.length > 50 && (
+          <p className="text-ink-4 py-2 text-center text-2xs">Showing 50 of {filteredEdges.length} relationships.</p>
+        )}
+      </PanelBody>
+    </Panel>
+  );
+}
+
+/* ========================================================================== */
+/* Canvas states                                                               */
 /* ========================================================================== */
 
 function CanvasSkeleton(): ReactElement {
@@ -991,8 +1169,6 @@ function CanvasSkeleton(): ReactElement {
       )}
       data-testid="canvas-skeleton"
     >
-      {/* A few node-and-edge shapes rather than a bare grey slab, so the loading
-          state reads as "a graph is coming" on a projector. */}
       <div aria-hidden className="flex items-center gap-3">
         <Skeleton className="size-9 rounded-full" />
         <Skeleton className="h-0.5 w-14" />
@@ -1007,82 +1183,21 @@ function CanvasSkeleton(): ReactElement {
       </div>
       <p className="text-ink-3 mt-2 flex items-center gap-2 text-xs">
         <Spinner className="size-3" label="Loading network" />
-        Building the network from the graph engine…
+        Building network graph…
       </p>
     </div>
   );
 }
 
-/**
- * A failed network request, with the honest reading of each status this endpoint
- * can return. Two of the three should be unreachable from the interface, and the
- * copy says so rather than implying the operator did something wrong.
- */
-function GraphRequestError({
-  error,
-  onRetry,
-}: {
-  error: ApiError;
-  onRetry: () => void;
-}): ReactElement {
+function GraphRequestError({ error, onRetry }: { error: ApiError; onRetry: () => void }): ReactElement {
   const navigate = useNavigate();
-
-  let title: string | undefined;
-  let note: ReactNode = null;
-
-  switch (error.status) {
-    case 404:
-      title = 'No person with that id';
-      note = (
-        <>
-          The backend has no person row with this id, so there is no network to draw. Ids are the
-          dataset's own <Mono>person_id</Mono> values and are not contiguous — reach a subject by
-          searching for a name instead of typing an id.
-        </>
-      );
-      break;
-    case 422:
-      title = 'Request rejected as invalid';
-      note = (
-        <>
-          The backend could not parse the person id as an integer. This interface only ever puts
-          integers in that path segment, so this should be unreachable from the UI; the backend's own
-          message is shown above.
-        </>
-      );
-      break;
-    case 400:
-      title = 'Request rejected';
-      note = (
-        <>
-          The backend rejected the request — for this endpoint that is normally a traversal depth
-          above its cap of 2 hops. This view only ever offers 1 or 2, so it should be unreachable
-          from the UI; the backend's own message is shown above.
-        </>
-      );
-      break;
-    default:
-      break;
-  }
 
   return (
     <div className={cn('flex flex-col justify-center gap-3', CANVAS_HEIGHT)}>
-      <ErrorState error={error} onRetry={onRetry} title={title} />
-      {note ? (
-        <div className="border-line bg-panel rounded-lg border px-4 py-3">
-          <p className="text-ink-3 text-xs leading-relaxed">{note}</p>
-          {error.status === 404 ? (
-            <Button
-              variant="primary"
-              size="sm"
-              className="mt-3"
-              onClick={() => navigate('/network')}
-            >
-              Search for a person
-            </Button>
-          ) : null}
-        </div>
-      ) : null}
+      <ErrorState error={error} onRetry={onRetry} title={error.status === 404 ? 'No person with that id' : undefined} />
+      {error.status === 404 && (
+        <Button variant="primary" size="sm" onClick={() => navigate('/network')}>Search for a person</Button>
+      )}
     </div>
   );
 }
