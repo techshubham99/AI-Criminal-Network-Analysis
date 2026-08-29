@@ -1,0 +1,138 @@
+{
+  "import_id": "1cda71516b0e58367ce29c54e9e8be8bbefec0bf2e6dd903d61e5c1ffbbdcb46",
+  "source_type": "CALL+TRANSACTION",
+  "counts": {
+    "total": 2,
+    "new_valid": 0,
+    "duplicate": 2,
+    "review_required": 0,
+    "rejected": 0
+  },
+  "commit_applicable": false,
+  "metrics_preview": {
+    "graph": {
+      "node_count": 3804,
+      "edge_count": 10809,
+      "observed_edge_count": 8829,
+      "overlay_edge_count": 1980,
+      "nodes_by_type": {
+        "AADHAAR": 500,
+        "CELL_TOWER": 1804,
+        "FIR": 300,
+        "LOCATION": 200,
+        "PERSON": 500,
+        "PHONE": 500
+      },
+      "edges_by_type": {
+        "CALLED": 1993,
+        "CO_LOCATED": 634,
+        "LOCATED_AT": 800,
+        "NAMED_IN_FIR": 600,
+        "OWNS_AADHAAR": 500,
+        "OWNS_PHONE": 500,
+        "REPORTED_AGAINST": 300,
+        "SAME_RING": 1980,
+        "TRANSACTED": 1499,
+        "USED_TOWER": 2003
+      },
+      "overlay_edges_by_type": {
+        "SAME_RING": 1980
+      },
+      "self_loops": 3
+    },
+    "live_rows": {
+      "calls": 3,
+      "transactions": 1,
+      "firs": 0,
+      "location_observations": 0
+    },
+    "note": "No new rows to analyse, so no analytics were recomputed."
+  },
+  "network_preview": {
+    "nodes": [],
+    "edges": [],
+    "meta": {
+      "truncated": false,
+      "node_count": 0,
+      "edge_count": 0,
+      "depth": 1,
+      "max_nodes": 300,
+      "anchors": 0
+    }
+  },
+  "suspicious_patterns_preview": {
+    "total": 0,
+    "count": 0,
+    "offset": 0,
+    "limit": 0,
+    "patterns": [],
+    "filters": {
+      "scope": "new_in_preview"
+    },
+    "note": "Patterns the existing detectors would newly assert if this import were committed. Deterministic rule output, not an accusation."
+  },
+  "duplicate_rows": [
+    {
+      "row": 1,
+      "verdict": "DUPLICATE",
+      "reason": "Identical record already accepted on 2026-08-29T20:50:10. No graph or intelligence change.",
+      "summary": "caller person_id 411, callee person_id 412",
+      "record_id": "cb317cb437052977004e6be5ff5a4e9a40b5521ebcec704503a64b06bec4c64a",
+      "source_type": "CALL"
+    },
+    {
+      "row": 1,
+      "verdict": "DUPLICATE",
+      "reason": "Identical record already accepted on 2026-08-29T20:50:10. No graph or intelligence change.",
+      "summary": "sender person_id 411, receiver person_id 412",
+      "record_id": "dcfe30baf4521abe8ef86693b71ba4db692dc29331c1a2a520e956dddb6409ae",
+      "source_type": "TRANSACTION"
+    }
+  ],
+  "review_required_rows": [],
+  "rejected_rows": [],
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious.",
+  "files": [
+    {
+      "index": 0,
+      "source_type": "CALL",
+      "filename": "calls-aug26.csv",
+      "status": "skipped",
+      "counts": {
+        "total": 1,
+        "new_valid": 0,
+        "duplicate": 1,
+        "review_required": 0,
+        "rejected": 0
+      },
+      "import_id": "b97fbe9ab81edaf6a5e58b8f7079f56e8379a2c86022d7600be24af52e739884",
+      "error": null,
+      "reason": "Identical record already accepted on 2026-08-29T20:50:10. No graph or intelligence change."
+    },
+    {
+      "index": 1,
+      "source_type": "TRANSACTION",
+      "filename": "transfers-aug26.csv",
+      "status": "skipped",
+      "counts": {
+        "total": 1,
+        "new_valid": 0,
+        "duplicate": 1,
+        "review_required": 0,
+        "rejected": 0
+      },
+      "import_id": "debe5447a7a467de57293a1c48a7a67a6721eb79639734733c532cafbb3c1d3e",
+      "error": null,
+      "reason": "Identical record already accepted on 2026-08-29T20:50:10. No graph or intelligence change."
+    }
+  ],
+  "import_ids": [
+    "1cda71516b0e58367ce29c54e9e8be8bbefec0bf2e6dd903d61e5c1ffbbdcb46",
+    "b97fbe9ab81edaf6a5e58b8f7079f56e8379a2c86022d7600be24af52e739884",
+    "debe5447a7a467de57293a1c48a7a67a6721eb79639734733c532cafbb3c1d3e"
+  ],
+  "graph_before": {
+    "nodes": 3804,
+    "edges": 10809
+  }
+}

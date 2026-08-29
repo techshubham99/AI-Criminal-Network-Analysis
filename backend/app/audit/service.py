@@ -293,6 +293,40 @@ class AuditService:
             )
         return events
 
+    def record_bulk_import(
+        self,
+        import_id: str,
+        *,
+        source_type: str,
+        counts: dict[str, int],
+        manifest_hash: str,
+        actor: str = DEFAULT_ACTOR,
+    ) -> AuditEvent:
+        """One event for a confirmed CSV import (Phase 6.2).
+
+        A bulk import is a single investigator decision — "add this file" — so it
+        gets a single link, addressed by its import id. Per-row events would bury
+        that decision under a hundred indistinguishable ones.
+
+        ``manifest_hash`` commits to the ordered list of record ids that were
+        actually written, so which rows the import claimed to commit is provable
+        later without the ledger holding the rows.
+        """
+        metadata: dict[str, Any] = {
+            "source_type": source_type,
+            "decision": "CONFIRMED",
+            "manifest_hash": manifest_hash,
+        }
+        for key, value in counts.items():
+            metadata[f"{key}_count"] = int(value)
+        return self.ledger.append(
+            AuditAction.INGEST_BULK_CONFIRMED,
+            ResourceType.INGEST_IMPORT,
+            import_id,
+            metadata=metadata,
+            actor=actor,
+        )
+
     # ==================================================================
     # §6, §7 content integrity
     # ==================================================================

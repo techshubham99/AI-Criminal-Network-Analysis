@@ -89,10 +89,16 @@ describe('there is exactly one fetch site', () => {
     }
   });
 
-  it('the only POSTs are the Phase 4.6 ingestion routes', () => {
+  it('every POST goes to an ingestion route', () => {
     const bindings = APP.find((f) => f.path === 'api/endpoints.ts')!;
-    const posted = [...bindings.text.matchAll(/\bpost<[^>]*>\(\s*'([^']+)'/g)].map((m) => m[1]);
+    // Both quote styles: the Phase 4.6 single-record routes are plain literals,
+    // and the Phase 6.2 bulk routes interpolate the source type or the import id,
+    // so a regex that only saw `'…'` would stop inventorying the writes.
+    const posted = [...bindings.text.matchAll(/\bpost<[^>]*>\(\s*['`]([^'`]+)['`]/g)].map(
+      (m) => m[1],
+    );
     expect(posted.length).toBeGreaterThan(0);
+    expect(posted.some((path) => path.startsWith('ingest/bulk/'))).toBe(true);
     expect(posted.filter((path) => !path.startsWith('ingest/'))).toEqual([]);
 
     // Only the binding layer may write; no component reaches past it.

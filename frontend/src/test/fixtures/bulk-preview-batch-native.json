@@ -1,0 +1,6009 @@
+{
+  "import_id": "601fb6a57231f4e2c7063b0e4d524769bf1f7bf627dce6d7dfdf5db6ae5b4c9b",
+  "source_type": "CALL+LOCATION+TRANSACTION",
+  "counts": {
+    "total": 4,
+    "new_valid": 2,
+    "duplicate": 0,
+    "review_required": 0,
+    "rejected": 2
+  },
+  "commit_applicable": true,
+  "metrics_preview": {
+    "graph": {
+      "node_count": 3805,
+      "edge_count": 10813,
+      "observed_edge_count": 8833,
+      "overlay_edge_count": 1980,
+      "nodes_by_type": {
+        "AADHAAR": 500,
+        "CELL_TOWER": 1805,
+        "FIR": 300,
+        "LOCATION": 200,
+        "PERSON": 500,
+        "PHONE": 500
+      },
+      "edges_by_type": {
+        "CALLED": 1995,
+        "CO_LOCATED": 634,
+        "LOCATED_AT": 800,
+        "NAMED_IN_FIR": 600,
+        "OWNS_AADHAAR": 500,
+        "OWNS_PHONE": 500,
+        "REPORTED_AGAINST": 300,
+        "SAME_RING": 1980,
+        "TRANSACTED": 1499,
+        "USED_TOWER": 2005
+      },
+      "overlay_edges_by_type": {
+        "SAME_RING": 1980
+      },
+      "self_loops": 3
+    },
+    "live_rows": {
+      "calls": 5,
+      "transactions": 1,
+      "firs": 0,
+      "location_observations": 0
+    },
+    "analytics": {
+      "persons": 500,
+      "undirected": {
+        "edges": 4368,
+        "metrics": [
+          "degree",
+          "weighted_degree",
+          "betweenness",
+          "components",
+          "louvain"
+        ],
+        "note": "betweenness is unweighted (weights are affinities, not distances)"
+      },
+      "directed": {
+        "edges": 3783,
+        "metrics": [
+          "pagerank"
+        ]
+      },
+      "excluded_from_analytics": [
+        "self_loops",
+        "SAME_RING_overlay",
+        "non_person_nodes"
+      ]
+    },
+    "communities": {
+      "count": 10,
+      "modularity": 0.216446,
+      "adjusted_rand_index_vs_rings": 0.013884,
+      "ari_persons": 142
+    },
+    "recompute_cost_ms": {
+      "analytics_ms": 1484.0,
+      "intelligence_ms": 134.8,
+      "total_ms": 1618.7
+    },
+    "priority_changes": [
+      {
+        "person_id": 421,
+        "entity_id": "person:421",
+        "score_before": 24,
+        "score_after": 25,
+        "band_before": "LOW",
+        "band_after": "LOW"
+      },
+      {
+        "person_id": 424,
+        "entity_id": "person:424",
+        "score_before": 36,
+        "score_after": 38,
+        "band_before": "LOW",
+        "band_after": "LOW"
+      }
+    ]
+  },
+  "network_preview": {
+    "nodes": [
+      {
+        "entity_id": "aadhaar:604255048076",
+        "entity_type": "AADHAAR",
+        "label": "604255048076",
+        "source_dataset": "persons",
+        "source_record_id": "persons:424",
+        "attributes": {}
+      },
+      {
+        "entity_id": "aadhaar:675939282671",
+        "entity_type": "AADHAAR",
+        "label": "675939282671",
+        "source_dataset": "persons",
+        "source_record_id": "persons:422",
+        "attributes": {}
+      },
+      {
+        "entity_id": "aadhaar:994437325440",
+        "entity_type": "AADHAAR",
+        "label": "994437325440",
+        "source_dataset": "persons",
+        "source_record_id": "persons:423",
+        "attributes": {}
+      },
+      {
+        "entity_id": "aadhaar:995510198977",
+        "entity_type": "AADHAAR",
+        "label": "995510198977",
+        "source_dataset": "persons",
+        "source_record_id": "persons:421",
+        "attributes": {}
+      },
+      {
+        "entity_id": "fir:107",
+        "entity_type": "FIR",
+        "label": "FIR 107 (2026-06-28)",
+        "source_dataset": "firs",
+        "source_record_id": "firs:107",
+        "attributes": {
+          "date": "2026-06-28",
+          "location_id": 52
+        }
+      },
+      {
+        "entity_id": "fir:245",
+        "entity_type": "FIR",
+        "label": "FIR 245 (2026-07-06)",
+        "source_dataset": "firs",
+        "source_record_id": "firs:245",
+        "attributes": {
+          "date": "2026-07-06",
+          "location_id": 150
+        }
+      },
+      {
+        "entity_id": "fir:294",
+        "entity_type": "FIR",
+        "label": "FIR 294 (2026-07-20)",
+        "source_dataset": "firs",
+        "source_record_id": "firs:294",
+        "attributes": {
+          "date": "2026-07-20",
+          "location_id": 2
+        }
+      },
+      {
+        "entity_id": "fir:62",
+        "entity_type": "FIR",
+        "label": "FIR 62 (2026-05-28)",
+        "source_dataset": "firs",
+        "source_record_id": "firs:62",
+        "attributes": {
+          "date": "2026-05-28",
+          "location_id": 157
+        }
+      },
+      {
+        "entity_id": "fir:92",
+        "entity_type": "FIR",
+        "label": "FIR 92 (2026-07-21)",
+        "source_dataset": "firs",
+        "source_record_id": "firs:92",
+        "attributes": {
+          "date": "2026-07-21",
+          "location_id": 58
+        }
+      },
+      {
+        "entity_id": "fir:96",
+        "entity_type": "FIR",
+        "label": "FIR 96 (2026-07-04)",
+        "source_dataset": "firs",
+        "source_record_id": "firs:96",
+        "attributes": {
+          "date": "2026-07-04",
+          "location_id": 20
+        }
+      },
+      {
+        "entity_id": "location:102",
+        "entity_type": "LOCATION",
+        "label": "Lucknow, Uttar Pradesh",
+        "source_dataset": "locations",
+        "source_record_id": "locations:102",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "canonical_lat": 26.882875,
+          "canonical_lng": 80.96927
+        }
+      },
+      {
+        "entity_id": "location:111",
+        "entity_type": "LOCATION",
+        "label": "Mumbai, Maharashtra",
+        "source_dataset": "locations",
+        "source_record_id": "locations:111",
+        "attributes": {
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "canonical_lat": 19.11305,
+          "canonical_lng": 72.878741
+        }
+      },
+      {
+        "entity_id": "location:159",
+        "entity_type": "LOCATION",
+        "label": "Jaipur, Rajasthan",
+        "source_dataset": "locations",
+        "source_record_id": "locations:159",
+        "attributes": {
+          "city": "Jaipur",
+          "state": "Rajasthan",
+          "canonical_lat": 26.872308,
+          "canonical_lng": 75.769288
+        }
+      },
+      {
+        "entity_id": "location:74",
+        "entity_type": "LOCATION",
+        "label": "Bengaluru, Karnataka",
+        "source_dataset": "locations",
+        "source_record_id": "locations:74",
+        "attributes": {
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "canonical_lat": 12.968367,
+          "canonical_lng": 77.619332
+        }
+      },
+      {
+        "entity_id": "person:1",
+        "entity_type": "PERSON",
+        "label": "Aryan Maharaj",
+        "source_dataset": "persons",
+        "source_record_id": "persons:1",
+        "attributes": {
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "location_id": 111,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:101",
+        "entity_type": "PERSON",
+        "label": "Widisha Dhar",
+        "source_dataset": "persons",
+        "source_record_id": "persons:101",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 124,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:102",
+        "entity_type": "PERSON",
+        "label": "Bhavna Dugar",
+        "source_dataset": "persons",
+        "source_record_id": "persons:102",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 37,
+          "ring_id": 0
+        }
+      },
+      {
+        "entity_id": "person:103",
+        "entity_type": "PERSON",
+        "label": "Tanmayi Mittal",
+        "source_dataset": "persons",
+        "source_record_id": "persons:103",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 102,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:107",
+        "entity_type": "PERSON",
+        "label": "Jasmit Wali",
+        "source_dataset": "persons",
+        "source_record_id": "persons:107",
+        "attributes": {
+          "city": "Jaipur",
+          "state": "Rajasthan",
+          "location_id": 159,
+          "ring_id": 0
+        }
+      },
+      {
+        "entity_id": "person:108",
+        "entity_type": "PERSON",
+        "label": "Faqid Dhaliwal",
+        "source_dataset": "persons",
+        "source_record_id": "persons:108",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 163,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:11",
+        "entity_type": "PERSON",
+        "label": "Priya Rastogi",
+        "source_dataset": "persons",
+        "source_record_id": "persons:11",
+        "attributes": {
+          "city": "New Delhi",
+          "state": "Delhi",
+          "location_id": 195,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:115",
+        "entity_type": "PERSON",
+        "label": "Sarthak Kalita",
+        "source_dataset": "persons",
+        "source_record_id": "persons:115",
+        "attributes": {
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "location_id": 56,
+          "ring_id": 2
+        }
+      },
+      {
+        "entity_id": "person:134",
+        "entity_type": "PERSON",
+        "label": "Xiti Pandya",
+        "source_dataset": "persons",
+        "source_record_id": "persons:134",
+        "attributes": {
+          "city": "New Delhi",
+          "state": "Delhi",
+          "location_id": 153,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:135",
+        "entity_type": "PERSON",
+        "label": "Dhriti Sanghvi",
+        "source_dataset": "persons",
+        "source_record_id": "persons:135",
+        "attributes": {
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "location_id": 111,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:139",
+        "entity_type": "PERSON",
+        "label": "Faqid Goel",
+        "source_dataset": "persons",
+        "source_record_id": "persons:139",
+        "attributes": {
+          "city": "New Delhi",
+          "state": "Delhi",
+          "location_id": 66,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:144",
+        "entity_type": "PERSON",
+        "label": "Balveer Kota",
+        "source_dataset": "persons",
+        "source_record_id": "persons:144",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 109,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:151",
+        "entity_type": "PERSON",
+        "label": "Nirja Patla",
+        "source_dataset": "persons",
+        "source_record_id": "persons:151",
+        "attributes": {
+          "city": "Ahmedabad",
+          "state": "Gujarat",
+          "location_id": 80,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:168",
+        "entity_type": "PERSON",
+        "label": "Fitan Samra",
+        "source_dataset": "persons",
+        "source_record_id": "persons:168",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 30,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:169",
+        "entity_type": "PERSON",
+        "label": "Harshil Buch",
+        "source_dataset": "persons",
+        "source_record_id": "persons:169",
+        "attributes": {
+          "city": "Jaipur",
+          "state": "Rajasthan",
+          "location_id": 159,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:177",
+        "entity_type": "PERSON",
+        "label": "Jalsa Pillay",
+        "source_dataset": "persons",
+        "source_record_id": "persons:177",
+        "attributes": {
+          "city": "New Delhi",
+          "state": "Delhi",
+          "location_id": 20,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:178",
+        "entity_type": "PERSON",
+        "label": "Nirja Rout",
+        "source_dataset": "persons",
+        "source_record_id": "persons:178",
+        "attributes": {
+          "city": "New Delhi",
+          "state": "Delhi",
+          "location_id": 119,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:181",
+        "entity_type": "PERSON",
+        "label": "Zashil Hegde",
+        "source_dataset": "persons",
+        "source_record_id": "persons:181",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 162,
+          "ring_id": 3
+        }
+      },
+      {
+        "entity_id": "person:189",
+        "entity_type": "PERSON",
+        "label": "Yashasvi Shankar",
+        "source_dataset": "persons",
+        "source_record_id": "persons:189",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 88,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:195",
+        "entity_type": "PERSON",
+        "label": "Maya Mistry",
+        "source_dataset": "persons",
+        "source_record_id": "persons:195",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 39,
+          "ring_id": 4
+        }
+      },
+      {
+        "entity_id": "person:218",
+        "entity_type": "PERSON",
+        "label": "Kevin Varghese",
+        "source_dataset": "persons",
+        "source_record_id": "persons:218",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 61,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:22",
+        "entity_type": "PERSON",
+        "label": "Neha Nori",
+        "source_dataset": "persons",
+        "source_record_id": "persons:22",
+        "attributes": {
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "location_id": 71,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:227",
+        "entity_type": "PERSON",
+        "label": "Chasmum Dhar",
+        "source_dataset": "persons",
+        "source_record_id": "persons:227",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 5,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:228",
+        "entity_type": "PERSON",
+        "label": "Warhi Batta",
+        "source_dataset": "persons",
+        "source_record_id": "persons:228",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 75,
+          "ring_id": 1
+        }
+      },
+      {
+        "entity_id": "person:255",
+        "entity_type": "PERSON",
+        "label": "Oliver Saran",
+        "source_dataset": "persons",
+        "source_record_id": "persons:255",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 174,
+          "ring_id": 1
+        }
+      },
+      {
+        "entity_id": "person:257",
+        "entity_type": "PERSON",
+        "label": "Gaurangi Rai",
+        "source_dataset": "persons",
+        "source_record_id": "persons:257",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 102,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:27",
+        "entity_type": "PERSON",
+        "label": "Chandresh Sood",
+        "source_dataset": "persons",
+        "source_record_id": "persons:27",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 14,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:274",
+        "entity_type": "PERSON",
+        "label": "Yasti Rama",
+        "source_dataset": "persons",
+        "source_record_id": "persons:274",
+        "attributes": {
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "location_id": 111,
+          "ring_id": 1
+        }
+      },
+      {
+        "entity_id": "person:275",
+        "entity_type": "PERSON",
+        "label": "Ojas Suri",
+        "source_dataset": "persons",
+        "source_record_id": "persons:275",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 42,
+          "ring_id": 1
+        }
+      },
+      {
+        "entity_id": "person:281",
+        "entity_type": "PERSON",
+        "label": "Shaurya Panchal",
+        "source_dataset": "persons",
+        "source_record_id": "persons:281",
+        "attributes": {
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "location_id": 8,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:288",
+        "entity_type": "PERSON",
+        "label": "Jeet Dugar",
+        "source_dataset": "persons",
+        "source_record_id": "persons:288",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 89,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:295",
+        "entity_type": "PERSON",
+        "label": "Logan Kota",
+        "source_dataset": "persons",
+        "source_record_id": "persons:295",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 130,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:296",
+        "entity_type": "PERSON",
+        "label": "Charvi Jha",
+        "source_dataset": "persons",
+        "source_record_id": "persons:296",
+        "attributes": {
+          "city": "Kolkata",
+          "state": "West Bengal",
+          "location_id": 13,
+          "ring_id": 2
+        }
+      },
+      {
+        "entity_id": "person:297",
+        "entity_type": "PERSON",
+        "label": "Xalak Bobal",
+        "source_dataset": "persons",
+        "source_record_id": "persons:297",
+        "attributes": {
+          "city": "Kolkata",
+          "state": "West Bengal",
+          "location_id": 168,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:304",
+        "entity_type": "PERSON",
+        "label": "Adya Bose",
+        "source_dataset": "persons",
+        "source_record_id": "persons:304",
+        "attributes": {
+          "city": "Hyderabad",
+          "state": "Telangana",
+          "location_id": 51,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:306",
+        "entity_type": "PERSON",
+        "label": "Advik Konda",
+        "source_dataset": "persons",
+        "source_record_id": "persons:306",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 122,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:308",
+        "entity_type": "PERSON",
+        "label": "Yadavi Ben",
+        "source_dataset": "persons",
+        "source_record_id": "persons:308",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 190,
+          "ring_id": 4
+        }
+      },
+      {
+        "entity_id": "person:314",
+        "entity_type": "PERSON",
+        "label": "Kalpit Khalsa",
+        "source_dataset": "persons",
+        "source_record_id": "persons:314",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 150,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:315",
+        "entity_type": "PERSON",
+        "label": "Anita Kaur",
+        "source_dataset": "persons",
+        "source_record_id": "persons:315",
+        "attributes": {
+          "city": "Jaipur",
+          "state": "Rajasthan",
+          "location_id": 159,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:320",
+        "entity_type": "PERSON",
+        "label": "Advik Bhatia",
+        "source_dataset": "persons",
+        "source_record_id": "persons:320",
+        "attributes": {
+          "city": "Kolkata",
+          "state": "West Bengal",
+          "location_id": 123,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:322",
+        "entity_type": "PERSON",
+        "label": "Om Sant",
+        "source_dataset": "persons",
+        "source_record_id": "persons:322",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 198,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:333",
+        "entity_type": "PERSON",
+        "label": "Rajeshri Sur",
+        "source_dataset": "persons",
+        "source_record_id": "persons:333",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 136,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:334",
+        "entity_type": "PERSON",
+        "label": "Damyanti Menon",
+        "source_dataset": "persons",
+        "source_record_id": "persons:334",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 85,
+          "ring_id": 3
+        }
+      },
+      {
+        "entity_id": "person:337",
+        "entity_type": "PERSON",
+        "label": "Aahana Chokshi",
+        "source_dataset": "persons",
+        "source_record_id": "persons:337",
+        "attributes": {
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "location_id": 74,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:339",
+        "entity_type": "PERSON",
+        "label": "Bahadurjit Menon",
+        "source_dataset": "persons",
+        "source_record_id": "persons:339",
+        "attributes": {
+          "city": "New Delhi",
+          "state": "Delhi",
+          "location_id": 10,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:348",
+        "entity_type": "PERSON",
+        "label": "Lila Virk",
+        "source_dataset": "persons",
+        "source_record_id": "persons:348",
+        "attributes": {
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "location_id": 23,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:355",
+        "entity_type": "PERSON",
+        "label": "Wazir Bawa",
+        "source_dataset": "persons",
+        "source_record_id": "persons:355",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 76,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:372",
+        "entity_type": "PERSON",
+        "label": "Lakshmi Wagle",
+        "source_dataset": "persons",
+        "source_record_id": "persons:372",
+        "attributes": {
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "location_id": 108,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:388",
+        "entity_type": "PERSON",
+        "label": "Chakradev Andra",
+        "source_dataset": "persons",
+        "source_record_id": "persons:388",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 16,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:389",
+        "entity_type": "PERSON",
+        "label": "Hema Goswami",
+        "source_dataset": "persons",
+        "source_record_id": "persons:389",
+        "attributes": {
+          "city": "New Delhi",
+          "state": "Delhi",
+          "location_id": 45,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:396",
+        "entity_type": "PERSON",
+        "label": "Sachi Sem",
+        "source_dataset": "persons",
+        "source_record_id": "persons:396",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 21,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:397",
+        "entity_type": "PERSON",
+        "label": "Harshil Raval",
+        "source_dataset": "persons",
+        "source_record_id": "persons:397",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 14,
+          "ring_id": 1
+        }
+      },
+      {
+        "entity_id": "person:4",
+        "entity_type": "PERSON",
+        "label": "Gayathri Chaudry",
+        "source_dataset": "persons",
+        "source_record_id": "persons:4",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 112,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:401",
+        "entity_type": "PERSON",
+        "label": "Raghav Dara",
+        "source_dataset": "persons",
+        "source_record_id": "persons:401",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 190,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:421",
+        "entity_type": "PERSON",
+        "label": "Pranav Krishnamurthy",
+        "source_dataset": "persons",
+        "source_record_id": "persons:421",
+        "attributes": {
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "location_id": 74,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:422",
+        "entity_type": "PERSON",
+        "label": "Diya Badal",
+        "source_dataset": "persons",
+        "source_record_id": "persons:422",
+        "attributes": {
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "location_id": 111,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:423",
+        "entity_type": "PERSON",
+        "label": "Ishita Thakkar",
+        "source_dataset": "persons",
+        "source_record_id": "persons:423",
+        "attributes": {
+          "city": "Jaipur",
+          "state": "Rajasthan",
+          "location_id": 159,
+          "ring_id": 1
+        }
+      },
+      {
+        "entity_id": "person:424",
+        "entity_type": "PERSON",
+        "label": "Lakshmi Rana",
+        "source_dataset": "persons",
+        "source_record_id": "persons:424",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 102,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:425",
+        "entity_type": "PERSON",
+        "label": "Chakrika Dhawan",
+        "source_dataset": "persons",
+        "source_record_id": "persons:425",
+        "attributes": {
+          "city": "Kolkata",
+          "state": "West Bengal",
+          "location_id": 179,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:433",
+        "entity_type": "PERSON",
+        "label": "Avni Dey",
+        "source_dataset": "persons",
+        "source_record_id": "persons:433",
+        "attributes": {
+          "city": "Kolkata",
+          "state": "West Bengal",
+          "location_id": 183,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:435",
+        "entity_type": "PERSON",
+        "label": "Udant Mannan",
+        "source_dataset": "persons",
+        "source_record_id": "persons:435",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 85,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:448",
+        "entity_type": "PERSON",
+        "label": "Amol Jain",
+        "source_dataset": "persons",
+        "source_record_id": "persons:448",
+        "attributes": {
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "location_id": 99,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:467",
+        "entity_type": "PERSON",
+        "label": "Vamakshi Murthy",
+        "source_dataset": "persons",
+        "source_record_id": "persons:467",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 137,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:468",
+        "entity_type": "PERSON",
+        "label": "Wahab Khurana",
+        "source_dataset": "persons",
+        "source_record_id": "persons:468",
+        "attributes": {
+          "city": "New Delhi",
+          "state": "Delhi",
+          "location_id": 10,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:478",
+        "entity_type": "PERSON",
+        "label": "Abha Patel",
+        "source_dataset": "persons",
+        "source_record_id": "persons:478",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 88,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:481",
+        "entity_type": "PERSON",
+        "label": "Ekbal Buch",
+        "source_dataset": "persons",
+        "source_record_id": "persons:481",
+        "attributes": {
+          "city": "Hyderabad",
+          "state": "Telangana",
+          "location_id": 6,
+          "ring_id": 0
+        }
+      },
+      {
+        "entity_id": "person:483",
+        "entity_type": "PERSON",
+        "label": "Qarin Bajaj",
+        "source_dataset": "persons",
+        "source_record_id": "persons:483",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 85,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:485",
+        "entity_type": "PERSON",
+        "label": "Frado Ramakrishnan",
+        "source_dataset": "persons",
+        "source_record_id": "persons:485",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 102,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:493",
+        "entity_type": "PERSON",
+        "label": "Raghav Biswas",
+        "source_dataset": "persons",
+        "source_record_id": "persons:493",
+        "attributes": {
+          "city": "Jaipur",
+          "state": "Rajasthan",
+          "location_id": 159,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:55",
+        "entity_type": "PERSON",
+        "label": "Abeer Pandey",
+        "source_dataset": "persons",
+        "source_record_id": "persons:55",
+        "attributes": {
+          "city": "Hyderabad",
+          "state": "Telangana",
+          "location_id": 49,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:6",
+        "entity_type": "PERSON",
+        "label": "Ekaraj Bath",
+        "source_dataset": "persons",
+        "source_record_id": "persons:6",
+        "attributes": {
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "location_id": 146,
+          "ring_id": 3
+        }
+      },
+      {
+        "entity_id": "person:65",
+        "entity_type": "PERSON",
+        "label": "Michael Saran",
+        "source_dataset": "persons",
+        "source_record_id": "persons:65",
+        "attributes": {
+          "city": "New Delhi",
+          "state": "Delhi",
+          "location_id": 1,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:7",
+        "entity_type": "PERSON",
+        "label": "Sudiksha Patla",
+        "source_dataset": "persons",
+        "source_record_id": "persons:7",
+        "attributes": {
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "location_id": 127,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:70",
+        "entity_type": "PERSON",
+        "label": "Urvashi Wali",
+        "source_dataset": "persons",
+        "source_record_id": "persons:70",
+        "attributes": {
+          "city": "Jaipur",
+          "state": "Rajasthan",
+          "location_id": 106,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:75",
+        "entity_type": "PERSON",
+        "label": "Qarin Behl",
+        "source_dataset": "persons",
+        "source_record_id": "persons:75",
+        "attributes": {
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "location_id": 105,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:77",
+        "entity_type": "PERSON",
+        "label": "Lajita Seshadri",
+        "source_dataset": "persons",
+        "source_record_id": "persons:77",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 85,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:78",
+        "entity_type": "PERSON",
+        "label": "Sarthak Kakar",
+        "source_dataset": "persons",
+        "source_record_id": "persons:78",
+        "attributes": {
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "location_id": 82,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:80",
+        "entity_type": "PERSON",
+        "label": "Ekavir Kaur",
+        "source_dataset": "persons",
+        "source_record_id": "persons:80",
+        "attributes": {
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "location_id": 74,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:83",
+        "entity_type": "PERSON",
+        "label": "Balveer Sankaran",
+        "source_dataset": "persons",
+        "source_record_id": "persons:83",
+        "attributes": {
+          "city": "Hyderabad",
+          "state": "Telangana",
+          "location_id": 96,
+          "ring_id": 2
+        }
+      },
+      {
+        "entity_id": "person:84",
+        "entity_type": "PERSON",
+        "label": "Banjeet Gill",
+        "source_dataset": "persons",
+        "source_record_id": "persons:84",
+        "attributes": {
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "location_id": 145,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:88",
+        "entity_type": "PERSON",
+        "label": "Riya Behl",
+        "source_dataset": "persons",
+        "source_record_id": "persons:88",
+        "attributes": {
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "location_id": 74,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:90",
+        "entity_type": "PERSON",
+        "label": "Ishaan Shenoy",
+        "source_dataset": "persons",
+        "source_record_id": "persons:90",
+        "attributes": {
+          "city": "Hyderabad",
+          "state": "Telangana",
+          "location_id": 51,
+          "ring_id": 2
+        }
+      },
+      {
+        "entity_id": "person:94",
+        "entity_type": "PERSON",
+        "label": "Ekanta Gulati",
+        "source_dataset": "persons",
+        "source_record_id": "persons:94",
+        "attributes": {
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "location_id": 74,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "person:99",
+        "entity_type": "PERSON",
+        "label": "Chandani Balakrishnan",
+        "source_dataset": "persons",
+        "source_record_id": "persons:99",
+        "attributes": {
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "location_id": 107,
+          "ring_id": null
+        }
+      },
+      {
+        "entity_id": "phone:+91-7073626894",
+        "entity_type": "PHONE",
+        "label": "+91-7073626894",
+        "source_dataset": "persons",
+        "source_record_id": "persons:421",
+        "attributes": {}
+      },
+      {
+        "entity_id": "phone:+91-7339385087",
+        "entity_type": "PHONE",
+        "label": "+91-7339385087",
+        "source_dataset": "persons",
+        "source_record_id": "persons:424",
+        "attributes": {}
+      },
+      {
+        "entity_id": "phone:+91-7769945233",
+        "entity_type": "PHONE",
+        "label": "+91-7769945233",
+        "source_dataset": "persons",
+        "source_record_id": "persons:422",
+        "attributes": {}
+      },
+      {
+        "entity_id": "phone:+91-9261111254",
+        "entity_type": "PHONE",
+        "label": "+91-9261111254",
+        "source_dataset": "persons",
+        "source_record_id": "persons:423",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:1120",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 1120",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:1120",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:1138",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 1138",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:1138",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:1716",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 1716",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:1716",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:2087",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 2087",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:2087",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:2140",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 2140",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:2140",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:3406",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 3406",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:3406",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:3736",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 3736",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:3736",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:41",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 41",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:41",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:4253",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 4253",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:4253",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:4361",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 4361",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:4361",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:5225",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 5225",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:5225",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:5355",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 5355",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:5355",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:5447",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 5447",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:5447",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:6692",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 6692",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:6692",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:6863",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 6863",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:6863",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:7086",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 7086",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:7086",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:7647",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 7647",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:7647",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:8133",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 8133",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:8133",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:8138",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 8138",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:8138",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:8231",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 8231",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:8231",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:8733",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 8733",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:8733",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:8796",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 8796",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:8796",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:8942",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 8942",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:8942",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:8999",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 8999",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:8999",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:9740",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 9740",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:9740",
+        "attributes": {}
+      },
+      {
+        "entity_id": "tower:9939",
+        "entity_type": "CELL_TOWER",
+        "label": "Tower 9939",
+        "source_dataset": "calls",
+        "source_record_id": "calls.cell_tower_id:9939",
+        "attributes": {}
+      }
+    ],
+    "edges": [
+      {
+        "relationship_id": "CALLED~person:101~person:135",
+        "source_entity_id": "person:101",
+        "target_entity_id": "person:135",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2571
+        },
+        "date_first": "2026-08-14T11:33:45",
+        "date_last": "2026-08-14T11:33:45",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:406"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:102~person:422",
+        "source_entity_id": "person:102",
+        "target_entity_id": "person:422",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2816
+        },
+        "date_first": "2026-08-25T02:27:47",
+        "date_last": "2026-08-25T02:27:47",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:113"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:11~person:423",
+        "source_entity_id": "person:11",
+        "target_entity_id": "person:423",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2235
+        },
+        "date_first": "2026-08-15T04:24:31",
+        "date_last": "2026-08-15T04:24:31",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1807"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:139~person:423",
+        "source_entity_id": "person:139",
+        "target_entity_id": "person:423",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1532
+        },
+        "date_first": "2026-08-19T20:09:46",
+        "date_last": "2026-08-19T20:09:46",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:82"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:144~person:483",
+        "source_entity_id": "person:144",
+        "target_entity_id": "person:483",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1717
+        },
+        "date_first": "2026-08-17T19:40:08",
+        "date_last": "2026-08-17T19:40:08",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1748"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:151~person:422",
+        "source_entity_id": "person:151",
+        "target_entity_id": "person:422",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2463
+        },
+        "date_first": "2026-08-25T05:19:44",
+        "date_last": "2026-08-25T05:19:44",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:173"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:177~person:11",
+        "source_entity_id": "person:177",
+        "target_entity_id": "person:11",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1443
+        },
+        "date_first": "2026-08-21T17:08:49",
+        "date_last": "2026-08-21T17:08:49",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:518"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:1~person:468",
+        "source_entity_id": "person:1",
+        "target_entity_id": "person:468",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 933
+        },
+        "date_first": "2026-08-06T09:13:10",
+        "date_last": "2026-08-06T09:13:10",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1809"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:22~person:1",
+        "source_entity_id": "person:22",
+        "target_entity_id": "person:1",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 3402
+        },
+        "date_first": "2026-07-30T19:20:53",
+        "date_last": "2026-07-30T19:20:53",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1345"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:22~person:422",
+        "source_entity_id": "person:22",
+        "target_entity_id": "person:422",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 3423
+        },
+        "date_first": "2026-08-23T08:53:46",
+        "date_last": "2026-08-23T08:53:46",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:998"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:275~person:168",
+        "source_entity_id": "person:275",
+        "target_entity_id": "person:168",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2603
+        },
+        "date_first": "2026-08-08T11:18:00",
+        "date_last": "2026-08-08T11:18:00",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:65"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:281~person:6",
+        "source_entity_id": "person:281",
+        "target_entity_id": "person:6",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 3411
+        },
+        "date_first": "2026-08-03T07:58:20",
+        "date_last": "2026-08-03T07:58:20",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:847"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:295~person:421",
+        "source_entity_id": "person:295",
+        "target_entity_id": "person:421",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1064
+        },
+        "date_first": "2026-07-31T12:31:22",
+        "date_last": "2026-07-31T12:31:22",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:376"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:296~person:177",
+        "source_entity_id": "person:296",
+        "target_entity_id": "person:177",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1635
+        },
+        "date_first": "2026-08-04T19:26:04",
+        "date_last": "2026-08-04T19:26:04",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:460"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:314~person:422",
+        "source_entity_id": "person:314",
+        "target_entity_id": "person:422",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 722
+        },
+        "date_first": "2026-07-28T18:42:33",
+        "date_last": "2026-07-28T18:42:33",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1488"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:314~person:425",
+        "source_entity_id": "person:314",
+        "target_entity_id": "person:425",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1085
+        },
+        "date_first": "2026-08-12T10:31:06",
+        "date_last": "2026-08-12T10:31:06",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1172"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:315~person:4",
+        "source_entity_id": "person:315",
+        "target_entity_id": "person:4",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2222
+        },
+        "date_first": "2026-07-27T09:58:08",
+        "date_last": "2026-07-27T09:58:08",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:494"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:322~person:424",
+        "source_entity_id": "person:322",
+        "target_entity_id": "person:424",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1429
+        },
+        "date_first": "2026-08-18T06:42:08",
+        "date_last": "2026-08-18T06:42:08",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:901"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:334~person:422",
+        "source_entity_id": "person:334",
+        "target_entity_id": "person:422",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 3298
+        },
+        "date_first": "2026-08-25T07:15:35",
+        "date_last": "2026-08-25T07:15:35",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1094"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:348~person:423",
+        "source_entity_id": "person:348",
+        "target_entity_id": "person:423",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1202
+        },
+        "date_first": "2026-08-23T05:19:30",
+        "date_last": "2026-08-23T05:19:30",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:953"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:372~person:99",
+        "source_entity_id": "person:372",
+        "target_entity_id": "person:99",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1799
+        },
+        "date_first": "2026-07-29T10:44:54",
+        "date_last": "2026-07-29T10:44:54",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1238"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:388~person:334",
+        "source_entity_id": "person:388",
+        "target_entity_id": "person:334",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1843
+        },
+        "date_first": "2026-08-17T02:57:21",
+        "date_last": "2026-08-17T02:57:21",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1287"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:396~person:421",
+        "source_entity_id": "person:396",
+        "target_entity_id": "person:421",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 3373
+        },
+        "date_first": "2026-08-17T17:07:11",
+        "date_last": "2026-08-17T17:07:11",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:618"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:397~person:423",
+        "source_entity_id": "person:397",
+        "target_entity_id": "person:423",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2990
+        },
+        "date_first": "2026-08-03T04:43:54",
+        "date_last": "2026-08-03T04:43:54",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:205"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:401~person:422",
+        "source_entity_id": "person:401",
+        "target_entity_id": "person:422",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 688
+        },
+        "date_first": "2026-08-14T02:05:37",
+        "date_last": "2026-08-14T02:05:37",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:71"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:421~person:189",
+        "source_entity_id": "person:421",
+        "target_entity_id": "person:189",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 243
+        },
+        "date_first": "2026-08-04T11:00:08",
+        "date_last": "2026-08-04T11:00:08",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:600"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:421~person:228",
+        "source_entity_id": "person:421",
+        "target_entity_id": "person:228",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1667
+        },
+        "date_first": "2026-08-17T14:59:06",
+        "date_last": "2026-08-17T14:59:06",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:788"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:421~person:297",
+        "source_entity_id": "person:421",
+        "target_entity_id": "person:297",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 53
+        },
+        "date_first": "2026-07-28T12:18:28",
+        "date_last": "2026-07-28T12:18:28",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1457"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:421~person:339",
+        "source_entity_id": "person:421",
+        "target_entity_id": "person:339",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 645
+        },
+        "date_first": "2026-08-05T08:10:57",
+        "date_last": "2026-08-05T08:10:57",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:383"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:421~person:422",
+        "source_entity_id": "person:421",
+        "target_entity_id": "person:422",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 233.0
+        },
+        "date_first": "2026-08-27T09:14:00",
+        "date_last": "2026-08-27T09:14:00",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "ingest_record_ids": [
+            "2cc6f0f474663accf50434f09418260ead607ffdf9e0d9fef44e435298baf9f4"
+          ]
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "calls:2004"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:421~person:481",
+        "source_entity_id": "person:421",
+        "target_entity_id": "person:481",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 548
+        },
+        "date_first": "2026-08-20T23:34:13",
+        "date_last": "2026-08-20T23:34:13",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:754"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:422~person:108",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:108",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 10
+        },
+        "date_first": "2026-08-01T14:01:20",
+        "date_last": "2026-08-01T14:01:20",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1779"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:422~person:178",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:178",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1659
+        },
+        "date_first": "2026-08-25T07:48:15",
+        "date_last": "2026-08-25T07:48:15",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1456"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:422~person:288",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:288",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 436
+        },
+        "date_first": "2026-08-09T02:29:10",
+        "date_last": "2026-08-09T02:29:10",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1257"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:422~person:322",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:322",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2442
+        },
+        "date_first": "2026-08-20T19:32:05",
+        "date_last": "2026-08-20T19:32:05",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:190"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:422~person:388",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:388",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2949
+        },
+        "date_first": "2026-08-14T21:37:34",
+        "date_last": "2026-08-14T21:37:34",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:8"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:422~person:6",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:6",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2450
+        },
+        "date_first": "2026-07-28T01:36:50",
+        "date_last": "2026-07-28T01:36:50",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1908"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:422~person:75",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:75",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2463
+        },
+        "date_first": "2026-08-25T09:29:10",
+        "date_last": "2026-08-25T09:29:10",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:465"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:422~person:84",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:84",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 525
+        },
+        "date_first": "2026-07-28T12:33:28",
+        "date_last": "2026-07-28T12:33:28",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1300"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:423~person:255",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:255",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2535
+        },
+        "date_first": "2026-07-27T17:30:17",
+        "date_last": "2026-07-27T17:30:17",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1716"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:423~person:320",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:320",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 424
+        },
+        "date_first": "2026-08-11T10:46:11",
+        "date_last": "2026-08-11T10:46:11",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:225"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:423~person:372",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:372",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 990
+        },
+        "date_first": "2026-08-25T04:49:43",
+        "date_last": "2026-08-25T04:49:43",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:612"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:423~person:4",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:4",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 307
+        },
+        "date_first": "2026-07-29T18:08:05",
+        "date_last": "2026-07-29T18:08:05",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1418"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:423~person:424",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:424",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 187.0
+        },
+        "date_first": "2026-08-27T09:31:00",
+        "date_last": "2026-08-27T09:31:00",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "ingest_record_ids": [
+            "58024a805236807e25d4e4aeca0ac9d25bac9e2ea8ed64363bcf98a73d0fd7d1"
+          ]
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "calls:2005"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:423~person:6",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:6",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1327
+        },
+        "date_first": "2026-08-10T11:27:32",
+        "date_last": "2026-08-10T11:27:32",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:2000"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:423~person:83",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:83",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2078
+        },
+        "date_first": "2026-07-30T10:01:37",
+        "date_last": "2026-07-30T10:01:37",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1136"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:424~person:144",
+        "source_entity_id": "person:424",
+        "target_entity_id": "person:144",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2505
+        },
+        "date_first": "2026-08-25T07:31:45",
+        "date_last": "2026-08-25T07:31:45",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1276"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:424~person:195",
+        "source_entity_id": "person:424",
+        "target_entity_id": "person:195",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 3295
+        },
+        "date_first": "2026-08-15T20:41:47",
+        "date_last": "2026-08-15T20:41:47",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1853"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:424~person:308",
+        "source_entity_id": "person:424",
+        "target_entity_id": "person:308",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 730
+        },
+        "date_first": "2026-07-27T11:36:17",
+        "date_last": "2026-07-27T11:36:17",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1362"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:424~person:433",
+        "source_entity_id": "person:424",
+        "target_entity_id": "person:433",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1238
+        },
+        "date_first": "2026-07-29T06:22:26",
+        "date_last": "2026-07-29T06:22:26",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1013"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:424~person:7",
+        "source_entity_id": "person:424",
+        "target_entity_id": "person:7",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2644
+        },
+        "date_first": "2026-08-01T03:19:59",
+        "date_last": "2026-08-01T03:19:59",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1799"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:424~person:77",
+        "source_entity_id": "person:424",
+        "target_entity_id": "person:77",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 731
+        },
+        "date_first": "2026-08-03T08:36:55",
+        "date_last": "2026-08-03T08:36:55",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:443"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:468~person:422",
+        "source_entity_id": "person:468",
+        "target_entity_id": "person:422",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 1989
+        },
+        "date_first": "2026-07-28T12:26:31",
+        "date_last": "2026-07-28T12:26:31",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:207"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:483~person:424",
+        "source_entity_id": "person:483",
+        "target_entity_id": "person:424",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 217
+        },
+        "date_first": "2026-08-04T06:15:04",
+        "date_last": "2026-08-04T06:15:04",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1335"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:6~person:1",
+        "source_entity_id": "person:6",
+        "target_entity_id": "person:1",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 3110
+        },
+        "date_first": "2026-08-16T04:40:48",
+        "date_last": "2026-08-16T04:40:48",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:543"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:78~person:4",
+        "source_entity_id": "person:78",
+        "target_entity_id": "person:4",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 102
+        },
+        "date_first": "2026-08-01T01:10:34",
+        "date_last": "2026-08-01T01:10:34",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:90"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:83~person:78",
+        "source_entity_id": "person:83",
+        "target_entity_id": "person:78",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 327
+        },
+        "date_first": "2026-08-21T04:29:46",
+        "date_last": "2026-08-21T04:29:46",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1867"
+        ]
+      },
+      {
+        "relationship_id": "CALLED~person:90~person:424",
+        "source_entity_id": "person:90",
+        "target_entity_id": "person:424",
+        "relationship_type": "CALLED",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_duration_sec": 2067
+        },
+        "date_first": "2026-08-04T15:44:49",
+        "date_last": "2026-08-04T15:44:49",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1249"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:103~person:257",
+        "source_entity_id": "person:103",
+        "target_entity_id": "person:257",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 102
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:103",
+          "persons:257"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:103~person:424",
+        "source_entity_id": "person:103",
+        "target_entity_id": "person:424",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 102
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:103",
+          "persons:424"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:103~person:485",
+        "source_entity_id": "person:103",
+        "target_entity_id": "person:485",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 102
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:103",
+          "persons:485"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:107~person:169",
+        "source_entity_id": "person:107",
+        "target_entity_id": "person:169",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 159
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:107",
+          "persons:169"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:107~person:315",
+        "source_entity_id": "person:107",
+        "target_entity_id": "person:315",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 159
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:107",
+          "persons:315"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:107~person:423",
+        "source_entity_id": "person:107",
+        "target_entity_id": "person:423",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 159
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:107",
+          "persons:423"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:107~person:493",
+        "source_entity_id": "person:107",
+        "target_entity_id": "person:493",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 159
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:107",
+          "persons:493"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:135~person:274",
+        "source_entity_id": "person:135",
+        "target_entity_id": "person:274",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 111
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:135",
+          "persons:274"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:135~person:422",
+        "source_entity_id": "person:135",
+        "target_entity_id": "person:422",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 111
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:135",
+          "persons:422"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:169~person:315",
+        "source_entity_id": "person:169",
+        "target_entity_id": "person:315",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 159
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:169",
+          "persons:315"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:169~person:423",
+        "source_entity_id": "person:169",
+        "target_entity_id": "person:423",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 159
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:169",
+          "persons:423"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:169~person:493",
+        "source_entity_id": "person:169",
+        "target_entity_id": "person:493",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 159
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:169",
+          "persons:493"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:1~person:135",
+        "source_entity_id": "person:1",
+        "target_entity_id": "person:135",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 111
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:1",
+          "persons:135"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:1~person:274",
+        "source_entity_id": "person:1",
+        "target_entity_id": "person:274",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 111
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:1",
+          "persons:274"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:1~person:422",
+        "source_entity_id": "person:1",
+        "target_entity_id": "person:422",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 111
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:1",
+          "persons:422"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:257~person:424",
+        "source_entity_id": "person:257",
+        "target_entity_id": "person:424",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 102
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:257",
+          "persons:424"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:257~person:485",
+        "source_entity_id": "person:257",
+        "target_entity_id": "person:485",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 102
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:257",
+          "persons:485"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:274~person:422",
+        "source_entity_id": "person:274",
+        "target_entity_id": "person:422",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 111
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:274",
+          "persons:422"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:315~person:423",
+        "source_entity_id": "person:315",
+        "target_entity_id": "person:423",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 159
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:315",
+          "persons:423"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:315~person:493",
+        "source_entity_id": "person:315",
+        "target_entity_id": "person:493",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 159
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:315",
+          "persons:493"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:337~person:421",
+        "source_entity_id": "person:337",
+        "target_entity_id": "person:421",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 74
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:337",
+          "persons:421"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:337~person:80",
+        "source_entity_id": "person:80",
+        "target_entity_id": "person:337",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 74
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:80",
+          "persons:337"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:337~person:88",
+        "source_entity_id": "person:88",
+        "target_entity_id": "person:337",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 74
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:88",
+          "persons:337"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:337~person:94",
+        "source_entity_id": "person:94",
+        "target_entity_id": "person:337",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 74
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:94",
+          "persons:337"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:421~person:80",
+        "source_entity_id": "person:80",
+        "target_entity_id": "person:421",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 74
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:80",
+          "persons:421"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:421~person:88",
+        "source_entity_id": "person:88",
+        "target_entity_id": "person:421",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 74
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:88",
+          "persons:421"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:421~person:94",
+        "source_entity_id": "person:94",
+        "target_entity_id": "person:421",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 74
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:94",
+          "persons:421"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:423~person:493",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:493",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 159
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:423",
+          "persons:493"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:424~person:485",
+        "source_entity_id": "person:424",
+        "target_entity_id": "person:485",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 102
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:424",
+          "persons:485"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:483~person:77",
+        "source_entity_id": "person:77",
+        "target_entity_id": "person:483",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 85
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:77",
+          "persons:483"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:80~person:88",
+        "source_entity_id": "person:80",
+        "target_entity_id": "person:88",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 74
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:80",
+          "persons:88"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:80~person:94",
+        "source_entity_id": "person:80",
+        "target_entity_id": "person:94",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 74
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:80",
+          "persons:94"
+        ]
+      },
+      {
+        "relationship_id": "CO_LOCATED~person:88~person:94",
+        "source_entity_id": "person:88",
+        "target_entity_id": "person:94",
+        "relationship_type": "CO_LOCATED",
+        "directed": false,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "shared_location_id": 74
+        },
+        "evidence_count": 2,
+        "evidence": [
+          "persons:88",
+          "persons:94"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:103~location:102",
+        "source_entity_id": "person:103",
+        "target_entity_id": "location:102",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:103"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:107~location:159",
+        "source_entity_id": "person:107",
+        "target_entity_id": "location:159",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:107"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:135~location:111",
+        "source_entity_id": "person:135",
+        "target_entity_id": "location:111",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:135"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:169~location:159",
+        "source_entity_id": "person:169",
+        "target_entity_id": "location:159",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:169"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:1~location:111",
+        "source_entity_id": "person:1",
+        "target_entity_id": "location:111",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:1"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:257~location:102",
+        "source_entity_id": "person:257",
+        "target_entity_id": "location:102",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:257"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:274~location:111",
+        "source_entity_id": "person:274",
+        "target_entity_id": "location:111",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:274"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:315~location:159",
+        "source_entity_id": "person:315",
+        "target_entity_id": "location:159",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:315"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:337~location:74",
+        "source_entity_id": "person:337",
+        "target_entity_id": "location:74",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:337"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:421~location:74",
+        "source_entity_id": "person:421",
+        "target_entity_id": "location:74",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:421"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:422~location:111",
+        "source_entity_id": "person:422",
+        "target_entity_id": "location:111",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:422"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:423~location:159",
+        "source_entity_id": "person:423",
+        "target_entity_id": "location:159",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:423"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:424~location:102",
+        "source_entity_id": "person:424",
+        "target_entity_id": "location:102",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:424"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:485~location:102",
+        "source_entity_id": "person:485",
+        "target_entity_id": "location:102",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:485"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:493~location:159",
+        "source_entity_id": "person:493",
+        "target_entity_id": "location:159",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:493"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:80~location:74",
+        "source_entity_id": "person:80",
+        "target_entity_id": "location:74",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:80"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:88~location:74",
+        "source_entity_id": "person:88",
+        "target_entity_id": "location:74",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:88"
+        ]
+      },
+      {
+        "relationship_id": "LOCATED_AT~person:94~location:74",
+        "source_entity_id": "person:94",
+        "target_entity_id": "location:74",
+        "relationship_type": "LOCATED_AT",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "subject_type": "PERSON"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "persons:94"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~accused~person:101~fir:294",
+        "source_entity_id": "person:101",
+        "target_entity_id": "fir:294",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-07-20",
+        "date_last": "2026-07-20",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "accused",
+          "fir_date": "2026-07-20"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:294"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~accused~person:134~fir:92",
+        "source_entity_id": "person:134",
+        "target_entity_id": "fir:92",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-07-21",
+        "date_last": "2026-07-21",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "accused",
+          "fir_date": "2026-07-21"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:92"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~accused~person:168~fir:107",
+        "source_entity_id": "person:168",
+        "target_entity_id": "fir:107",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-06-28",
+        "date_last": "2026-06-28",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "accused",
+          "fir_date": "2026-06-28"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:107"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~accused~person:296~fir:96",
+        "source_entity_id": "person:296",
+        "target_entity_id": "fir:96",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-07-04",
+        "date_last": "2026-07-04",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "accused",
+          "fir_date": "2026-07-04"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:96"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~accused~person:424~fir:62",
+        "source_entity_id": "person:424",
+        "target_entity_id": "fir:62",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-05-28",
+        "date_last": "2026-05-28",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "accused",
+          "fir_date": "2026-05-28"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:62"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~accused~person:435~fir:245",
+        "source_entity_id": "person:435",
+        "target_entity_id": "fir:245",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-07-06",
+        "date_last": "2026-07-06",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "accused",
+          "fir_date": "2026-07-06"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:245"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~complainant~person:181~fir:62",
+        "source_entity_id": "person:181",
+        "target_entity_id": "fir:62",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-05-28",
+        "date_last": "2026-05-28",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "complainant",
+          "fir_date": "2026-05-28"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:62"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~complainant~person:422~fir:294",
+        "source_entity_id": "person:422",
+        "target_entity_id": "fir:294",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-07-20",
+        "date_last": "2026-07-20",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "complainant",
+          "fir_date": "2026-07-20"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:294"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~complainant~person:423~fir:245",
+        "source_entity_id": "person:423",
+        "target_entity_id": "fir:245",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-07-06",
+        "date_last": "2026-07-06",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "complainant",
+          "fir_date": "2026-07-06"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:245"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~complainant~person:423~fir:92",
+        "source_entity_id": "person:423",
+        "target_entity_id": "fir:92",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-07-21",
+        "date_last": "2026-07-21",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "complainant",
+          "fir_date": "2026-07-21"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:92"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~complainant~person:423~fir:96",
+        "source_entity_id": "person:423",
+        "target_entity_id": "fir:96",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-07-04",
+        "date_last": "2026-07-04",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "complainant",
+          "fir_date": "2026-07-04"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:96"
+        ]
+      },
+      {
+        "relationship_id": "NAMED_IN_FIR~complainant~person:424~fir:107",
+        "source_entity_id": "person:424",
+        "target_entity_id": "fir:107",
+        "relationship_type": "NAMED_IN_FIR",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": "2026-06-28",
+        "date_last": "2026-06-28",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "role": "complainant",
+          "fir_date": "2026-06-28"
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "firs:107"
+        ]
+      },
+      {
+        "relationship_id": "OWNS_AADHAAR~person:421~aadhaar:995510198977",
+        "source_entity_id": "person:421",
+        "target_entity_id": "aadhaar:995510198977",
+        "relationship_type": "OWNS_AADHAAR",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "persons:421"
+        ]
+      },
+      {
+        "relationship_id": "OWNS_AADHAAR~person:422~aadhaar:675939282671",
+        "source_entity_id": "person:422",
+        "target_entity_id": "aadhaar:675939282671",
+        "relationship_type": "OWNS_AADHAAR",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "persons:422"
+        ]
+      },
+      {
+        "relationship_id": "OWNS_AADHAAR~person:423~aadhaar:994437325440",
+        "source_entity_id": "person:423",
+        "target_entity_id": "aadhaar:994437325440",
+        "relationship_type": "OWNS_AADHAAR",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "persons:423"
+        ]
+      },
+      {
+        "relationship_id": "OWNS_AADHAAR~person:424~aadhaar:604255048076",
+        "source_entity_id": "person:424",
+        "target_entity_id": "aadhaar:604255048076",
+        "relationship_type": "OWNS_AADHAAR",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "persons:424"
+        ]
+      },
+      {
+        "relationship_id": "OWNS_PHONE~person:421~phone:+91-7073626894",
+        "source_entity_id": "person:421",
+        "target_entity_id": "phone:+91-7073626894",
+        "relationship_type": "OWNS_PHONE",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "persons:421"
+        ]
+      },
+      {
+        "relationship_id": "OWNS_PHONE~person:422~phone:+91-7769945233",
+        "source_entity_id": "person:422",
+        "target_entity_id": "phone:+91-7769945233",
+        "relationship_type": "OWNS_PHONE",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "persons:422"
+        ]
+      },
+      {
+        "relationship_id": "OWNS_PHONE~person:423~phone:+91-9261111254",
+        "source_entity_id": "person:423",
+        "target_entity_id": "phone:+91-9261111254",
+        "relationship_type": "OWNS_PHONE",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "persons:423"
+        ]
+      },
+      {
+        "relationship_id": "OWNS_PHONE~person:424~phone:+91-7339385087",
+        "source_entity_id": "person:424",
+        "target_entity_id": "phone:+91-7339385087",
+        "relationship_type": "OWNS_PHONE",
+        "directed": true,
+        "source_dataset": "persons",
+        "weight": 1.0,
+        "weight_detail": {},
+        "date_first": null,
+        "date_last": null,
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "persons:424"
+        ]
+      },
+      {
+        "relationship_id": "REPORTED_AGAINST~person:181~person:424",
+        "source_entity_id": "person:181",
+        "target_entity_id": "person:424",
+        "relationship_type": "REPORTED_AGAINST",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {
+          "fir_count": 1
+        },
+        "date_first": "2026-05-28",
+        "date_last": "2026-05-28",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "firs:62"
+        ]
+      },
+      {
+        "relationship_id": "REPORTED_AGAINST~person:288~person:322",
+        "source_entity_id": "person:288",
+        "target_entity_id": "person:322",
+        "relationship_type": "REPORTED_AGAINST",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {
+          "fir_count": 1
+        },
+        "date_first": "2026-08-10",
+        "date_last": "2026-08-10",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "firs:200"
+        ]
+      },
+      {
+        "relationship_id": "REPORTED_AGAINST~person:422~person:101",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:101",
+        "relationship_type": "REPORTED_AGAINST",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {
+          "fir_count": 1
+        },
+        "date_first": "2026-07-20",
+        "date_last": "2026-07-20",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "firs:294"
+        ]
+      },
+      {
+        "relationship_id": "REPORTED_AGAINST~person:423~person:134",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:134",
+        "relationship_type": "REPORTED_AGAINST",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {
+          "fir_count": 1
+        },
+        "date_first": "2026-07-21",
+        "date_last": "2026-07-21",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "firs:92"
+        ]
+      },
+      {
+        "relationship_id": "REPORTED_AGAINST~person:423~person:296",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:296",
+        "relationship_type": "REPORTED_AGAINST",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {
+          "fir_count": 1
+        },
+        "date_first": "2026-07-04",
+        "date_last": "2026-07-04",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "firs:96"
+        ]
+      },
+      {
+        "relationship_id": "REPORTED_AGAINST~person:423~person:435",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:435",
+        "relationship_type": "REPORTED_AGAINST",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {
+          "fir_count": 1
+        },
+        "date_first": "2026-07-06",
+        "date_last": "2026-07-06",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "firs:245"
+        ]
+      },
+      {
+        "relationship_id": "REPORTED_AGAINST~person:424~person:168",
+        "source_entity_id": "person:424",
+        "target_entity_id": "person:168",
+        "relationship_type": "REPORTED_AGAINST",
+        "directed": true,
+        "source_dataset": "firs",
+        "weight": 1.0,
+        "weight_detail": {
+          "fir_count": 1
+        },
+        "date_first": "2026-06-28",
+        "date_last": "2026-06-28",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "firs:107"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:107~person:421",
+        "source_entity_id": "person:107",
+        "target_entity_id": "person:421",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 405362.52
+        },
+        "date_first": "2026-07-28T11:43:04",
+        "date_last": "2026-07-28T11:43:04",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1383"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:139~person:83",
+        "source_entity_id": "person:139",
+        "target_entity_id": "person:83",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 219120.83
+        },
+        "date_first": "2026-07-04T04:56:12",
+        "date_last": "2026-07-04T04:56:12",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1268"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:178~person:422",
+        "source_entity_id": "person:178",
+        "target_entity_id": "person:422",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 231027.58
+        },
+        "date_first": "2026-07-31T12:02:55",
+        "date_last": "2026-07-31T12:02:55",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:437"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:227~person:423",
+        "source_entity_id": "person:227",
+        "target_entity_id": "person:423",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 274038.81
+        },
+        "date_first": "2026-07-14T18:26:24",
+        "date_last": "2026-07-14T18:26:24",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:678"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:255~person:389",
+        "source_entity_id": "person:255",
+        "target_entity_id": "person:389",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 495711.84
+        },
+        "date_first": "2026-08-13T07:25:45",
+        "date_last": "2026-08-13T07:25:45",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1380"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:255~person:99",
+        "source_entity_id": "person:255",
+        "target_entity_id": "person:99",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 498671.22
+        },
+        "date_first": "2026-07-11T03:28:11",
+        "date_last": "2026-07-11T03:28:11",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:724"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:257~person:181",
+        "source_entity_id": "person:257",
+        "target_entity_id": "person:181",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 449887.9
+        },
+        "date_first": "2026-08-03T14:40:58",
+        "date_last": "2026-08-03T14:40:58",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:125"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:275~person:424",
+        "source_entity_id": "person:275",
+        "target_entity_id": "person:424",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 314169.99
+        },
+        "date_first": "2026-08-05T12:18:16",
+        "date_last": "2026-08-05T12:18:16",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1483"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:27~person:422",
+        "source_entity_id": "person:27",
+        "target_entity_id": "person:422",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 436865.23
+        },
+        "date_first": "2026-08-12T05:50:49",
+        "date_last": "2026-08-12T05:50:49",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:741"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:281~person:422",
+        "source_entity_id": "person:281",
+        "target_entity_id": "person:422",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 103706.56
+        },
+        "date_first": "2026-08-08T20:27:24",
+        "date_last": "2026-08-08T20:27:24",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:906"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:333~person:101",
+        "source_entity_id": "person:333",
+        "target_entity_id": "person:101",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 229714.92
+        },
+        "date_first": "2026-08-07T22:21:00",
+        "date_last": "2026-08-07T22:21:00",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:494"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:333~person:422",
+        "source_entity_id": "person:333",
+        "target_entity_id": "person:422",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 468611.75
+        },
+        "date_first": "2026-08-05T00:47:31",
+        "date_last": "2026-08-05T00:47:31",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:777"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:388~person:108",
+        "source_entity_id": "person:388",
+        "target_entity_id": "person:108",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 244605.3
+        },
+        "date_first": "2026-07-12T17:28:12",
+        "date_last": "2026-07-12T17:28:12",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:575"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:389~person:423",
+        "source_entity_id": "person:389",
+        "target_entity_id": "person:423",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 395830.11
+        },
+        "date_first": "2026-08-11T04:20:45",
+        "date_last": "2026-08-11T04:20:45",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:475"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:396~person:320",
+        "source_entity_id": "person:396",
+        "target_entity_id": "person:320",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 476557.41
+        },
+        "date_first": "2026-07-18T17:27:18",
+        "date_last": "2026-07-18T17:27:18",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1346"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:396~person:423",
+        "source_entity_id": "person:396",
+        "target_entity_id": "person:423",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 100936.44
+        },
+        "date_first": "2026-07-08T20:37:15",
+        "date_last": "2026-07-08T20:37:15",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1178"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:421~person:115",
+        "source_entity_id": "person:421",
+        "target_entity_id": "person:115",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 287172.15
+        },
+        "date_first": "2026-08-07T00:23:20",
+        "date_last": "2026-08-07T00:23:20",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:692"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:421~person:218",
+        "source_entity_id": "person:421",
+        "target_entity_id": "person:218",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 429342.59
+        },
+        "date_first": "2026-08-01T07:33:03",
+        "date_last": "2026-08-01T07:33:03",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1224"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:421~person:314",
+        "source_entity_id": "person:421",
+        "target_entity_id": "person:314",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 429671.01
+        },
+        "date_first": "2026-07-12T15:44:45",
+        "date_last": "2026-07-12T15:44:45",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:92"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:421~person:467",
+        "source_entity_id": "person:421",
+        "target_entity_id": "person:467",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 292275.75
+        },
+        "date_first": "2026-08-15T01:49:43",
+        "date_last": "2026-08-15T01:49:43",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:317"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:422~person:306",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:306",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 362416.34
+        },
+        "date_first": "2026-08-09T00:01:22",
+        "date_last": "2026-08-09T00:01:22",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1387"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:422~person:94",
+        "source_entity_id": "person:422",
+        "target_entity_id": "person:94",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 54444.98
+        },
+        "date_first": "2026-07-25T01:55:58",
+        "date_last": "2026-07-25T01:55:58",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:519"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:423~person:177",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:177",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 265322.37
+        },
+        "date_first": "2026-07-20T04:56:36",
+        "date_last": "2026-07-20T04:56:36",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:847"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:423~person:304",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:304",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 244234.38
+        },
+        "date_first": "2026-07-11T16:00:40",
+        "date_last": "2026-07-11T16:00:40",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:61"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:423~person:355",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:355",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 411739.34
+        },
+        "date_first": "2026-08-18T17:06:37",
+        "date_last": "2026-08-18T17:06:37",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:960"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:423~person:78",
+        "source_entity_id": "person:423",
+        "target_entity_id": "person:78",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 294945.18
+        },
+        "date_first": "2026-07-15T07:30:39",
+        "date_last": "2026-07-15T07:30:39",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:541"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:424~person:65",
+        "source_entity_id": "person:424",
+        "target_entity_id": "person:65",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 122547.47
+        },
+        "date_first": "2026-07-23T01:52:49",
+        "date_last": "2026-07-23T01:52:49",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:210"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:425~person:422",
+        "source_entity_id": "person:425",
+        "target_entity_id": "person:422",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 35789.45
+        },
+        "date_first": "2026-08-19T07:04:51",
+        "date_last": "2026-08-19T07:04:51",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:192"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:448~person:422",
+        "source_entity_id": "person:448",
+        "target_entity_id": "person:422",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 438333.87
+        },
+        "date_first": "2026-08-19T17:41:58",
+        "date_last": "2026-08-19T17:41:58",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1487"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:478~person:423",
+        "source_entity_id": "person:478",
+        "target_entity_id": "person:423",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 330342.07
+        },
+        "date_first": "2026-08-13T18:00:23",
+        "date_last": "2026-08-13T18:00:23",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1118"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:55~person:422",
+        "source_entity_id": "person:55",
+        "target_entity_id": "person:422",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 111890.24
+        },
+        "date_first": "2026-07-27T06:37:19",
+        "date_last": "2026-07-27T06:37:19",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1135"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:70~person:424",
+        "source_entity_id": "person:70",
+        "target_entity_id": "person:424",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 213917.58
+        },
+        "date_first": "2026-08-06T21:12:05",
+        "date_last": "2026-08-06T21:12:05",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1321"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:78~person:304",
+        "source_entity_id": "person:78",
+        "target_entity_id": "person:304",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 108575.19
+        },
+        "date_first": "2026-08-10T14:34:52",
+        "date_last": "2026-08-10T14:34:52",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:861"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:7~person:424",
+        "source_entity_id": "person:7",
+        "target_entity_id": "person:424",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 355107.56
+        },
+        "date_first": "2026-07-26T19:03:52",
+        "date_last": "2026-07-26T19:03:52",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:45"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:84~person:75",
+        "source_entity_id": "person:84",
+        "target_entity_id": "person:75",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 261091.15
+        },
+        "date_first": "2026-08-21T06:51:52",
+        "date_last": "2026-08-21T06:51:52",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1209"
+        ]
+      },
+      {
+        "relationship_id": "TRANSACTED~person:99~person:423",
+        "source_entity_id": "person:99",
+        "target_entity_id": "person:423",
+        "relationship_type": "TRANSACTED",
+        "directed": true,
+        "source_dataset": "transactions",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1,
+          "total_amount_inr": 172199.51
+        },
+        "date_first": "2026-07-02T21:35:03",
+        "date_last": "2026-07-02T21:35:03",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "transactions:1247"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:421~tower:2140",
+        "source_entity_id": "person:421",
+        "target_entity_id": "tower:2140",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-17T14:59:06",
+        "date_last": "2026-08-17T14:59:06",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:788"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:421~tower:41",
+        "source_entity_id": "person:421",
+        "target_entity_id": "tower:41",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-27T09:14:00",
+        "date_last": "2026-08-27T09:14:00",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "ingest_record_ids": [
+            "2cc6f0f474663accf50434f09418260ead607ffdf9e0d9fef44e435298baf9f4"
+          ]
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "calls:2004"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:421~tower:4361",
+        "source_entity_id": "person:421",
+        "target_entity_id": "tower:4361",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-20T23:34:13",
+        "date_last": "2026-08-20T23:34:13",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:754"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:421~tower:5355",
+        "source_entity_id": "person:421",
+        "target_entity_id": "tower:5355",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-04T11:00:08",
+        "date_last": "2026-08-04T11:00:08",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:600"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:421~tower:8733",
+        "source_entity_id": "person:421",
+        "target_entity_id": "tower:8733",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-07-28T12:18:28",
+        "date_last": "2026-07-28T12:18:28",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1457"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:421~tower:9740",
+        "source_entity_id": "person:421",
+        "target_entity_id": "tower:9740",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-05T08:10:57",
+        "date_last": "2026-08-05T08:10:57",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:383"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:422~tower:3736",
+        "source_entity_id": "person:422",
+        "target_entity_id": "tower:3736",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-09T02:29:10",
+        "date_last": "2026-08-09T02:29:10",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1257"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:422~tower:4253",
+        "source_entity_id": "person:422",
+        "target_entity_id": "tower:4253",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-07-28T01:36:50",
+        "date_last": "2026-07-28T01:36:50",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1908"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:422~tower:5225",
+        "source_entity_id": "person:422",
+        "target_entity_id": "tower:5225",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-20T19:32:05",
+        "date_last": "2026-08-20T19:32:05",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:190"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:422~tower:6692",
+        "source_entity_id": "person:422",
+        "target_entity_id": "tower:6692",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-01T14:01:20",
+        "date_last": "2026-08-01T14:01:20",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1779"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:422~tower:7647",
+        "source_entity_id": "person:422",
+        "target_entity_id": "tower:7647",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-25T07:48:15",
+        "date_last": "2026-08-25T07:48:15",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1456"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:422~tower:8133",
+        "source_entity_id": "person:422",
+        "target_entity_id": "tower:8133",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-25T09:29:10",
+        "date_last": "2026-08-25T09:29:10",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:465"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:422~tower:8231",
+        "source_entity_id": "person:422",
+        "target_entity_id": "tower:8231",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-14T21:37:34",
+        "date_last": "2026-08-14T21:37:34",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:8"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:422~tower:8942",
+        "source_entity_id": "person:422",
+        "target_entity_id": "tower:8942",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-07-28T12:33:28",
+        "date_last": "2026-07-28T12:33:28",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1300"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:423~tower:1120",
+        "source_entity_id": "person:423",
+        "target_entity_id": "tower:1120",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-11T10:46:11",
+        "date_last": "2026-08-11T10:46:11",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:225"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:423~tower:2087",
+        "source_entity_id": "person:423",
+        "target_entity_id": "tower:2087",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-07-30T10:01:37",
+        "date_last": "2026-07-30T10:01:37",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1136"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:423~tower:41",
+        "source_entity_id": "person:423",
+        "target_entity_id": "tower:41",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-27T09:31:00",
+        "date_last": "2026-08-27T09:31:00",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {
+          "ingest_record_ids": [
+            "58024a805236807e25d4e4aeca0ac9d25bac9e2ea8ed64363bcf98a73d0fd7d1"
+          ]
+        },
+        "evidence_count": 1,
+        "evidence": [
+          "calls:2005"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:423~tower:6863",
+        "source_entity_id": "person:423",
+        "target_entity_id": "tower:6863",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-07-29T18:08:05",
+        "date_last": "2026-07-29T18:08:05",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1418"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:423~tower:8138",
+        "source_entity_id": "person:423",
+        "target_entity_id": "tower:8138",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-10T11:27:32",
+        "date_last": "2026-08-10T11:27:32",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:2000"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:423~tower:8999",
+        "source_entity_id": "person:423",
+        "target_entity_id": "tower:8999",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-07-27T17:30:17",
+        "date_last": "2026-07-27T17:30:17",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1716"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:423~tower:9939",
+        "source_entity_id": "person:423",
+        "target_entity_id": "tower:9939",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-25T04:49:43",
+        "date_last": "2026-08-25T04:49:43",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:612"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:424~tower:1138",
+        "source_entity_id": "person:424",
+        "target_entity_id": "tower:1138",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-07-27T11:36:17",
+        "date_last": "2026-07-27T11:36:17",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1362"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:424~tower:1716",
+        "source_entity_id": "person:424",
+        "target_entity_id": "tower:1716",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-01T03:19:59",
+        "date_last": "2026-08-01T03:19:59",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1799"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:424~tower:3406",
+        "source_entity_id": "person:424",
+        "target_entity_id": "tower:3406",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-25T07:31:45",
+        "date_last": "2026-08-25T07:31:45",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1276"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:424~tower:5447",
+        "source_entity_id": "person:424",
+        "target_entity_id": "tower:5447",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-07-29T06:22:26",
+        "date_last": "2026-07-29T06:22:26",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1013"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:424~tower:7086",
+        "source_entity_id": "person:424",
+        "target_entity_id": "tower:7086",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-15T20:41:47",
+        "date_last": "2026-08-15T20:41:47",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:1853"
+        ]
+      },
+      {
+        "relationship_id": "USED_TOWER~person:424~tower:8796",
+        "source_entity_id": "person:424",
+        "target_entity_id": "tower:8796",
+        "relationship_type": "USED_TOWER",
+        "directed": true,
+        "source_dataset": "calls",
+        "weight": 1.0,
+        "weight_detail": {
+          "count": 1
+        },
+        "date_first": "2026-08-03T08:36:55",
+        "date_last": "2026-08-03T08:36:55",
+        "provenance_confidence": 1.0,
+        "is_overlay": false,
+        "attributes": {},
+        "evidence_count": 1,
+        "evidence": [
+          "calls:443"
+        ]
+      }
+    ],
+    "meta": {
+      "truncated": false,
+      "node_count": 128,
+      "edge_count": 199,
+      "depth": 1,
+      "max_nodes": 300,
+      "anchors": 4
+    }
+  },
+  "suspicious_patterns_preview": {
+    "total": 0,
+    "count": 0,
+    "offset": 0,
+    "limit": 0,
+    "patterns": [],
+    "filters": {
+      "scope": "new_in_preview"
+    },
+    "note": "Patterns the existing detectors would newly assert if this import were committed. Deterministic rule output, not an accusation."
+  },
+  "duplicate_rows": [],
+  "review_required_rows": [],
+  "rejected_rows": [
+    {
+      "row": 1,
+      "verdict": "REJECTED",
+      "reason": "amount_inr: must be greater than zero",
+      "summary": "sender_id, receiver_id",
+      "record_id": null,
+      "source_type": "TRANSACTION"
+    },
+    {
+      "row": 2,
+      "verdict": "REJECTED",
+      "reason": "amount_inr: must be greater than zero",
+      "summary": "sender_id, receiver_id",
+      "record_id": null,
+      "source_type": "TRANSACTION"
+    }
+  ],
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious.",
+  "files": [
+    {
+      "index": 0,
+      "source_type": "CALL",
+      "filename": "calls.csv",
+      "status": "ok",
+      "counts": {
+        "total": 2,
+        "new_valid": 2,
+        "duplicate": 0,
+        "review_required": 0,
+        "rejected": 0
+      },
+      "import_id": "14b4d6f96d82412dbd7bbf46b02681ffcb69c5b4b03677b18f621c0f2d698f57",
+      "error": null,
+      "reason": null
+    },
+    {
+      "index": 1,
+      "source_type": "TRANSACTION",
+      "filename": "transactions.csv",
+      "status": "rejected",
+      "counts": {
+        "total": 2,
+        "new_valid": 0,
+        "duplicate": 0,
+        "review_required": 0,
+        "rejected": 2
+      },
+      "import_id": "2998f14c1d44bc0d4f6abe14bf5b0f79df18f3cd3e47ef8b8071923a0a51a260",
+      "error": null,
+      "reason": "amount_inr: must be greater than zero"
+    },
+    {
+      "index": 2,
+      "source_type": "LOCATION",
+      "filename": "locations.csv",
+      "status": "error",
+      "counts": {
+        "total": 0,
+        "new_valid": 0,
+        "duplicate": 0,
+        "review_required": 0,
+        "rejected": 0
+      },
+      "import_id": null,
+      "error": "No column identifies the person of a location row.",
+      "reason": null
+    }
+  ],
+  "import_ids": [
+    "601fb6a57231f4e2c7063b0e4d524769bf1f7bf627dce6d7dfdf5db6ae5b4c9b",
+    "14b4d6f96d82412dbd7bbf46b02681ffcb69c5b4b03677b18f621c0f2d698f57",
+    "2998f14c1d44bc0d4f6abe14bf5b0f79df18f3cd3e47ef8b8071923a0a51a260"
+  ],
+  "graph_before": {
+    "nodes": 3804,
+    "edges": 10809
+  }
+}

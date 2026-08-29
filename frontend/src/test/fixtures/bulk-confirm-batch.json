@@ -1,0 +1,124 @@
+{
+  "import_id": "7b372fad0a10f6277fbe6715b003563c149b14573e5c57753b27e3516d9e5eef",
+  "source_type": "CALL+LOCATION+TRANSACTION",
+  "counts": {
+    "total": 3,
+    "new_valid": 2,
+    "duplicate": 0,
+    "review_required": 0,
+    "rejected": 1,
+    "imported": 2,
+    "skipped_on_confirm": 0,
+    "files": 3
+  },
+  "record_ids": [
+    "cb317cb437052977004e6be5ff5a4e9a40b5521ebcec704503a64b06bec4c64a",
+    "dcfe30baf4521abe8ef86693b71ba4db692dc29331c1a2a520e956dddb6409ae"
+  ],
+  "skipped": [],
+  "graph_totals": {
+    "nodes": 3804,
+    "edges": 10809
+  },
+  "live_rows": {
+    "calls": 3,
+    "transactions": 1,
+    "firs": 0,
+    "location_observations": 0
+  },
+  "new_pattern_ids": [
+    "multi_channel_relationship~51f8032ca0953f90",
+    "transaction_cycle~2cee66b4ae7ef7da",
+    "transaction_fan_out~4731202c563bf8c8"
+  ],
+  "priority_changes": [
+    {
+      "person_id": 411,
+      "entity_id": "person:411",
+      "score_before": 28,
+      "score_after": 45,
+      "band_before": "LOW",
+      "band_after": "MEDIUM"
+    },
+    {
+      "person_id": 412,
+      "entity_id": "person:412",
+      "score_before": 30,
+      "score_after": 39,
+      "band_before": "LOW",
+      "band_after": "LOW"
+    }
+  ],
+  "recompute_cost_ms": {
+    "analytics_ms": 1518.3,
+    "intelligence_ms": 219.0,
+    "total_ms": 1737.3
+  },
+  "recompute_error": null,
+  "manifest_hash": "54e20e7150125248c5977165eaa75a80bbc6f8cfb4f2e57055601226e4011f84",
+  "audit_event_id": "ae-000002",
+  "audit_error": null,
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious.",
+  "files": [
+    {
+      "index": 0,
+      "source_type": "CALL",
+      "filename": "calls-aug26.csv",
+      "status": "committed",
+      "counts": {
+        "total": 2,
+        "new_valid": 1,
+        "duplicate": 0,
+        "review_required": 0,
+        "rejected": 1
+      },
+      "import_id": "8cea6962491e6cac0dc7734f70a79b9625c1c86e265119f3492eccdb71ac6385",
+      "error": null,
+      "reason": null,
+      "imported": 1
+    },
+    {
+      "index": 1,
+      "source_type": "TRANSACTION",
+      "filename": "transfers-aug26.csv",
+      "status": "committed",
+      "counts": {
+        "total": 1,
+        "new_valid": 1,
+        "duplicate": 0,
+        "review_required": 0,
+        "rejected": 0
+      },
+      "import_id": "debe5447a7a467de57293a1c48a7a67a6721eb79639734733c532cafbb3c1d3e",
+      "error": null,
+      "reason": null,
+      "imported": 1
+    },
+    {
+      "index": 2,
+      "source_type": "LOCATION",
+      "filename": "seen-aug26.csv",
+      "status": "error",
+      "counts": {
+        "total": 0,
+        "new_valid": 0,
+        "duplicate": 0,
+        "review_required": 0,
+        "rejected": 0
+      },
+      "import_id": null,
+      "error": "No LOCATION column was found in the header.",
+      "reason": null,
+      "imported": 0
+    }
+  ],
+  "import_ids": [
+    "7b372fad0a10f6277fbe6715b003563c149b14573e5c57753b27e3516d9e5eef",
+    "8cea6962491e6cac0dc7734f70a79b9625c1c86e265119f3492eccdb71ac6385",
+    "debe5447a7a467de57293a1c48a7a67a6721eb79639734733c532cafbb3c1d3e"
+  ],
+  "graph_before": {
+    "nodes": 3804,
+    "edges": 10806
+  }
+}

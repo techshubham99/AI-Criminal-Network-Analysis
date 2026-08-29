@@ -231,6 +231,27 @@ class IngestStore:
     def resume_journal(self, path: Optional[Path]) -> None:
         self._journal = path
 
+    def snapshot(self, repo) -> "IngestStore":
+        """A detached copy of this store, for preview work (Phase 6.2).
+
+        Every container is copied, so putting a record or appending a live row to
+        the snapshot cannot reach this store. Journalling is off on the copy: a
+        preview is not a submission and must never be replayable as one.
+        """
+        clone = IngestStore(self.settings, repo)
+        clone._records = dict(self._records)
+        clone._by_entity = {k: list(v) for k, v in self._by_entity.items()}
+        clone._duplicate_submissions = dict(self._duplicate_submissions)
+        clone.live_calls = list(self.live_calls)
+        clone.live_transactions = list(self.live_transactions)
+        clone.live_firs = list(self.live_firs)
+        clone.live_observations = list(self.live_observations)
+        clone._next_call_id = self._next_call_id
+        clone._next_txn_id = self._next_txn_id
+        clone._next_fir_id = self._next_fir_id
+        clone._journal = None
+        return clone
+
     # -- derived live rows --------------------------------------------------
     def add_live_call(
         self, *, caller_id: int, callee_id: int, start_time: str, duration_sec: int,

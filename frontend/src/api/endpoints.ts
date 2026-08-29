@@ -38,6 +38,13 @@
  */
 import { post, request } from './client';
 import type {
+  BulkBatchIn,
+  BulkBatchPreviewOut,
+  BulkConfirmOut,
+  BulkPreviewOut,
+  BulkRejectOut,
+  BulkSourceType,
+  BulkUploadIn,
   CallIn,
   CallRecord,
   ChainVerificationOut,
@@ -370,6 +377,41 @@ export const ingestTransaction = (body: TransactionIn, o: Signalled = {}) =>
 /** `POST /api/v1/ingest/location` — one observation of a person at a place. */
 export const ingestLocation = (body: LocationIn, o: Signalled = {}) =>
   post<IngestRecordOut>('ingest/location', body, { signal: o.signal });
+
+/* --------------------------------------------- Phase 6.2 — CSV import -- */
+/*
+ * A CSV is judged before anything is written. `previewBulkCsv` classifies every
+ * row and computes the metrics, graph and patterns that committing it *would*
+ * produce, on an in-memory overlay; the live graph only changes when
+ * `confirmBulkImport` is called. `rejectBulkImport` drops the held preview.
+ */
+
+/** `POST /api/v1/ingest/bulk/{source_type}/preview` — judge a file, write nothing. */
+export const previewBulkCsv = (
+  sourceType: BulkSourceType,
+  body: BulkUploadIn,
+  o: Signalled = {},
+) =>
+  post<BulkPreviewOut>(`ingest/bulk/${sourceType}/preview`, body, { signal: o.signal });
+
+/**
+ * `POST /api/v1/ingest/bulk/preview` — judge one to four files as ONE import.
+ *
+ * Not the same as calling `previewBulkCsv` per file: the backend applies every
+ * file's candidate rows to one overlay and analyses it once, so a relationship
+ * that spans two of the files is detected before either is committed. Confirm and
+ * reject are the existing routes, called with the returned import id.
+ */
+export const previewBulkBatch = (body: BulkBatchIn, o: Signalled = {}) =>
+  post<BulkBatchPreviewOut>('ingest/bulk/preview', body, { signal: o.signal });
+
+/** `POST /api/v1/ingest/bulk/{import_id}/confirm` — commit the new rows only. */
+export const confirmBulkImport = (importId: string, o: Signalled = {}) =>
+  post<BulkConfirmOut>(`ingest/bulk/${importId}/confirm`, undefined, { signal: o.signal });
+
+/** `POST /api/v1/ingest/bulk/{import_id}/reject` — discard the preview. */
+export const rejectBulkImport = (importId: string, o: Signalled = {}) =>
+  post<BulkRejectOut>(`ingest/bulk/${importId}/reject`, undefined, { signal: o.signal });
 
 /* ------------------------------------ Phase 5 — audit chain verification -- */
 

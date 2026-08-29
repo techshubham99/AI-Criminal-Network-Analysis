@@ -62,6 +62,7 @@ export function PatternList({
   refreshKey = 0,
   types = PATTERN_TYPES,
   title = 'Patterns',
+  provided,
 }: {
   entityId?: string;
   limit?: number;
@@ -77,6 +78,12 @@ export function PatternList({
    */
   types?: readonly string[];
   title?: string;
+  /**
+   * An already-computed list to render instead of fetching one. Used by the CSV
+   * import preview, whose patterns come from an overlay that only exists in that
+   * response — there is no endpoint to ask for them again.
+   */
+  provided?: PatternListResponse | null;
 }): ReactElement {
   const [patternType, setPatternType] = useState('');
   const scoped = types.length < PATTERN_TYPES.length;
@@ -104,6 +111,7 @@ export function PatternList({
       return mergePages(pages, limit, entityId ?? null);
     },
     [patternType, entityId, limit, refreshKey, typesKey],
+    { enabled: !provided },
   );
 
   const filter = (
@@ -130,17 +138,16 @@ export function PatternList({
    * With a narrowed `types` list the backend's unfiltered response still spans
    * every category, so the out-of-scope rows are dropped here as a guard.
    */
-  const data = list.data;
+  const data = provided ?? list.data;
   const allowed = useMemo(() => new Set(types), [types]);
-  const patterns = useMemo(
-    () =>
-      data
-        ? patternType
-          ? data.patterns
-          : data.patterns.filter((pattern) => allowed.has(pattern.pattern_type))
-        : [],
-    [data, patternType, allowed],
-  );
+  const patterns = useMemo(() => {
+    if (!data) return [];
+    if (!patternType) return data.patterns.filter((pattern) => allowed.has(pattern.pattern_type));
+    // A provided list is never refetched, so its type filter is applied here.
+    return provided
+      ? data.patterns.filter((pattern) => pattern.pattern_type === patternType)
+      : data.patterns;
+  }, [data, patternType, allowed, provided]);
   const subtitle = data
     ? `${formatCount(patterns.length)} of ${formatCount(data.total)}`
     : undefined;

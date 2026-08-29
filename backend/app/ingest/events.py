@@ -29,13 +29,20 @@ logger = logging.getLogger(__name__)
 
 
 class EventType(str, Enum):
-    """The five event types this phase publishes (spec §12)."""
+    """The event types this channel publishes (spec §12).
+
+    ``BULK_PREVIEW`` is Phase 6.2's progress channel: one frame per real
+    checkpoint of a CSV preview, carrying an import id and a stage name. It
+    reports work that has already happened, so no frame is ever emitted on a
+    timer or ahead of the step it names.
+    """
 
     NEW_INTELLIGENCE = "new_intelligence"
     ENTITY_UPDATED = "entity_updated"
     RELATIONSHIP_ADDED = "relationship_added"
     PATTERN_DETECTED = "pattern_detected"
     PRIORITY_CHANGED = "priority_changed"
+    BULK_PREVIEW = "bulk_preview"
 
 
 @dataclass(frozen=True)

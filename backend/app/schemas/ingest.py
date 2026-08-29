@@ -19,6 +19,9 @@ from typing import Any, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.schemas.graph import EdgeOut, NodeOut
+from app.schemas.intelligence import PatternListResponse
+
 # An identifier a caller may send as either a number or a string. Normalization
 # decides what it means; the schema only insists it is scalar.
 Scalar = Union[str, int, float]
@@ -252,3 +255,188 @@ class IngestSummaryOut(BaseModel):
         ),
     )
     disclaimer: str
+
+
+# --- Phase 6.2: CSV bulk import ---------------------------------------------
+class BulkUploadIn(BaseModel):
+    """One uploaded CSV, sent as text so the existing JSON client carries it."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    filename: str = Field(..., min_length=1, max_length=200)
+    content: str = Field(..., min_length=1, description="The file's text, verbatim")
+
+
+class BulkBatchFileIn(BulkUploadIn):
+    """One file of an All Types upload, which names its own source type."""
+
+    source_type: str = Field(
+        ..., min_length=2, max_length=20, description="fir | call | transaction | location"
+    )
+
+
+class BulkBatchIn(BaseModel):
+    """Several files, previewed together as one import (Phase 6.2b).
+
+    One to four files, in any combination of types. Every file is validated on its
+    own; the candidate rows of all of them are then analysed together, so a
+    relationship that spans two files is visible before either is committed.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    files: list[BulkBatchFileIn] = Field(..., min_length=1, max_length=4)
+
+
+class BulkRowOut(BaseModel):
+    row: int = Field(..., description="1-based data row number, header excluded")
+    verdict: str = Field(
+        ..., description="NEW_VALID | DUPLICATE | REVIEW_REQUIRED | REJECTED"
+    )
+    reason: str
+    summary: str = Field(
+        ...,
+        description=(
+            "Which entities the row points at. A phone or Aadhaar number is shown "
+            "by its last four digits only."
+        ),
+    )
+    record_id: Optional[str] = None
+    source_type: Optional[str] = Field(
+        None,
+        description=(
+            "Which file the row came from, in a combined import. Null in a "
+            "single-type import, where every row is of the type requested."
+        ),
+    )
+
+
+class BulkCountsOut(BaseModel):
+    total: int
+    new_valid: int
+    duplicate: int
+    review_required: int
+    rejected: int
+
+
+class BulkNetworkOut(BaseModel):
+    """The preview subgraph, in the shape the graph endpoints already return."""
+
+    nodes: list[NodeOut]
+    edges: list[EdgeOut]
+    meta: dict[str, Any]
+
+
+class BulkPreviewOut(BaseModel):
+    import_id: str
+    source_type: str
+    counts: BulkCountsOut
+    commit_applicable: bool = Field(
+        ..., description="False when no row is new: there is nothing to commit"
+    )
+    metrics_preview: dict[str, Any] = Field(
+        ...,
+        description=(
+            "What the graph and analytics would look like after committing. "
+            "Computed on an in-memory overlay; the live graph is untouched."
+        ),
+    )
+    network_preview: BulkNetworkOut
+    suspicious_patterns_preview: PatternListResponse = Field(
+        ...,
+        description=(
+            "Patterns the existing Phase 4 detectors would newly assert. Empty "
+            "when they assert none — nothing is generated to fill it."
+        ),
+    )
+    duplicate_rows: list[BulkRowOut]
+    review_required_rows: list[BulkRowOut]
+    rejected_rows: list[BulkRowOut]
+    disclaimer: str
+
+
+class BulkFileOut(BaseModel):
+    """One selected file's own contribution to a combined preview."""
+
+    index: int
+    source_type: str
+    filename: str
+    status: str = Field(
+        ...,
+        description=(
+            "ok (has new rows) | skipped (its rows are already in the system) | "
+            "rejected (no row was usable) | review (no row could be added without "
+            "a decision) | error (the file itself could not be read). After a "
+            "commit, a file that wrote rows is `committed`."
+        ),
+    )
+    counts: BulkCountsOut
+    import_id: Optional[str] = None
+    error: Optional[str] = Field(
+        None, description="Why the file was not usable, if it was not"
+    )
+    reason: Optional[str] = Field(
+        None,
+        description=(
+            "Why the file contributed nothing new, in the same words the row itself "
+            "was given. Null when it did contribute."
+        ),
+    )
+
+
+class BulkBatchPreviewOut(BulkPreviewOut):
+    """A combined preview: the same body, plus which files it was built from.
+
+    ``counts``, ``metrics_preview``, ``network_preview`` and
+    ``suspicious_patterns_preview`` describe the whole selection analysed
+    together on ONE overlay — not per-file results added up.
+    """
+
+    files: list[BulkFileOut]
+    import_ids: list[str] = Field(
+        ...,
+        description="The batch id, then each file's own id. Any of them confirms "
+        "or rejects the whole import.",
+    )
+    graph_before: dict[str, int] = Field(
+        ..., description="Live graph totals the preview was computed against"
+    )
+
+
+class BulkConfirmOut(BaseModel):
+    import_id: str
+    source_type: str
+    counts: dict[str, int]
+    record_ids: list[str]
+    skipped: list[dict[str, Any]] = Field(
+        ...,
+        description="Rows that stopped being committable between preview and confirm",
+    )
+    graph_totals: dict[str, int]
+    live_rows: dict[str, int]
+    new_pattern_ids: list[str]
+    priority_changes: list[dict[str, Any]]
+    recompute_cost_ms: dict[str, Any]
+    recompute_error: Optional[str] = None
+    manifest_hash: Optional[str] = Field(
+        None, description="SHA-256 of the committed record ids, as audited"
+    )
+    audit_event_id: Optional[str] = None
+    audit_error: Optional[str] = None
+    disclaimer: str
+    # Combined imports only; null for a single-type import.
+    files: Optional[list[dict[str, Any]]] = Field(
+        None, description="What each selected file committed"
+    )
+    import_ids: list[str] = Field(
+        default_factory=list, description="Every id this import answered to"
+    )
+    graph_before: Optional[dict[str, int]] = Field(
+        None, description="Live graph totals immediately before this commit"
+    )
+
+
+class BulkRejectOut(BaseModel):
+    import_id: str
+    discarded: bool
+    note: str

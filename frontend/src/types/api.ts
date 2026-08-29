@@ -674,7 +674,12 @@ export interface PatternListResponse {
   offset: number;
   limit: number;
   patterns: PatternOut[];
-  filters: { pattern_type?: string | null; entity_id?: string | null };
+  filters: {
+    pattern_type?: string | null;
+    entity_id?: string | null;
+    /** `new_in_preview` on a bulk-import preview. */
+    scope?: string | null;
+  };
   note: string;
 }
 
@@ -1005,13 +1010,14 @@ export interface IngestRecordOut {
   disclaimer: string;
 }
 
-/** The five event types the live channel publishes. */
+/** Every event type the live channel publishes. */
 export const LIVE_EVENT_TYPES = [
   'new_intelligence',
   'entity_updated',
   'relationship_added',
   'pattern_detected',
   'priority_changed',
+  'bulk_preview',
 ] as const;
 export type LiveEventType = (typeof LIVE_EVENT_TYPES)[number];
 
@@ -1027,6 +1033,167 @@ export interface LiveEvent {
   event_type: LiveEventType | string;
   at: string;
   data: Record<string, unknown>;
+}
+
+/* ------------------------------------- Phase 6.2 — CSV bulk import ------ */
+
+/** The four record types a CSV may carry, lowercase as the route expects. */
+export const BULK_SOURCE_TYPES = ['call', 'transaction', 'fir', 'location'] as const;
+export type BulkSourceType = (typeof BULK_SOURCE_TYPES)[number];
+
+/** The six checkpoints a preview reports, in the order the backend reaches them. */
+export const BULK_STAGES = [
+  'received',
+  'validating',
+  'checking_duplicates',
+  'building_preview',
+  'analyzing_preview',
+  'preview_ready',
+] as const;
+export type BulkStage = (typeof BULK_STAGES)[number];
+
+export interface BulkUploadIn {
+  filename: string;
+  content: string;
+}
+
+export interface BulkRowOut {
+  /** 1-based data row, header excluded. */
+  row: number;
+  verdict: 'NEW_VALID' | 'DUPLICATE' | 'REVIEW_REQUIRED' | 'REJECTED' | string;
+  reason: string;
+  /** Which entities the row points at, identifiers masked to their last four. */
+  summary: string;
+  record_id?: string | null;
+  /** Which file the row came from in a combined import; null in a single one. */
+  source_type?: string | null;
+}
+
+export interface BulkCountsOut {
+  total: number;
+  new_valid: number;
+  duplicate: number;
+  review_required: number;
+  rejected: number;
+}
+
+/**
+ * What the graph and analytics would look like after committing.
+ *
+ * The same three shapes `GET /graph/summary` returns, because the preview runs
+ * the same functions over an in-memory overlay. `note` replaces `analytics` when
+ * no row is new: nothing was recomputed, so there is nothing to report.
+ */
+export interface BulkMetricsPreview {
+  graph?: GraphSummaryResponse['graph'];
+  analytics?: GraphSummaryResponse['analytics'];
+  communities?: GraphSummaryResponse['communities'];
+  live_rows?: Record<string, number>;
+  recompute_cost_ms?: Record<string, number>;
+  priority_changes?: Record<string, unknown>[];
+  note?: string;
+}
+
+/** The affected nodes and their immediate neighbours, in the graph shape. */
+export interface BulkNetworkOut {
+  nodes: NodeOut[];
+  edges: EdgeOut[];
+  meta: Record<string, unknown>;
+}
+
+export interface BulkPreviewOut {
+  import_id: string;
+  source_type: string;
+  counts: BulkCountsOut;
+  /** False when no row is new: there is nothing to commit. */
+  commit_applicable: boolean;
+  metrics_preview: BulkMetricsPreview;
+  network_preview: BulkNetworkOut;
+  suspicious_patterns_preview: PatternListResponse;
+  duplicate_rows: BulkRowOut[];
+  review_required_rows: BulkRowOut[];
+  rejected_rows: BulkRowOut[];
+  disclaimer: string;
+}
+
+export interface BulkConfirmOut {
+  import_id: string;
+  source_type: string;
+  counts: Record<string, number>;
+  record_ids: string[];
+  /** Rows that stopped being committable between preview and confirm. */
+  skipped: Record<string, unknown>[];
+  graph_totals: Record<string, number>;
+  live_rows: Record<string, number>;
+  new_pattern_ids: string[];
+  priority_changes: Record<string, unknown>[];
+  recompute_cost_ms: Record<string, number>;
+  recompute_error?: string | null;
+  manifest_hash?: string | null;
+  audit_event_id?: string | null;
+  audit_error?: string | null;
+  disclaimer: string;
+  /** Combined imports only: what each selected file committed. */
+  files?: BulkFileOut[] | null;
+  import_ids?: string[];
+  graph_before?: Record<string, number> | null;
+}
+
+export interface BulkRejectOut {
+  import_id: string;
+  discarded: boolean;
+  note: string;
+}
+
+/* --------------------------- Phase 6.2b — several files, one import ----- */
+
+/** One file of an All Types selection, sent with the type it carries. */
+export interface BulkBatchFileIn extends BulkUploadIn {
+  source_type: BulkSourceType;
+}
+
+export interface BulkBatchIn {
+  files: BulkBatchFileIn[];
+}
+
+/**
+ * One selected file's own contribution.
+ *
+ * `status` says what became of the file, and the three ways of contributing
+ * nothing are kept apart because they are different news: `skipped` (its rows are
+ * already in the system), `rejected` (no row was usable) and `review` (no row
+ * could be added without a decision). `ok` has new rows and becomes `committed`
+ * after a commit; `error` means the file itself could not be read, and `error`
+ * says why. `reason` carries the row's own explanation for the first three.
+ */
+export interface BulkFileOut {
+  index: number;
+  source_type: string;
+  filename: string;
+  status: 'ok' | 'skipped' | 'rejected' | 'review' | 'error' | 'committed' | string;
+  counts: BulkCountsOut;
+  import_id?: string | null;
+  error?: string | null;
+  /** Why the file contributed nothing new. Null when it did. */
+  reason?: string | null;
+  /** Present on a confirm response only. */
+  imported?: number;
+}
+
+/**
+ * A combined preview: one import over one to four files.
+ *
+ * `counts`, `metrics_preview`, `network_preview` and `suspicious_patterns_preview`
+ * describe the whole selection analysed **together** on one overlay — not per-file
+ * previews added up, which is what makes a relationship spanning two files
+ * visible before either file is committed.
+ */
+export interface BulkBatchPreviewOut extends BulkPreviewOut {
+  files: BulkFileOut[];
+  /** The batch id, then each file's own id. Any of them ends the import. */
+  import_ids: string[];
+  /** Live graph totals the preview was computed against. */
+  graph_before: Record<string, number>;
 }
 
 /* ------------------------------- Phase 5 — tamper-evident audit ledger -- */

@@ -1,8 +1,7 @@
 /**
- * Phase 4.6 live-ingestion components: the one write surface in the app, the
- * verdict it renders, and the SSE connection indicator.
+ * Live-ingestion components: the one write surface in the app — a CSV previewed
+ * before anything is committed — and the SSE connection indicator.
  */
-export { AddIntelligence, toPersonRef } from './AddIntelligence';
-export { AddIntelligenceButton } from './AddIntelligenceButton';
-export { IngestVerdict } from './IngestVerdict';
+export { CsvImport } from './CsvImport';
+export { UploadCsvButton } from './UploadCsvButton';
 export { LiveIndicator } from './LiveIndicator';

@@ -1,0 +1,70 @@
+{
+  "import_id": "2398a3dd1bf6f70ddfd89d7e3696bd228953867ef5546391649f22648fe35676",
+  "source_type": "CALL",
+  "counts": {
+    "total": 5,
+    "new_valid": 2,
+    "duplicate": 1,
+    "review_required": 1,
+    "rejected": 1,
+    "imported": 2,
+    "skipped_on_confirm": 0
+  },
+  "record_ids": [
+    "1765554e125f2c81736eb179493b21360e99f7e82b22f8c65b92a101d6d282e7",
+    "586e89f34591e7fd2590aa4017430db4e3256746cca6d1b172ef9e4d7092e66c"
+  ],
+  "skipped": [],
+  "graph_totals": {
+    "nodes": 3804,
+    "edges": 10806
+  },
+  "live_rows": {
+    "calls": 2,
+    "transactions": 0,
+    "firs": 0,
+    "location_observations": 0
+  },
+  "new_pattern_ids": [
+    "bridge_entity~7e3e78bf510eb134"
+  ],
+  "priority_changes": [
+    {
+      "person_id": 301,
+      "entity_id": "person:301",
+      "score_before": 45,
+      "score_after": 51,
+      "band_before": "MEDIUM",
+      "band_after": "MEDIUM"
+    },
+    {
+      "person_id": 302,
+      "entity_id": "person:302",
+      "score_before": 33,
+      "score_after": 35,
+      "band_before": "LOW",
+      "band_after": "LOW"
+    },
+    {
+      "person_id": 304,
+      "entity_id": "person:304",
+      "score_before": 28,
+      "score_after": 30,
+      "band_before": "LOW",
+      "band_after": "LOW"
+    }
+  ],
+  "recompute_cost_ms": {
+    "analytics_ms": 1346.7,
+    "intelligence_ms": 208.5,
+    "total_ms": 1555.2
+  },
+  "recompute_error": null,
+  "manifest_hash": "16ed1b12505da8fe09c3e594dd49772dbcd397b7bf51a7be10f8fc6fcc42594d",
+  "audit_event_id": "ae-000001",
+  "audit_error": null,
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious.",
+  "files": null,
+  "import_ids": [],
+  "graph_before": null
+}

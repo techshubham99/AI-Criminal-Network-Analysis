@@ -32,7 +32,9 @@ from typing import Any, Callable, Optional
 from app.config import Settings
 from app.core.errors import NotFoundError
 from app.graph.model import fir_eid, location_eid, person_eid, tower_eid
+from app.graph.store import GraphStore
 from app.ingest import external
+from app.ingest.bulk import BulkIngest
 from app.ingest.events import EventBus, EventType
 from app.ingest.graph_update import GraphUpdater
 from app.ingest.models import (
@@ -99,6 +101,9 @@ class IngestPipeline:
         )
         self._lock = threading.RLock()
         self.replayed = 0
+        # Phase 6.2. Holds in-memory previews only; every judgement and every
+        # write it makes goes through this pipeline, so there is no second engine.
+        self.bulk = BulkIngest(self)
 
     # ==================================================================
     # submit
@@ -150,6 +155,46 @@ class IngestPipeline:
         emit_events: bool,
         ingested_at: Optional[str],
     ) -> IngestRecord:
+        """Judge one submission (steps 2-7) and act on the verdict (steps 8, 9)."""
+        record = self.classify(
+            source_type, payload, provenance, ingested_at=ingested_at
+        )
+
+        if record.status is IngestStatus.REJECTED:
+            return record
+
+        if record.status is IngestStatus.DUPLICATE:
+            resubmissions = self.store.note_duplicate(record.record_id)
+            record.impact["resubmissions"] = resubmissions
+            logger.info(
+                "Duplicate %s submission for record %s (resubmission %d)",
+                source_type.value, record.record_id[:12], resubmissions,
+            )
+            return record
+
+        if record.status is not IngestStatus.ACCEPTED:
+            self.store.put(record)
+            return record
+
+        # --- steps 5, 8, 9: apply -------------------------------------------
+        return self._apply(record, emit_events=emit_events)
+
+    def classify(
+        self,
+        source_type: SourceType,
+        payload: dict[str, Any],
+        provenance: Provenance,
+        *,
+        ingested_at: Optional[str] = None,
+    ) -> IngestRecord:
+        """Steps 2-7: reach a verdict without writing anything.
+
+        Normalization, duplicate detection, entity resolution, provenance
+        validation and the decision itself are all read-only, so the same
+        judgement serves a real submission and a Phase 6.2 preview. Nothing is
+        stored, no resubmission is counted and no graph is touched here — the
+        caller decides what to do with the verdict.
+        """
         raw = dict(payload)
         at = ingested_at or _now()
 
@@ -166,11 +211,6 @@ class IngestPipeline:
         record_id = make_record_id(source_type, normalized)
         existing = self.store.get(record_id)
         if existing is not None:
-            resubmissions = self.store.note_duplicate(record_id)
-            logger.info(
-                "Duplicate %s submission for record %s (resubmission %d)",
-                source_type.value, record_id[:12], resubmissions,
-            )
             return IngestRecord(
                 record_id=record_id,
                 source_type=source_type,
@@ -198,7 +238,6 @@ class IngestPipeline:
                         "intelligence was recomputed."
                     ),
                     "original_status": existing.status.value,
-                    "resubmissions": resubmissions,
                 },
             )
 
@@ -245,11 +284,7 @@ class IngestPipeline:
                     "intelligence was recomputed."
                 ),
             }
-            self.store.put(record)
-            return record
-
-        # --- steps 5, 8, 9: apply -------------------------------------------
-        return self._apply(record, emit_events=emit_events)
+        return record
 
     # ==================================================================
     # resolution per source type
@@ -378,9 +413,26 @@ class IngestPipeline:
     # ==================================================================
     # apply an accepted record (steps 5, 8, 9)
     # ==================================================================
-    def _apply(self, record: IngestRecord, *, emit_events: bool) -> IngestRecord:
+    def write_record(
+        self,
+        record: IngestRecord,
+        *,
+        graph_store: GraphStore,
+        ingest_store: IngestStore,
+        run_nlp: bool = True,
+    ) -> tuple[GraphUpdater, set[int], Optional[dict[str, Any]]]:
+        """Steps 5 and 8 for one accepted record, against the given targets.
+
+        Derived rows go to ``ingest_store`` and derived edges to ``graph_store``,
+        so one code path serves a real submission (the live store and graph) and a
+        Phase 6.2 preview (a snapshot store and an overlay graph). Nothing global
+        is recomputed and nothing is published from here.
+
+        ``run_nlp`` is off for a preview: the Phase 3 narrative pipeline writes
+        into the live narrative overlay, which a preview must not touch.
+        """
         by_field = {m.field_name: m for m in record.matches}
-        updater = GraphUpdater(self.graph.store)
+        updater = GraphUpdater(graph_store)
         decisions: list[RelationshipDecision] = []
         entity_ids: set[str] = set(record.entity_ids)
         person_ids: set[int] = set()
@@ -395,7 +447,7 @@ class IngestPipeline:
 
         if record.source_type is SourceType.CALL:
             caller, callee = pid_of("caller"), pid_of("callee")
-            row = self.store.add_live_call(
+            row = ingest_store.add_live_call(
                 caller_id=caller,
                 callee_id=callee,
                 start_time=norm["start_time"],
@@ -440,7 +492,7 @@ class IngestPipeline:
 
         elif record.source_type is SourceType.TRANSACTION:
             sender, receiver = pid_of("sender"), pid_of("receiver")
-            row = self.store.add_live_transaction(
+            row = ingest_store.add_live_transaction(
                 sender_id=sender,
                 receiver_id=receiver,
                 amount_inr=norm["amount_inr"],
@@ -473,7 +525,7 @@ class IngestPipeline:
 
         elif record.source_type is SourceType.LOCATION:
             person, location = pid_of("person"), lid_of("place")
-            row = self.store.add_live_observation(
+            row = ingest_store.add_live_observation(
                 person_id=person,
                 location_id=location,
                 observed_at=norm.get("observed_at"),
@@ -503,7 +555,7 @@ class IngestPipeline:
         else:  # FIR
             complainant = pid_of("complainant")
             accused = pid_of("accused") if "accused" in by_field else None
-            row = self.store.add_live_fir(
+            row = ingest_store.add_live_fir(
                 date=norm["date"],
                 complainant_id=complainant,
                 accused_id=accused,
@@ -593,12 +645,20 @@ class IngestPipeline:
             # §7: the accepted FIR goes through the existing Phase 3 pipeline.
             # Narrative-derived relationships land in the narrative overlay, not
             # in the structured graph — the Phase 3 separation is preserved.
-            if self.nlp is not None:
+            if run_nlp and self.nlp is not None:
                 nlp_report = self._run_nlp(row)
 
         record.relationships = decisions
         record.entity_ids = sorted(entity_ids | {person_eid(p) for p in person_ids})
-        self.store.put(record)
+        ingest_store.put(record)
+        return updater, person_ids, nlp_report
+
+    def _apply(self, record: IngestRecord, *, emit_events: bool) -> IngestRecord:
+        """Write one accepted record, then recompute global state (step 9)."""
+        updater, person_ids, nlp_report = self.write_record(
+            record, graph_store=self.graph.store, ingest_store=self.store
+        )
+        decisions = record.relationships
 
         # --- step 9b: global recomputation ---------------------------------
         # The graph is already mutated at this point, so a recomputation failure
@@ -647,6 +707,105 @@ class IngestPipeline:
         if emit_events and result is not None:
             self._emit(record, result, updater)
         return record
+
+    def apply_batch(
+        self, records: list[IngestRecord], *, emit_events: bool = True
+    ) -> dict[str, Any]:
+        """Apply several accepted records, recomputing global state exactly once.
+
+        The recomputation in :meth:`_apply` is global — PageRank, betweenness and
+        communities are properties of the whole graph — so running it per record
+        would pay for the same work N times and report N sets of "new patterns"
+        for one import. A batch writes every record, then recomputes once, and the
+        result describes the import rather than any single row in it.
+        """
+        with self._lock:
+            if not records:
+                # Nothing was written, so nothing global can have changed. A
+                # recomputation here would cost a full analytics pass to prove it.
+                return {
+                    "record_ids": [],
+                    "person_ids": [],
+                    "graph_totals": {
+                        "nodes": self.graph.store.node_count(),
+                        "edges": self.graph.store.edge_count(),
+                    },
+                    "live_rows": self.store.live_counts(),
+                    "new_pattern_ids": [],
+                    "cleared_pattern_ids": [],
+                    "priority_changes": [],
+                    "recompute_cost_ms": {},
+                }
+
+            person_ids: set[int] = set()
+            for record in records:
+                updater, touched, nlp_report = self.write_record(
+                    record, graph_store=self.graph.store, ingest_store=self.store
+                )
+                person_ids |= touched
+                accepted = sum(1 for d in record.relationships if d.accepted)
+                record.impact = {
+                    "changed": updater.change.touched_graph,
+                    "graph": updater.change.as_dict(),
+                    "relationships_accepted": accepted,
+                    "relationships_rejected": len(record.relationships) - accepted,
+                    "note": (
+                        "Committed as part of a bulk import; the global "
+                        "recomputation ran once for the whole import."
+                    ),
+                }
+                if nlp_report is not None:
+                    record.impact["nlp"] = nlp_report
+                record.reason = f"{accepted} relationship(s) accepted."
+
+            result: Optional[Any] = None
+            recompute_error: Optional[str] = None
+            try:
+                result = self.recomputer.run(
+                    person_ids=sorted(person_ids),
+                    before_analytics=self.graph.cached_analytics,
+                    before_intelligence=self.intelligence,
+                )
+            except Exception as exc:  # pragma: no cover - defensive
+                recompute_error = f"{type(exc).__name__}: {exc}"
+                logger.exception(
+                    "Recomputation failed after committing %d record(s)", len(records)
+                )
+
+            if result is not None:
+                self.graph.publish_analytics(result.analytics)
+                self.intelligence = result.intelligence
+                if self._publish_intelligence is not None:
+                    self._publish_intelligence(result.intelligence)
+
+            out: dict[str, Any] = {
+                "record_ids": [r.record_id for r in records],
+                "person_ids": sorted(person_ids),
+                "graph_totals": {
+                    "nodes": self.graph.store.node_count(),
+                    "edges": self.graph.store.edge_count(),
+                },
+                "live_rows": self.store.live_counts(),
+            }
+            for record in records:
+                record.impact["graph_totals"] = out["graph_totals"]
+                record.impact["live_rows"] = out["live_rows"]
+
+            if result is None:
+                out["recompute_error"] = recompute_error
+                return out
+
+            out.update(
+                {
+                    "new_pattern_ids": list(result.new_pattern_ids),
+                    "cleared_pattern_ids": list(result.cleared_pattern_ids),
+                    "priority_changes": list(result.priority_changes),
+                    "recompute_cost_ms": result.cost_ms,
+                }
+            )
+            if emit_events and records:
+                self._emit_batch(records, result)
+            return out
 
     def _run_nlp(self, fir_row: dict) -> dict[str, Any]:
         """Analyse an accepted FIR with the existing Phase 3 pipeline (§7).
@@ -781,6 +940,54 @@ class IngestPipeline:
                 **base,
                 "status": record.status.value,
                 "entity_ids": record.entity_ids,
+                "new_patterns": len(result.new_pattern_ids),
+                "priority_changes": len(result.priority_changes),
+                "recompute_cost_ms": result.cost_ms.get("total_ms"),
+            },
+        )
+
+    def _emit_batch(self, records: list[IngestRecord], result) -> None:
+        """One set of frames for a whole import, not one set per row.
+
+        The recomputation that produced ``result`` ran once for the import, so
+        attributing its new patterns and band changes to any individual row would
+        be a claim the computation does not support.
+        """
+        base = {
+            "source_type": records[0].source_type.value,
+            "records": len(records),
+        }
+        rel_ids = [
+            d.relationship_id
+            for r in records
+            for d in r.relationships
+            if d.relationship_id
+        ]
+        entity_ids = sorted({e for r in records for e in r.entity_ids})
+        if rel_ids:
+            self.bus.publish(
+                EventType.RELATIONSHIP_ADDED, {**base, "relationship_ids": rel_ids}
+            )
+        if entity_ids:
+            self.bus.publish(
+                EventType.ENTITY_UPDATED, {**base, "entity_ids": entity_ids}
+            )
+        if result.new_pattern_ids:
+            self.bus.publish(
+                EventType.PATTERN_DETECTED,
+                {**base, "pattern_ids": result.new_pattern_ids,
+                 "count": len(result.new_pattern_ids)},
+            )
+        if result.priority_changes:
+            self.bus.publish(
+                EventType.PRIORITY_CHANGED, {**base, "changes": result.priority_changes}
+            )
+        self.bus.publish(
+            EventType.NEW_INTELLIGENCE,
+            {
+                **base,
+                "status": IngestStatus.ACCEPTED.value,
+                "entity_ids": entity_ids,
                 "new_patterns": len(result.new_pattern_ids),
                 "priority_changes": len(result.priority_changes),
                 "recompute_cost_ms": result.cost_ms.get("total_ms"),

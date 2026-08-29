@@ -58,6 +58,8 @@ class AuditAction(str, Enum):
     INGEST_DUPLICATE = "INGEST_DUPLICATE"
     INGEST_REVIEW_REQUIRED = "INGEST_REVIEW_REQUIRED"
     INGEST_REJECTED = "INGEST_REJECTED"
+    # Phase 6.2: one event for a confirmed CSV import, not one per row.
+    INGEST_BULK_CONFIRMED = "INGEST_BULK_CONFIRMED"
     RELATIONSHIP_ADDED = "RELATIONSHIP_ADDED"
     PATTERN_DETECTED = "PATTERN_DETECTED"
     PRIORITY_BAND_CHANGED = "PRIORITY_BAND_CHANGED"
@@ -69,6 +71,8 @@ class ResourceType(str, Enum):
     """What an audit event is about."""
 
     INGEST_RECORD = "ingest_record"
+    # A confirmed bulk import, addressed by its import id (Phase 6.2).
+    INGEST_IMPORT = "ingest_import"
     RELATIONSHIP = "relationship"
     PATTERN = "pattern"
     PERSON = "person"

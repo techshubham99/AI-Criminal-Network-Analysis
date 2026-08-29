@@ -1100,3 +1100,122 @@ started.
 O(chain length) and reports `events_checked`; the chain is forward-only with no backfill of the
 static corpus; a rejected submission has a decision event but no verifiable record;
 `content`-type resources need the holder to present the content; persistence is off by default.
+
+## V. As-built — Phase 6.2 shipped: CSV upload, previewed before it is written (addendum, 2026-08-29)
+
+`POST /ingest/bulk/{source_type}/preview` classifies every row through the **existing** Phase 4.6
+gate (DUPLICATE / NEW_VALID / REVIEW_REQUIRED / REJECTED, cap 2,000 rows / 5 MB), then runs the
+**existing** Phase 4 detectors and centrality over a separate `NetworkXGraphStore` rebuilt from
+the live nodes and edges plus a snapshot ingest store, so a preview writes nothing: no live
+`GraphStore`, no ingest store, no ledger, no file. `{import_id}/confirm` replays
+only the NEW_VALID rows through the **existing** single-record pipeline, recomputes once, and
+writes **one** audit event carrying the import id, counts and a manifest hash of the committed
+`record_id`s — not one per row; `{import_id}/reject` drops the overlay and 404s a later confirm.
+Six `bulk_preview` frames (`received → validating → checking_duplicates → building_preview →
+analyzing_preview → preview_ready`) go out on the existing SSE channel at real checkpoints, and
+the UI's checkmarks come only from those frames — there is no client-side timer. "Add
+Intelligence" is gone; `components/live/CsvImport.tsx` is a modal that feeds the preview payload
+into the same `StatTile`, `NetworkGraph` and `PatternList` components the app already uses,
+badged `Preview` until committed. Measured on a 5-row call file: `{total 5, new_valid 2,
+duplicate 1, review_required 1, rejected 1}`, overlay **3,804 nodes / 10,806 edges** — equal to
+the totals after the commit — 101-entity affected network, **1** pattern claimed, `ae-000001`,
+chain `VERIFIED`, second confirm `404`; the same two rows re-uploaded gave `new_valid 0` with
+`commit_applicable false` and **no** patterns claimed; dataset SHA-256 unchanged throughout.
+Backend **554 passed** (544 from §U + **10** bulk cases); frontend **465 tests / 30 files**,
+typecheck and build clean. Limits: previews live in the API process and are lost on restart (one
+worker only); held and rejected rows are never auto-corrected — they must be fixed and
+re-uploaded; the confirm recompute is global, ~1.8 s.
+
+## W. As-built — Phase 6.2b shipped: several files previewed as one import (addendum, 2026-08-29)
+
+`POST /ingest/bulk/preview` takes 1–4 files (`{source_type, filename, content}`, one per type) and
+answers with ONE preview. Each file is validated and normalised against its **existing** per-type
+schema and gets its own content-addressed `import_id` for provenance, then every file's candidate
+rows are applied to **one** temporary overlay, and the **existing** Phase 4 detectors, centrality
+and priority pass run **once** over it — `bulk.py:_analyse()` is the single computation path, shared
+with the single-file route, so this is a combined analysis and not merged per-file results. That is
+the observable difference: a call file and a transaction file both naming persons 411 and 412 yield
+a `MULTI_CHANNEL_RELATIONSHIP` that neither file produces alone, because one channel is not two.
+The response adds `files[]` (type, filename, status, counts, import_id, error), `import_ids[]` and
+`graph_before` to the 6.2 body. A file whose header cannot be read is reported on its own row with
+the parser's reason and does **not** abort the batch; a file with no new rows is `skipped`. One SSE
+sequence covers the whole batch — the same six `bulk_preview` stages on the existing channel, each
+carrying `detail: "N file(s)"`, published under the batch id only. Confirm revalidates the
+NEW_VALID rows, writes them through the **existing** single-record pipeline, recomputes **once**
+and appends **one** `INGEST_BULK_CONFIRMED` event whose metadata names the combined
+`source_type` (`"CALL+TRANSACTION"`), the counts, `files_count` and a manifest hash of the
+committed `record_id`s — never per file. The held preview answers to the batch id *and* to each
+file's id, so `Reject All` drops every id it gave out and the later ones report nothing left to
+drop. `CsvImport.tsx` grew a `[Single Type] [All Types]` toggle on the existing `.tab-item` styling,
+four optional file inputs and a per-file summary row; the two graph tiles gained a `Before …`
+footnote and the `Preview` badge becomes `Live` on commit. Single Type mode is byte-for-byte the
+same request, response and labels as §V. Measured live against the running app: two files, `{total
+3, new_valid 2, duplicate 0, review_required 0, rejected 1}`, live graph **3,803 / 10,802**
+untouched during the preview, overlay **3,804 / 10,805**, **3** patterns including the cross-file
+one, `Add All` → committed 2, graph **3,804 / 10,805**, **1** audit event `ae-000001`
+(`files_count 2`), chain `VERIFIED`; the committed rows re-uploaded gave `new_valid 0`, both files
+`skipped`, no patterns claimed; a fresh combined preview rejected left graph and ledger unchanged;
+dataset SHA-256 unchanged throughout. Backend **572 passed** (554 from §V + **18** combined-import
+cases); frontend **474 tests / 30 files**, typecheck and build clean. Limits: one file per type, so
+two call files in one selection is not a supported gesture; the overlay is rebuilt from the live
+graph on every preview, so its cost tracks the graph size rather than the file count; previews
+still live in the API process and are lost on restart; the batch `import_id` is content-addressed,
+so byte-identical files re-uploaded reproduce the same id; and cross-file detection is only what
+the existing Phase 4 rules can justify — no new rule, weight or pattern type was added for 6.2b.
+
+## X. As-built — bug fix: every row rejected, and a rejected file called a duplicate (addendum, 2026-08-29)
+
+Two separate defects, found by instrumenting the real app rather than by reading the code.
+`backend/scripts/diagnose_csv_upload.py` runs each dataset type through `TestClient` and prints the
+header, the recognised and unrecognised columns, the verdict tally and **the first rejection with
+its reason and the payload that was built**. It answered: `caller: must be an object identifying a
+person` / `sender: …` / `complainant: …` / `person: …`, all `RejectReason.INVALID_FIELD`.
+
+**Root cause — a column-name mismatch, not a validation problem.** The corpus spells a party
+`caller_id`, `callee_id`, `sender_id`, `receiver_id`, `complainant_id`, `accused_id` — the same names
+`graph/builder.py`, `ingest/graph_update.py`, `ingest/store.py` and the query params use — while
+`bulk.py` recognised only the `_person_id` long form a single submission posts. The file-level
+`header & known` check passed anyway because the **scalar** columns (`start_time`, `duration_sec`,
+`amount_inr`, …) matched, so nothing warned at file level and every row then failed individually on
+its party: 800 rows, 800 rejections, 0 duplicates. `_REFERENCE_SUFFIXES` is now a suffix → payload-key
+map that accepts both spellings, `build_payload` uses `setdefault` so `_person_id` wins if a file
+carries both, and values still pass through `normalize_reference` and entity resolution **unchanged**
+— nothing was loosened. `_REQUIRED_REFERENCES` adds a second, file-level check: if no column could
+name a required role, the upload is one `400` — *"No column identifies the person of a location
+row."* with `missing_references` and `expected_columns` — instead of N rejected rows reporting the
+row count of a problem the file has. `locations.csv` is that case: a table of places, with no column
+for who was seen at one. An FIR may name no accused yet, so only `complainant` is required.
+
+**Status label — the enum was never wrong.** `_VERDICTS` has always mapped ACCEPTED→`NEW_VALID`,
+DUPLICATE, REVIEW_REQUIRED and REJECTED distinctly; two layers flattened them. The backend set
+`status = "ok" if file_candidates else "skipped"`, collapsing rejected, review-required and duplicate
+into the one word the UI renders as *"Already in system — skipped."*; `confirm()` repeated the
+collapse. `_file_outcome()` now picks the file's status from its **dominant** verdict — ties going to
+the more serious outcome — over the vocabulary `ok | skipped | rejected | review | error`
+(`committed` after a commit), and carries that outcome's own row reason in a new `BulkFile.reason`,
+mirrored in `BulkFileOut` and `types/api.ts`. In `CsvImport.tsx`, `fileNote()` returned the static
+`FILE_STATUS` note unconditionally; it now returns the real counts plus `reason` for any status
+without a fixed note, and the duplicate sentence is reachable only from `skipped`.
+
+Measured live against the running app (uvicorn + Vite, real HTTP). Four files in the corpus's own
+spelling: `{total 5, new_valid 5, duplicate 0, review_required 0, rejected 0}`, all four `ok`,
+commit wrote 5, per file `[(CALL, committed, 2), (TRANSACTION, committed, 1), (LOCATION, committed,
+1), (FIR, committed, 1)]`. The same four again: `{new_valid 0, duplicate 5}`, all four `skipped`,
+reason *"Identical record already accepted on 2026-08-29T21:20:13. No graph or intelligence
+change."* Broken rows: `bad-calls.csv → rejected  duration_sec: must be greater than zero`,
+`bad-transfers.csv → rejected  amount_inr: must be greater than zero`, `locations.csv → error  No
+column identifies the person of a location row.` In the browser the three rows rendered
+`[rejected, ok, error]` reading *"Call bad-calls.csv Rejected 1 rejected of 1 · duration_sec: must
+be greater than zero"*, tiles New 1 / Duplicates 0 / Rejected 1, and no duplicate wording anywhere
+on screen; after commit `[rejected, committed, error]`; re-uploading the committed file gave one
+`skipped` row, *"Already in system — skipped."*, Duplicates 1 and no confirm button. Backend **581
+passed** (572 from §W + **9**: both spellings reaching the same `record_id`, `build_payload`
+precedence, the two missing-role headers, and the per-file statuses); frontend **475 tests / 30
+files**, typecheck and build clean; ten fixtures re-recorded from the app through
+`phase6_2_bulk_demo.py --record` (section I is the new three-outcomes case). Limits: dedup looks up
+the content-addressed `record_id` in the **ingest store only**, so a row already in the pre-loaded
+corpus is `NEW_VALID` the first time it is uploaded and `DUPLICATE` the second — pre-existing Phase
+4.6 semantics, unchanged here; a file mixing verdicts evenly reports the most serious one, so the
+per-file line is a summary and the row lists remain the full answer; and the two accepted spellings
+are the corpus's and the API's — an arbitrary third naming (`from_id`, `A_party`) is still a
+file-level `400` naming the columns it expected.

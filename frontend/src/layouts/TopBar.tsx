@@ -1,10 +1,10 @@
 /**
- * TopBar — brand, search, intake, clock, LIVE indicator, system status, theme.
+ * TopBar — brand, search, CSV upload, clock, LIVE indicator, system status, theme.
  */
 import { useEffect, useState, type ReactElement } from 'react';
 
 import { api } from '@/api';
-import { AddIntelligenceButton, LiveIndicator } from '@/components/live';
+import { LiveIndicator, UploadCsvButton } from '@/components/live';
 import { GlobalSearch } from '@/components/search/GlobalSearch';
 import { Spinner, ThemeToggle, Tooltip } from '@/components/ui';
 import { useAsync } from '@/hooks/useAsync';
@@ -39,7 +39,7 @@ export function TopBar(): ReactElement {
         <div className="border-line mx-1 hidden h-5 w-px shrink-0 lg:block" />
         <GlobalSearch className="min-w-0 flex-1 sm:max-w-sm lg:max-w-md" />
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          <AddIntelligenceButton />
+          <UploadCsvButton />
           <Clock />
           <LiveIndicator className="hidden sm:flex" />
           <SystemStatus />

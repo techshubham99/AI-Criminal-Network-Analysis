@@ -1,0 +1,95 @@
+{
+  "import_id": "61fec6b3fdc5e316467bfe94e721f90644afa6ac07daaf3406a497a9ece4349b",
+  "source_type": "CALL",
+  "counts": {
+    "total": 2,
+    "new_valid": 0,
+    "duplicate": 2,
+    "review_required": 0,
+    "rejected": 0
+  },
+  "commit_applicable": false,
+  "metrics_preview": {
+    "graph": {
+      "node_count": 3804,
+      "edge_count": 10806,
+      "observed_edge_count": 8826,
+      "overlay_edge_count": 1980,
+      "nodes_by_type": {
+        "AADHAAR": 500,
+        "CELL_TOWER": 1804,
+        "FIR": 300,
+        "LOCATION": 200,
+        "PERSON": 500,
+        "PHONE": 500
+      },
+      "edges_by_type": {
+        "CALLED": 1992,
+        "CO_LOCATED": 634,
+        "LOCATED_AT": 800,
+        "NAMED_IN_FIR": 600,
+        "OWNS_AADHAAR": 500,
+        "OWNS_PHONE": 500,
+        "REPORTED_AGAINST": 300,
+        "SAME_RING": 1980,
+        "TRANSACTED": 1498,
+        "USED_TOWER": 2002
+      },
+      "overlay_edges_by_type": {
+        "SAME_RING": 1980
+      },
+      "self_loops": 3
+    },
+    "live_rows": {
+      "calls": 2,
+      "transactions": 0,
+      "firs": 0,
+      "location_observations": 0
+    },
+    "note": "No new rows to analyse, so no analytics were recomputed."
+  },
+  "network_preview": {
+    "nodes": [],
+    "edges": [],
+    "meta": {
+      "truncated": false,
+      "node_count": 0,
+      "edge_count": 0,
+      "depth": 1,
+      "max_nodes": 300,
+      "anchors": 0
+    }
+  },
+  "suspicious_patterns_preview": {
+    "total": 0,
+    "count": 0,
+    "offset": 0,
+    "limit": 0,
+    "patterns": [],
+    "filters": {
+      "scope": "new_in_preview"
+    },
+    "note": "Patterns the existing detectors would newly assert if this import were committed. Deterministic rule output, not an accusation."
+  },
+  "duplicate_rows": [
+    {
+      "row": 1,
+      "verdict": "DUPLICATE",
+      "reason": "Identical record already accepted on 2026-08-29T20:50:06. No graph or intelligence change.",
+      "summary": "caller person_id 301, callee person_id 302",
+      "record_id": "1765554e125f2c81736eb179493b21360e99f7e82b22f8c65b92a101d6d282e7",
+      "source_type": null
+    },
+    {
+      "row": 2,
+      "verdict": "DUPLICATE",
+      "reason": "Identical record already accepted on 2026-08-29T20:50:06. No graph or intelligence change.",
+      "summary": "caller person_id 303, callee person_id 304",
+      "record_id": "586e89f34591e7fd2590aa4017430db4e3256746cca6d1b172ef9e4d7092e66c",
+      "source_type": null
+    }
+  ],
+  "review_required_rows": [],
+  "rejected_rows": [],
+  "disclaimer": "Ingestion decisions describe record validity and how a reference resolves against existing records. They are not findings about any person, and a new or unconnected record is not treated as suspicious."
+}

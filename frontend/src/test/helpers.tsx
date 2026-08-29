@@ -88,6 +88,32 @@ import ingestRecord from './fixtures/ingest-record.json';
 import ingestImpact from './fixtures/ingest-impact.json';
 import entityChanges141 from './fixtures/entity-changes-141.json';
 import liveEvents from './fixtures/live-events.json';
+// Phase 6.2 — one CSV through the whole decision cycle, recorded by
+// `backend/scripts/phase6_2_bulk_demo.py`: the preview of a five-row file, the
+// six progress frames that preview published, the commit of it, the same rows
+// uploaded a second time (all duplicates by then), and a rejected preview.
+import bulkPreviewCall from './fixtures/bulk-preview-call.json';
+import bulkPreviewEvents from './fixtures/bulk-preview-events.json';
+import bulkPreviewDuplicates from './fixtures/bulk-preview-duplicates.json';
+import bulkConfirmCall from './fixtures/bulk-confirm-call.json';
+import bulkReject from './fixtures/bulk-reject.json';
+// Phase 6.2b — the same script's second flow: three files chosen at once (a call
+// file, a transaction file and one the parser cannot read) previewed as ONE
+// import, the commit of it, and the two good files uploaded again. The combined
+// preview contains a MULTI_CHANNEL_RELATIONSHIP over persons 411 and 412 that
+// neither file produces on its own — the recorded proof that the files were
+// analysed together rather than separately and added up.
+import bulkPreviewBatch from './fixtures/bulk-preview-batch.json';
+import bulkPreviewBatchEvents from './fixtures/bulk-preview-batch-events.json';
+import bulkConfirmBatch from './fixtures/bulk-confirm-batch.json';
+import bulkPreviewBatchDuplicates from './fixtures/bulk-preview-batch-duplicates.json';
+// The same combined route fed files exported with the corpus's own column names.
+// Three files, three different reasons for adding nothing new — a call file that
+// imports, a transaction file whose every row is unusable, and a file whose header
+// names no person at all. None of them is "already in the system", so this is the
+// recording that distinguishes a rejected file from a duplicate one. It answers the
+// same URL as `bulkPreviewBatch`, so a test that wants it passes its own table.
+import bulkPreviewBatchNative from './fixtures/bulk-preview-batch-native.json';
 // Phase 5 — the audit chain, recorded by `backend/scripts/phase5_audit_demo.py`.
 // The compromised recording is what the real ledger answered after one field of
 // one recorded event was changed in memory; the hashes in it are genuine.
@@ -176,6 +202,16 @@ export const fixtures = {
   ingestImpact,
   entityChanges141,
   liveEvents,
+  bulkPreviewCall,
+  bulkPreviewEvents,
+  bulkPreviewDuplicates,
+  bulkConfirmCall,
+  bulkReject,
+  bulkPreviewBatch,
+  bulkPreviewBatchEvents,
+  bulkConfirmBatch,
+  bulkPreviewBatchDuplicates,
+  bulkPreviewBatchNative,
   auditVerify,
   auditVerifyCompromised,
 } as const;
@@ -284,6 +320,17 @@ export function defaultRoutes(): FixtureRoute[] {
     { match: '/api/v1/ingest/fir', body: ingestFirAccepted },
     { match: '/api/v1/ingest/location', body: ingestLocationAccepted },
     { match: /\/api\/v1\/ingest\/[^/?]+\/impact/, body: ingestImpact },
+    // Phase 6.2 CSV import. The preview route is matched on the source type it
+    // names, because the recording is the preview of a *call* file; confirm and
+    // reject carry an import id in the path, so they match on the last segment.
+    { match: '/api/v1/ingest/bulk/call/preview', body: bulkPreviewCall },
+    // Phase 6.2b: the combined route has no source type in its path. Its confirm
+    // is matched on the batch import id, ahead of the single-type confirm, because
+    // both are `bulk/{id}/confirm`.
+    { match: '/api/v1/ingest/bulk/preview', body: bulkPreviewBatch },
+    { match: `/bulk/${bulkPreviewBatch.import_id}/confirm`, body: bulkConfirmBatch },
+    { match: /\/api\/v1\/ingest\/bulk\/[^/]+\/confirm/, body: bulkConfirmCall },
+    { match: /\/api\/v1\/ingest\/bulk\/[^/]+\/reject/, body: bulkReject },
     { match: /\/api\/v1\/entities\/person(%3A|:)141\/changes/, body: entityChanges141 },
     // Phase 5 — the audit chain verdict. A VERIFIED chain by default; a test that
     // needs the compromised recording passes its own table.
