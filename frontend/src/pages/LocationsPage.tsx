@@ -8,19 +8,23 @@
  * subject is linked to, the people they share a place with, and the observation
  * window behind each link.
  *
- * The map is a plain coordinate plot. There is no basemap, no tile service and no
- * geocoding — `canonical_lat` / `canonical_lng` are the only coordinates in the
- * corpus, they are city centroids rather than addresses, and the plot says so
- * instead of implying street-level precision it does not have.
+ * The map is drawn from vendored Census-2011 boundaries projected to Web Mercator,
+ * with the corpus's coordinates put through the same projection: no tile service,
+ * no map API, no map library, no geocoding, nothing fetched at render time.
+ * `canonical_lat` / `canonical_lng` are the only coordinates in the corpus and they
+ * are city centroids rather than addresses, so the panel says so, and a city can be
+ * zoomed rather than having its points spread out to look separate.
  */
 import { useMemo, useState, type ReactElement } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
 import { api } from '@/api';
+import { INDIA_BOUNDS, INDIA_VIEWBOX, IndiaMap, project } from '@/components/geo';
 import { PatternDetails, PatternList } from '@/components/intelligence';
 import { Cell, DataTable, PersonRef, SubjectScope } from '@/components/records';
 import {
   Badge,
+  Button,
   EmptyState,
   ErrorState,
   Mono,
@@ -36,6 +40,7 @@ import { useLive } from '@/hooks/useLive';
 import { usePersonNames } from '@/hooks/usePersonNames';
 import { usePersonScope } from '@/hooks/usePersonScope';
 import type { EdgeOut, LocationRecord, NodeOut } from '@/types/api';
+import { cn } from '@/utils/cn';
 import { formatCount, formatDateTime, formatMetric } from '@/utils/format';
 
 /** The server-side page cap. The corpus holds 200 locations, so one page reads all. */
@@ -71,8 +76,7 @@ export function LocationsPage(): ReactElement {
 function CorpusLocations(): ReactElement {
   const [params, setParams] = useSearchParams();
   const rawSelected = params.get('location');
-  const selectedId =
-    rawSelected !== null && /^\d+$/.test(rawSelected) ? Number(rawSelected) : null;
+  const selectedId = rawSelected !== null && /^\d+$/.test(rawSelected) ? Number(rawSelected) : null;
   const [selectedPattern, setSelectedPattern] = useState<string | null>(null);
 
   const locations = useAsync(
@@ -125,7 +129,11 @@ function CorpusLocations(): ReactElement {
         {cohorts.isInitialLoading ? (
           <SkeletonTile />
         ) : (
-          <StatTile label="Location cohorts" value={formatCount(cohorts.data?.total)} accent="azure" />
+          <StatTile
+            label="Location cohorts"
+            value={formatCount(cohorts.data?.total)}
+            accent="azure"
+          />
         )}
         {sharedPairs.isInitialLoading ? (
           <SkeletonTile />
@@ -278,7 +286,9 @@ export function PersonLocations({ personId }: { personId: number }): ReactElemen
                       </Cell>
                       <Cell numeric>{formatCount(place.observations)}</Cell>
                       <Cell>
-                        <span className="font-mono text-2xs">{formatDateTime(place.firstSeen)}</span>
+                        <span className="font-mono text-2xs">
+                          {formatDateTime(place.firstSeen)}
+                        </span>
                       </Cell>
                       <Cell>
                         <span className="font-mono text-2xs">{formatDateTime(place.lastSeen)}</span>
@@ -415,12 +425,88 @@ function sharedWith(edges: EdgeOut[], anchorId: string): SharedLink[] {
 
 /* ============================================================ map */
 
-const PLOT_PAD = 6;
+/** Map units across the whole country — the scale every size below is relative to. */
+const COUNTRY_WIDTH = INDIA_BOUNDS.maxX - INDIA_BOUNDS.minX;
+const COUNTRY_HEIGHT = INDIA_BOUNDS.maxY - INDIA_BOUNDS.minY;
 
 /**
- * A coordinate plot of `canonical_lat` / `canonical_lng`, scaled to the extent of
- * the points supplied. Not a map of anywhere in particular: no basemap, no
- * projection beyond a linear scale, and no claim of address-level accuracy.
+ * A city never zooms tighter than this many degrees across. The corpus places
+ * every location in a city within ±0.05° of its centroid, which is about six
+ * kilometres, so a cluster's own extent is far too small to be a sensible window.
+ */
+const MIN_FOCUS_SPAN = 1.6;
+const FOCUS_PAD = 0.4;
+
+/** The country's own longitude midpoint; labels are written away from it. */
+const COUNTRY_MID_X = (INDIA_BOUNDS.minX + INDIA_BOUNDS.maxX) / 2;
+
+interface Plotted {
+  readonly item: LocationRecord;
+  readonly x: number;
+  readonly y: number;
+}
+
+interface Cluster {
+  readonly key: string;
+  readonly city: string;
+  readonly state: string;
+  readonly count: number;
+  readonly x: number;
+  readonly y: number;
+  readonly span: number;
+}
+
+/**
+ * The locations of one city, gathered. Every position stays exactly where the
+ * coordinates put it; grouping only decides where a label and a ring are drawn.
+ */
+function clustersOf(points: Plotted[]): Cluster[] {
+  const groups = new Map<string, Plotted[]>();
+  for (const point of points) {
+    const key = `${point.item.city}, ${point.item.state}`;
+    const bucket = groups.get(key);
+    if (bucket) bucket.push(point);
+    else groups.set(key, [point]);
+  }
+  return [...groups.values()]
+    .map((members) => {
+      const xs = members.map((member) => member.x);
+      const ys = members.map((member) => member.y);
+      const first = members[0].item;
+      return {
+        key: `${first.city}, ${first.state}`,
+        city: first.city,
+        state: first.state,
+        count: members.length,
+        x: xs.reduce((total, value) => total + value, 0) / members.length,
+        y: ys.reduce((total, value) => total + value, 0) / members.length,
+        span: Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)),
+      };
+    })
+    .sort((a, b) => b.count - a.count);
+}
+
+/** A window on one city, at the country's aspect ratio so the map cannot shift. */
+function windowOf(cluster: Cluster): { viewBox: string; width: number } {
+  const width = Math.max(cluster.span + FOCUS_PAD * 2, MIN_FOCUS_SPAN);
+  const height = (width * COUNTRY_HEIGHT) / COUNTRY_WIDTH;
+  return {
+    viewBox: `${cluster.x - width / 2} ${cluster.y - height / 2} ${width} ${height}`,
+    width,
+  };
+}
+
+/**
+ * Where the dataset's places actually are, drawn on a map of India.
+ *
+ * The basemap is vendored geometry projected to Web Mercator — no tile service, no
+ * map API, no map library, nothing fetched at render time — and the points go
+ * through the same projection, so a dot sits on the land it names.
+ *
+ * What it cannot claim: `canonical_lat` / `canonical_lng` are city centroids with a
+ * deterministic jitter, not addresses. At country scale a city's twenty locations
+ * therefore land on top of each other, which is why a city can be opened: the zoom
+ * is geographic, and no point is ever moved to make the picture read better.
  */
 function CoordinatePlot({
   locations,
@@ -439,85 +525,204 @@ function CoordinatePlot({
   onSelect: (locationId: number | null) => void;
   footnote?: string;
 }): ReactElement {
-  const bounds = useMemo(() => {
-    if (locations.length === 0) return null;
-    const lats = locations.map((item) => item.canonical_lat);
-    const lngs = locations.map((item) => item.canonical_lng);
-    const minLat = Math.min(...lats);
-    const maxLat = Math.max(...lats);
-    const minLng = Math.min(...lngs);
-    const maxLng = Math.max(...lngs);
-    return {
-      minLat,
-      maxLat,
-      minLng,
-      maxLng,
-      /* A single point, or a row of identical ones, must not divide by zero. */
-      spanLat: maxLat - minLat || 1,
-      spanLng: maxLng - minLng || 1,
-    };
-  }, [locations]);
+  const [focusKey, setFocusKey] = useState<string | null>(null);
+
+  const points = useMemo(
+    () =>
+      locations.map((item) => ({
+        item,
+        ...project(item.canonical_lat, item.canonical_lng),
+      })),
+    [locations],
+  );
+  const clusters = useMemo(() => clustersOf(points), [points]);
+  const activeStates = useMemo(
+    () => new Set(locations.map((item) => item.state.toLowerCase())),
+    [locations],
+  );
+
+  const focus = clusters.find((cluster) => cluster.key === focusKey) ?? null;
+  const view = focus ? windowOf(focus) : { viewBox: INDIA_VIEWBOX, width: COUNTRY_WIDTH };
+  /* Sizes are given in map units, so they have to shrink as the window does. */
+  const zoom = view.width / COUNTRY_WIDTH;
+  const selected = points.find((point) => point.item.location_id === selectedId) ?? null;
 
   return (
     <Panel data-testid="location-map">
       <PanelHeader
-        title="Coordinate plot"
-        subtitle="City centroids — not address-level positions"
+        title="Geographic plot"
+        subtitle="City centroids on a projected map — not address-level positions"
         accent
-        actions={footnote ? <span className="text-ink-4 font-mono text-2xs">{footnote}</span> : null}
+        actions={
+          <div className="flex items-center gap-2">
+            {footnote ? <span className="text-ink-4 font-mono text-2xs">{footnote}</span> : null}
+            {focus ? (
+              <Button size="sm" onClick={() => setFocusKey(null)} data-testid="map-zoom-out">
+                Whole country
+              </Button>
+            ) : null}
+          </div>
+        }
       />
       <PanelBody>
-        {loading ? <div className="skeleton h-64 w-full rounded-md" /> : null}
+        {loading ? <div className="skeleton h-80 w-full rounded-md" /> : null}
         {error ? <ErrorState error={error} onRetry={onRetry} compact /> : null}
         {!loading && !error && locations.length === 0 ? (
           <EmptyState title="No coordinates" description="No data available." />
         ) : null}
-        {bounds && locations.length > 0 ? (
-          <div className="inset relative overflow-hidden rounded-md">
-            <svg
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              role="img"
-              aria-label={`Coordinate plot of ${locations.length} locations`}
-              className="h-64 w-full"
-            >
-              {/* Reference grid. Decorative, and drawn from the tokens. */}
-              {[25, 50, 75].map((at) => (
-                <g key={at} stroke="var(--color-line)" strokeWidth="0.15">
-                  <line x1={at} y1="0" x2={at} y2="100" />
-                  <line x1="0" y1={at} x2="100" y2={at} />
-                </g>
-              ))}
-              {locations.map((item) => {
-                const x =
-                  PLOT_PAD +
-                  ((item.canonical_lng - bounds.minLng) / bounds.spanLng) * (100 - PLOT_PAD * 2);
-                /* Latitude grows northwards; SVG y grows downwards. */
-                const y =
-                  100 -
-                  PLOT_PAD -
-                  ((item.canonical_lat - bounds.minLat) / bounds.spanLat) * (100 - PLOT_PAD * 2);
-                const active = item.location_id === selectedId;
-                return (
-                  <circle
-                    key={item.location_id}
-                    cx={x}
-                    cy={y}
-                    r={active ? 1.6 : 0.9}
-                    fill={active ? 'var(--color-cyan-300)' : 'var(--color-ent-location)'}
-                    fillOpacity={active ? 1 : 0.7}
-                    stroke={active ? 'var(--color-cyan-200)' : 'none'}
-                    strokeWidth="0.3"
-                    className="cursor-pointer"
-                    onClick={() => onSelect(active ? null : item.location_id)}
-                    data-testid="map-point"
-                    data-location-id={item.location_id}
-                  >
-                    <title>{`${item.city}, ${item.state}`}</title>
-                  </circle>
-                );
-              })}
-            </svg>
+        {locations.length > 0 ? (
+          <div className="space-y-2">
+            <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_10rem]">
+              <div className="inset relative overflow-hidden rounded-md">
+                <IndiaMap
+                  label={`Map of India with ${locations.length} plotted locations`}
+                  activeStates={activeStates}
+                  viewBox={view.viewBox}
+                  className="h-80 w-full sm:h-[26rem]"
+                >
+                  {/* A ring per city, sized by how many locations it holds. Click to open. */}
+                  {clusters.map((cluster) => {
+                    const radius = (0.32 + Math.sqrt(cluster.count) * 0.08) * zoom;
+                    const toLeft = cluster.x < COUNTRY_MID_X;
+                    return (
+                      <g key={cluster.key} data-testid="map-cluster" data-city={cluster.city}>
+                        <circle
+                          cx={cluster.x}
+                          cy={cluster.y}
+                          r={radius}
+                          fill="var(--color-cyan-500)"
+                          fillOpacity={focus?.key === cluster.key ? 0.18 : 0.1}
+                          stroke="var(--color-cyan-400)"
+                          strokeOpacity="0.75"
+                          strokeWidth="1"
+                          vectorEffect="non-scaling-stroke"
+                          className="cursor-pointer"
+                          onClick={() =>
+                            setFocusKey(focus?.key === cluster.key ? null : cluster.key)
+                          }
+                        >
+                          <title>{`${cluster.key} — ${formatCount(cluster.count)} locations`}</title>
+                        </circle>
+                        <text
+                          x={cluster.x + (toLeft ? -(radius + 0.22 * zoom) : radius + 0.22 * zoom)}
+                          y={cluster.y + 0.3 * zoom}
+                          textAnchor={toLeft ? 'end' : 'start'}
+                          fontSize={0.82 * zoom}
+                          fill="var(--color-ink-2)"
+                          className="pointer-events-none font-semibold"
+                        >
+                          {cluster.city}
+                          <tspan fill="var(--color-ink-4)"> {cluster.count}</tspan>
+                        </text>
+                      </g>
+                    );
+                  })}
+
+                  {/* Cross hairs on the selection, so it stays findable inside a cluster. */}
+                  {selected ? (
+                    <g
+                      stroke="var(--color-cyan-300)"
+                      strokeOpacity="0.5"
+                      strokeWidth="1"
+                      strokeDasharray="4 3"
+                      vectorEffect="non-scaling-stroke"
+                      className="pointer-events-none"
+                    >
+                      <line
+                        x1={INDIA_BOUNDS.minX}
+                        y1={selected.y}
+                        x2={INDIA_BOUNDS.maxX}
+                        y2={selected.y}
+                        vectorEffect="non-scaling-stroke"
+                      />
+                      <line
+                        x1={selected.x}
+                        y1={INDIA_BOUNDS.minY}
+                        x2={selected.x}
+                        y2={INDIA_BOUNDS.maxY}
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    </g>
+                  ) : null}
+
+                  {points.map(({ item, x, y }) => {
+                    const active = item.location_id === selectedId;
+                    return (
+                      <circle
+                        key={item.location_id}
+                        cx={x}
+                        cy={y}
+                        r={(active ? 0.26 : 0.13) * zoom}
+                        fill={active ? 'var(--color-cyan-200)' : 'var(--color-ent-location)'}
+                        fillOpacity={active ? 1 : 0.8}
+                        stroke={active ? 'var(--color-cyan-300)' : 'none'}
+                        strokeWidth="1.5"
+                        vectorEffect="non-scaling-stroke"
+                        className="cursor-pointer"
+                        onClick={() => onSelect(active ? null : item.location_id)}
+                        data-testid="map-point"
+                        data-location-id={item.location_id}
+                      >
+                        <title>{`${item.city}, ${item.state}`}</title>
+                      </circle>
+                    );
+                  })}
+                </IndiaMap>
+              </div>
+              {/* The same clusters as a list, because a wide panel leaves the map's
+                own aspect ratio room to spare and a ranking is worth more there
+                than empty space. Counts are the recording's, bars are relative
+                to the largest city. */}
+              <ul className="space-y-1" data-testid="map-city-rail">
+                {clusters.map((cluster) => {
+                  const open = focus?.key === cluster.key;
+                  const share = cluster.count / clusters[0].count;
+                  return (
+                    <li key={cluster.key}>
+                      <button
+                        type="button"
+                        onClick={() => setFocusKey(open ? null : cluster.key)}
+                        className={cn(
+                          'w-full rounded-sm border px-2 py-1 text-left transition-colors',
+                          open
+                            ? 'border-cyan-600/55 bg-cyan-500/12'
+                            : 'border-line hover:border-line-accent hover:bg-panel-2',
+                        )}
+                        data-testid="map-city"
+                        data-city={cluster.city}
+                        title={`${cluster.key} — ${formatCount(cluster.count)} locations`}
+                      >
+                        <span className="flex items-baseline justify-between gap-2">
+                          <span
+                            className={cn(
+                              'truncate text-2xs font-semibold',
+                              open ? 'text-cyan-200' : 'text-ink-2',
+                            )}
+                          >
+                            {cluster.city}
+                          </span>
+                          <Mono className="text-ink-4 text-2xs">{formatCount(cluster.count)}</Mono>
+                        </span>
+                        <span className="bg-panel-3 mt-1 block h-0.5 w-full overflow-hidden rounded-full">
+                          <span
+                            className="block h-full bg-cyan-500/70"
+                            style={{ width: `${(share * 100).toFixed(1)}%` }}
+                          />
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div className="text-ink-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 font-mono text-2xs">
+              <span>
+                {focus
+                  ? `${focus.key} · ${formatCount(focus.count)} locations · zoomed`
+                  : 'Click a city ring to zoom · click a point to select it'}
+              </span>
+              <span>Boundaries: Census 2011 (DataMeet, CC-BY-SA) · Web Mercator</span>
+            </div>
           </div>
         ) : null}
       </PanelBody>
@@ -589,7 +794,11 @@ function LocationPeople({
   const people = useAsync(
     (signal) =>
       api.listPersons(
-        { city: location.city, state: location.state, page_size: MAX_PAGE_SIZE },
+        {
+          city: location.city,
+          state: location.state,
+          page_size: MAX_PAGE_SIZE,
+        },
         { signal },
       ),
     [location.city, location.state],

@@ -2,15 +2,17 @@
  * Location Intelligence — §3: an independent product area built on the backend's
  * own location data.
  *
- * The map is the part most easily overclaimed. `canonical_lat` / `canonical_lng`
- * are city centroids, not addresses, and there is no basemap, tile service or
- * geocoder behind them — so the plot says exactly that, and this asserts it. No
- * geography is invented anywhere: every point, city and state below comes out of
- * the recording.
+ * The map is the part most easily overclaimed. The basemap is boundary geometry
+ * this repo ships, and `canonical_lat` / `canonical_lng` are city centroids rather
+ * than addresses — there is no tile service and no geocoder behind either — so the
+ * panel says exactly that, and this asserts it. No geography is invented anywhere:
+ * every point, city and state below comes out of the recording, and each dot is
+ * checked against the projection rather than against a hand-written position.
  */
-import { screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { INDIA_BOUNDS, INDIA_VIEWBOX, project } from '@/components/geo';
 import { resetPersonNames } from '@/hooks/usePersonNames';
 import { fixtures, installFetch, renderWithRouter, statTile } from '@/test/helpers';
 import type { EdgeOut, LocationRecord, NodeOut, Page, PatternListResponse } from '@/types/api';
@@ -32,12 +34,26 @@ const person445 = fixtures.personRecord445 as unknown as {
   state: string;
   location_id: number;
 };
-const network = fixtures.network445Depth1 as unknown as { nodes: NodeOut[]; edges: EdgeOut[] };
+const network = fixtures.network445Depth1 as unknown as {
+  nodes: NodeOut[];
+  edges: EdgeOut[];
+};
 
 const cities = new Set(allLocations.items.map((item) => item.city)).size;
+/** Enough plotted points to hold the projection to account, without walking 200. */
+const sample = allLocations.items.filter((_, index) => index % 25 === 0);
 
 const home = allLocations.items.find((item) => item.location_id === person445.location_id);
 if (!home) throw new Error('the locations recording no longer holds the person’s own location');
+
+/** One plotted point, by the location it stands for. */
+const dotOf = (map: HTMLElement, locationId: number): SVGCircleElement => {
+  const dot = map.querySelector<SVGCircleElement>(
+    `[data-testid="map-point"][data-location-id="${locationId}"]`,
+  );
+  if (!dot) throw new Error(`location ${locationId} is not plotted`);
+  return dot;
+};
 
 const touchesAnchor = (edge: EdgeOut) =>
   !edge.is_overlay && (edge.source_entity_id === ANCHOR || edge.target_entity_id === ANCHOR);
@@ -77,8 +93,62 @@ describe('Location Intelligence — the corpus-wide browse', () => {
 
     const map = await screen.findByTestId('location-map');
     expect(
-      within(map).getByText('City centroids — not address-level positions'),
+      within(map).getByText('City centroids on a projected map — not address-level positions'),
     ).toBeInTheDocument();
+    // Where the land under the points came from, stated on the panel itself.
+    expect(within(map).getByText(/Census 2011.*Web Mercator/)).toBeInTheDocument();
+  });
+
+  it('plots each point where the projection puts it, on a basemap of India', async () => {
+    installFetch();
+    renderWithRouter(<LocationsPage />, { route: '/locations' });
+
+    const map = await screen.findByTestId('location-map');
+    await waitFor(() => expect(screen.getAllByTestId('map-point').length).toBeGreaterThan(0));
+
+    // The basemap is geometry this repo ships, not a tile fetched from anywhere.
+    const canvas = within(map).getByTestId('india-map');
+    expect(canvas).toHaveAttribute('viewBox', INDIA_VIEWBOX);
+    expect(within(map).getAllByTestId('india-map-state').length).toBeGreaterThan(30);
+
+    // Every point sits at its own coordinates put through the map's own projection,
+    // so it cannot drift from the land it names.
+    for (const item of sample) {
+      const dot = dotOf(map, item.location_id);
+      const at = project(item.canonical_lat, item.canonical_lng);
+      expect(Number(dot.getAttribute('cx'))).toBeCloseTo(at.x, 10);
+      expect(Number(dot.getAttribute('cy'))).toBeCloseTo(at.y, 10);
+    }
+
+    // Only the states the recording actually places data in are lit.
+    const lit = within(map)
+      .getAllByTestId('india-map-state')
+      .filter((state) => state.dataset.active === 'true')
+      .map((state) => state.dataset.state);
+    expect(new Set(lit)).toEqual(new Set(allLocations.items.map((item) => item.state)));
+  });
+
+  it('zooms a city geographically instead of spreading its points apart', async () => {
+    installFetch();
+    renderWithRouter(<LocationsPage />, { route: '/locations' });
+
+    const map = await screen.findByTestId('location-map');
+    await waitFor(() => expect(within(map).getAllByTestId('map-cluster').length).toBe(cities));
+
+    const before = sample.map((item) => dotOf(map, item.location_id).getAttribute('cx'));
+    const ring = within(map).getAllByTestId('map-cluster')[0];
+    fireEvent.click(ring.querySelector('circle') as SVGCircleElement);
+
+    // A narrower window on the same projected space — the coordinates do not move.
+    const canvas = within(map).getByTestId('india-map');
+    expect(canvas.getAttribute('viewBox')).not.toBe(INDIA_VIEWBOX);
+    expect(Number(canvas.getAttribute('viewBox')?.split(' ')[2])).toBeLessThan(
+      INDIA_BOUNDS.maxX - INDIA_BOUNDS.minX,
+    );
+    expect(sample.map((item) => dotOf(map, item.location_id).getAttribute('cx'))).toEqual(before);
+
+    fireEvent.click(within(map).getByTestId('map-zoom-out'));
+    expect(within(map).getByTestId('india-map')).toHaveAttribute('viewBox', INDIA_VIEWBOX);
   });
 
   it('counts locations and cities from the response, and patterns from the engine', async () => {
@@ -113,7 +183,9 @@ describe('Location Intelligence — the corpus-wide browse', () => {
 
   it('opens a location from the URL and lists the people on record there', async () => {
     const { calls } = installFetch();
-    renderWithRouter(<LocationsPage />, { route: `/locations?location=${home.location_id}` });
+    renderWithRouter(<LocationsPage />, {
+      route: `/locations?location=${home.location_id}`,
+    });
 
     const panel = await screen.findByTestId('location-people');
     expect(within(panel).getByText(`${home.city}, ${home.state}`)).toBeInTheDocument();
@@ -172,18 +244,16 @@ describe('Location Intelligence — scoped to one subject', () => {
     const { calls } = installFetch();
     renderWithRouter(<LocationsPage />, { route: '/locations?person=445' });
 
-    await waitFor(() =>
-      expect(statTile('Registered city')).toHaveTextContent(person445.city),
-    );
+    await waitFor(() => expect(statTile('Registered city')).toHaveTextContent(person445.city));
     expect(statTile('Registered city')).toHaveTextContent(person445.state);
 
     // The person record names a location id; that record is then read for its
     // coordinates. Nothing here is geocoded from the address text.
     expect(calls.some((url) => url.includes('/api/v1/persons/445'))).toBe(true);
     await waitFor(() =>
-      expect(
-        calls.some((url) => url.includes(`/api/v1/locations/${person445.location_id}`)),
-      ).toBe(true),
+      expect(calls.some((url) => url.includes(`/api/v1/locations/${person445.location_id}`))).toBe(
+        true,
+      ),
     );
     await waitFor(() => expect(screen.getAllByTestId('map-point')).toHaveLength(1));
   });

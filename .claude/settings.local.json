@@ -133,7 +133,20 @@
       "Bash(grep -rn \"slice\\(0,\\\\|more\\\\b\\\\|+{\" --include=\"*.tsx\" .)",
       "Bash(sed -n '/=== I/,$p' /tmp/demo.txt)",
       "Bash(awk -F': ' '/: [0-9]+$/ {s+=$2} END {print \"collected\", s}' /tmp/co.txt)",
-      "Bash(curl -s -m 8 http://127.0.0.1:8000/health)"
+      "Bash(curl -s -m 8 http://127.0.0.1:8000/health)",
+      "Bash(curl -s -m 10 \"http://127.0.0.1:8000/api/v1/records/locations?page=1&page_size=6\")",
+      "Bash(curl -s -m 10 \"http://127.0.0.1:8000/api/v1/records/locations?page=1&page_size=5\")",
+      "Bash(curl -sSL -o backend/data/geo/_raw.geojson \"https://raw.githubusercontent.com/udit-001/india-maps-data/main/geojson/india.geojson\")",
+      "Bash(echo \"curl exit=$?\")",
+      "Bash(curl -sSL -o /dev/null -w \"%{http_code}\\\\n\" \"https://raw.githubusercontent.com/udit-001/india-maps-data/main/geojson/states/bihar.geojson\")",
+      "Bash(rm backend/data/geo/_raw.geojson)",
+      "Bash(PYTHONIOENCODING=utf-8 ./.venv/Scripts/python.exe scripts/build_india_basemap.py)",
+      "Bash(sed -i 's/^DISTRICT_EPSILON = 0.045$/DISTRICT_EPSILON = 0.09/' scripts/build_india_basemap.py)",
+      "Bash(npx prettier *)",
+      "Bash(awk '{ print length }' src/pages/PatternsPage.tsx src/pages/PersonPage.tsx)",
+      "Bash(npx --no-install prettier --single-quote --print-width 100 --check src/pages/AlertsPage.tsx src/pages/EvidencePage.tsx src/components/ui/Button.tsx)",
+      "Bash(npx --no-install prettier --single-quote --print-width 100 src/pages/AlertsPage.tsx)",
+      "Bash(npx --no-install prettier --single-quote --print-width 100 --write src/pages/LocationsPage.tsx src/pages/LocationsPage.test.tsx src/components/geo/IndiaMap.tsx src/components/geo/projection.ts src/components/geo/index.ts)"
     ],
     "defaultMode": "auto"
   }

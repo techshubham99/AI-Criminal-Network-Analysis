@@ -1278,3 +1278,56 @@ table reads the detector's own `detail`, and the two new tables render the ranke
 the detected communities), typecheck and build clean. Eleven fixtures re-recorded through
 `phase6_2_bulk_demo.py --record`; its new section J is the recording these tables are tested
 against.
+
+## Z. As-built — Location Intelligence gets a real map, drawn offline (addendum, 2026-08-30)
+
+**Scope.** The coordinate-plot panel on `/locations` only. It showed dots on a decorative grid — no
+land, so a point could not be read as a place. It now draws India under the same points. No other
+page changed, no endpoint changed, and no coordinate the backend produces was altered.
+
+**No map API, no map library, no new dependency.** `backend/data/geo/india-districts.geojson.gz`
+(313 KB) vendors the Census-2011 district and state boundaries from
+`udit-001/india-maps-data` — DataMeet, CC-BY-SA 2.5 IN — with properties reduced to
+`{st_nm, level}`. `backend/scripts/build_india_basemap.py` projects and simplifies them at build
+time and writes `frontend/src/components/geo/india-basemap.ts` (169 KB, 54 KB gzipped):
+`INDIA_STATES` (36 outlines), `INDIA_DISTRICT_LINES`, `INDIA_BOUNDS` and `INDIA_VIEWBOX`. Nothing is
+fetched at render time; there is no tile service, no geocoder and no API key anywhere in the path.
+The source bundles state-level polygons *with* the districts — a feature is a state when its
+properties carry no `district` key — so state outlines are taken directly rather than dissolved from
+district edges; Chandigarh and Lakshadweep, the two with no state polygon, fall back to their
+districts. Simplification is an iterative Douglas–Peucker (0.01° states, 0.09° districts, 3
+decimals ≈ 110 m), iterative so a long coastline cannot blow the stack, and the minimum ring span is
+kept at 0.015° so Lakshadweep survives.
+
+**Generator and client share one projection, which is why dots cannot drift from land.** Web
+Mercator, `x = lon`, `y = -(180/π)·ln(tan(π/4 + φ/2))`, written the same way in `mercator()` in the
+generator and `project()` in `frontend/src/components/geo/projection.ts`; the generator emits the
+view box in those same units. `IndiaMap.tsx` draws sea, graticule, coastal glow, land, district
+texture and per-state paths, lighting only the states the data is in, and renders whatever the caller
+plots as children in that projected space. Strokes carry `vectorEffect="non-scaling-stroke"` (set per
+element — it does not inherit) so borders stay one CSS pixel while the view box is in degrees.
+
+**Zoom is geographic, not fabricated spread.** `canonical_lat` / `canonical_lng` are a city centroid
+plus a deterministic ±0.05° hash jitter (`geo_jitter_degrees`, `backend/app/config.py`), so a city's
+~20 locations genuinely overlap at country scale. Clicking a city ring — or its row in the new city
+rail, which is the same clusters counted — narrows the view box around that city instead of moving
+any point, and radii are multiplied by `viewWidth / countryWidth` so they stay pixel-constant. The
+points are unchanged at every zoom level; the test asserts exactly that by comparing `cx` before and
+after.
+
+**Two honest limitations, stated on the panel.** The corpus's raw `latitude` / `longitude` are
+bbox-random inside India and do not agree with their own city labels (`New Delhi, Delhi` sits at
+8.73, 75.98 — offshore Kerala), so they are not plottable and are not plotted; only the canonical
+centroids are. And because that ±0.05° jitter is applied blind to coastline, **8 of 200 points land a
+few km offshore** (Chennai 7, Mumbai 1). No point was nudged to improve the picture. The panel says
+*"City centroids on a projected map — not address-level positions"* and carries the provenance line
+*"Boundaries: Census 2011 (DataMeet, CC-BY-SA) · Web Mercator"*.
+
+**Verified.** All 10 city centroids fall inside their own state's polygon; 192 of 200 canonical points
+fall on land. Live against the running backend: view box `67.801 -40.274 29.887 33.791`, 200
+`map-point`s, 36 state paths with exactly the 10 states in the data lit, 10 clusters (`Chennai 29 ·
+Bhopal 25 · Jaipur 24 · Lucknow 23 · Hyderabad 21 · New Delhi 18 · Mumbai 18 · Kolkata 17 ·
+Ahmedabad 14 · Bengaluru 11` = 200), clicking Chennai narrowing the window to 1.6° with `cx`
+unchanged and *Whole country* restoring it, no console errors. Frontend **480 tests / 30 files** (478
+from §Y + **2**: each dot is where the projection puts it on a basemap of India, and a city zooms
+without its points moving), typecheck clean, `✓ built in 1.16s`.
