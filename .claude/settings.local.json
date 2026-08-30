@@ -128,7 +128,12 @@
       "Bash(PYTHONIOENCODING=utf-8 ./.venv/Scripts/python.exe -m pytest -q --co)",
       "Bash(PYTHONIOENCODING=utf-8 ./.venv/Scripts/python.exe -m pytest --co -q)",
       "Bash(awk -F': ' '/: [0-9]+$/ {s+=$2; f++} END {print \"files\", f, \"tests\", s}' /tmp/co.txt)",
-      "Bash(taskkill //PID 39536 //F)"
+      "Bash(taskkill //PID 39536 //F)",
+      "Bash(./backend/.venv/Scripts/python.exe -)",
+      "Bash(grep -rn \"slice\\(0,\\\\|more\\\\b\\\\|+{\" --include=\"*.tsx\" .)",
+      "Bash(sed -n '/=== I/,$p' /tmp/demo.txt)",
+      "Bash(awk -F': ' '/: [0-9]+$/ {s+=$2} END {print \"collected\", s}' /tmp/co.txt)",
+      "Bash(curl -s -m 8 http://127.0.0.1:8000/health)"
     ],
     "defaultMode": "auto"
   }

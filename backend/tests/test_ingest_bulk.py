@@ -187,6 +187,37 @@ def test_preview_reports_no_patterns_when_the_detectors_assert_none(client):
         assert "already" in row["reason"].lower() or "identical" in row["reason"].lower()
 
 
+def test_preview_carries_the_overlay_centralities_and_communities(client):
+    """The preview's own tables read two fields, and both are the analytics object
+    the rest of ``metrics_preview`` already comes from — a ranking and a summary of
+    the one overlay, not a second computation and not a second graph."""
+    content = csv_rows(call_row(214, 215, 9), call_row(215, 214, 10))
+    body = upload(client, content).json()
+    metrics = body["metrics_preview"]
+
+    players = metrics["key_players"]
+    assert players and len(players) <= bulk.KEY_PLAYERS
+    for player in players:
+        assert player["entity_id"].startswith("person:")
+        # Every column the table shows is a value the analytics pass produced.
+        for field in ("degree_centrality", "betweenness", "pagerank"):
+            assert isinstance(player[field], (int, float))
+        assert isinstance(player["in_import"], bool)
+    # Ranked, descending, by the metric asked for.
+    degrees = [player["degree"] for player in players]
+    assert degrees == sorted(degrees, reverse=True)
+
+    detected = metrics["communities"]["detected"]
+    assert len(detected) == metrics["communities"]["count"]
+    for community in detected:
+        # The sample is the backend's, so the client can state the real remainder.
+        assert 0 < len(community["members_sample"]) <= community["size"]
+        assert len(community["member_names"]) == len(community["members_sample"])
+
+    # Read-only: nothing about these two fields writes to the live graph.
+    client.post(f"{BASE}/bulk/{body['import_id']}/reject").raise_for_status()
+
+
 # --- confirm ----------------------------------------------------------------
 def test_confirm_commits_exactly_the_previewed_rows(client):
     before = state(client)

@@ -20,8 +20,11 @@
  * sequence for the whole selection, however many files it holds. There is no
  * client-side timer: a stage lights up because the backend finished it.
  *
- * The dashboard is the same three components the rest of the app uses — the stat
- * tiles, the Cytoscape canvas and the pattern list — fed the preview payload.
+ * The dashboard is the same components the rest of the app uses — the stat
+ * tiles, the Cytoscape canvas, and tables built from the same preview payload:
+ * the detectors' findings grouped into one tab per Phase 4 pattern type, the
+ * overlay's most central persons, and its detected communities. Every one of
+ * those reads a field the preview already returned; nothing is computed here.
  * After a commit they show what was actually written: the confirmed graph totals
  * and the pattern ids the recomputation genuinely newly asserted.
  */
@@ -30,7 +33,6 @@ import { useCallback, useMemo, useState, type ReactElement } from 'react';
 import { api } from '@/api';
 import { ApiError } from '@/api/client';
 import { NetworkGraph } from '@/components/graph';
-import { PatternList } from '@/components/intelligence';
 import { Badge, Button, Panel, PanelBody, PanelHeader, StatTile } from '@/components/ui';
 import { useLive } from '@/hooks/useLive';
 import {
@@ -48,6 +50,8 @@ import {
   type PatternListResponse,
 } from '@/types/api';
 import { formatCount, formatMetric } from '@/utils/format';
+
+import { DetectedCommunities, KeyPlayers, PreviewPatterns } from './PreviewTables';
 
 const SOURCE_LABELS: Record<BulkSourceType, string> = {
   call: 'Call',
@@ -587,12 +591,21 @@ export function CsvImport({ onClose }: { onClose: () => void }): ReactElement {
                 </PanelBody>
               </Panel>
 
-              <PatternList
-                title={committed ? 'New patterns' : 'Patterns this would add'}
-                provided={patterns}
-                limit={patterns ? Math.max(patterns.patterns.length, 1) : 8}
-              />
+              <KeyPlayers players={metrics?.key_players ?? []} />
             </div>
+
+            {patterns ? (
+              <PreviewPatterns
+                title={committed ? 'New patterns' : 'Patterns this would add'}
+                patterns={patterns.patterns}
+                note={patterns.note}
+              />
+            ) : null}
+
+            <DetectedCommunities
+              communities={metrics?.communities?.detected ?? []}
+              modularity={metrics?.communities?.modularity}
+            />
 
             <div className="grid gap-4 sm:grid-cols-2">
               <RowList

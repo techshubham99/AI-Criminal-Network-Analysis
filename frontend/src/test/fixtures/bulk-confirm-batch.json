@@ -50,9 +50,9 @@
     }
   ],
   "recompute_cost_ms": {
-    "analytics_ms": 1518.3,
-    "intelligence_ms": 219.0,
-    "total_ms": 1737.3
+    "analytics_ms": 1586.3,
+    "intelligence_ms": 239.9,
+    "total_ms": 1826.2
   },
   "recompute_error": null,
   "manifest_hash": "54e20e7150125248c5977165eaa75a80bbc6f8cfb4f2e57055601226e4011f84",

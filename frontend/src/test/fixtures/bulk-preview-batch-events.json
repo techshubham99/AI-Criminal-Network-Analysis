@@ -2,7 +2,7 @@
   {
     "event_id": 18,
     "event_type": "bulk_preview",
-    "at": "2026-08-29T20:50:08",
+    "at": "2026-08-29T22:59:14",
     "data": {
       "import_id": "7b372fad0a10f6277fbe6715b003563c149b14573e5c57753b27e3516d9e5eef",
       "stage": "received",
@@ -12,7 +12,7 @@
   {
     "event_id": 19,
     "event_type": "bulk_preview",
-    "at": "2026-08-29T20:50:08",
+    "at": "2026-08-29T22:59:14",
     "data": {
       "import_id": "7b372fad0a10f6277fbe6715b003563c149b14573e5c57753b27e3516d9e5eef",
       "stage": "validating",
@@ -22,7 +22,7 @@
   {
     "event_id": 20,
     "event_type": "bulk_preview",
-    "at": "2026-08-29T20:50:08",
+    "at": "2026-08-29T22:59:14",
     "data": {
       "import_id": "7b372fad0a10f6277fbe6715b003563c149b14573e5c57753b27e3516d9e5eef",
       "stage": "checking_duplicates",
@@ -32,7 +32,7 @@
   {
     "event_id": 21,
     "event_type": "bulk_preview",
-    "at": "2026-08-29T20:50:08",
+    "at": "2026-08-29T22:59:14",
     "data": {
       "import_id": "7b372fad0a10f6277fbe6715b003563c149b14573e5c57753b27e3516d9e5eef",
       "stage": "building_preview",
@@ -42,7 +42,7 @@
   {
     "event_id": 22,
     "event_type": "bulk_preview",
-    "at": "2026-08-29T20:50:08",
+    "at": "2026-08-29T22:59:14",
     "data": {
       "import_id": "7b372fad0a10f6277fbe6715b003563c149b14573e5c57753b27e3516d9e5eef",
       "stage": "analyzing_preview",
@@ -52,7 +52,7 @@
   {
     "event_id": 23,
     "event_type": "bulk_preview",
-    "at": "2026-08-29T20:50:09",
+    "at": "2026-08-29T22:59:16",
     "data": {
       "import_id": "7b372fad0a10f6277fbe6715b003563c149b14573e5c57753b27e3516d9e5eef",
       "stage": "preview_ready",

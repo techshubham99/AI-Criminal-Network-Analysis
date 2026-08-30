@@ -158,8 +158,36 @@ def native_files() -> list[dict[str, str]]:
     ]
 
 
-def show(label: str, value: Any) -> None:
-    print(f"{label:<34} {value}")
+# --- what the preview's own tables read -------------------------------------
+# Two persons who call each other AND send money both ways. That one shape is
+# enough for several *different* existing detectors to fire on the same overlay —
+# a reciprocal transaction cycle, a multi-channel pair, fan-in and fan-out at
+# both hubs — which is what makes it the honest fixture for a screen that groups
+# findings by pattern type. Nothing here is tuned to produce a given tab; the
+# tabs show whatever the detectors say about it.
+RICH_FILES = [
+    {
+        "source_type": "call",
+        "filename": "calls-pair.csv",
+        "content": (
+            "caller_id,callee_id,start_time,duration_sec,cell_tower_id\n"
+            "461,462,2026-08-28T09:05:00,214,41\n"
+            "462,461,2026-08-28T09:41:00,96,41\n"
+        ),
+    },
+    {
+        "source_type": "transaction",
+        "filename": "transfers-pair.csv",
+        "content": (
+            "sender_id,receiver_id,amount_inr,txn_time,mode,bank_ref\n"
+            "461,462,48000,2026-08-28T10:02:00,UPI,REF-X1\n"
+            "462,461,47000,2026-08-28T10:44:00,UPI,REF-X2\n"
+        ),
+    },
+]
+
+
+def show(label: str, value: Any) -> None:    print(f"{label:<34} {value}")
 
 
 def digests(directory: Path) -> dict[str, str]:
@@ -302,6 +330,33 @@ def main() -> int:
             print(f"  [{f['source_type']:<12}] {f['filename']:<18} {f['status']:<9} {note}")
         show("no file called 'skipped'", all(f["status"] != "skipped" for f in native["files"]))
         show("rejecting it", client.post(f"{BULK}/{native['import_id']}/reject").json()["discarded"])
+        show("dataset SHA-256 unchanged", digests(dataset) == before_files)
+
+        print("\n=== J  what the preview tables read ===")
+        rich = client.post(f"{BULK}/preview", json={"files": RICH_FILES}).json()
+        recorded["bulk-preview-batch-rich"] = rich
+        show("combined counts", rich["counts"])
+        by_type: dict[str, int] = {}
+        for p in rich["suspicious_patterns_preview"]["patterns"]:
+            by_type[p["pattern_type"]] = by_type.get(p["pattern_type"], 0) + 1
+        for name, n in sorted(by_type.items()):
+            print(f"  {name:<32} {n}")
+        players = rich["metrics_preview"]["key_players"]
+        show("key players", len(players))
+        for p in players[:3]:
+            print(
+                f"  {p['entity_id']:<12} {str(p['name'])[:22]:<24} "
+                f"degree={p['degree_centrality']} btw={p['betweenness']} "
+                f"pr={p['pagerank']} community={p['community_id']}"
+            )
+        detected = rich["metrics_preview"]["communities"]["detected"]
+        show("communities listed", len(detected))
+        for c in detected[:2]:
+            print(
+                f"  community {c['community_id']}  size {c['size']}  "
+                f"sample {len(c['members_sample'])}  {c['member_names'][:2]}"
+            )
+        show("rejecting it", client.post(f"{BULK}/{rich['import_id']}/reject").json()["discarded"])
         show("dataset SHA-256 unchanged", digests(dataset) == before_files)
 
     if args.record:

@@ -114,6 +114,13 @@ import bulkPreviewBatchDuplicates from './fixtures/bulk-preview-batch-duplicates
 // recording that distinguishes a rejected file from a duplicate one. It answers the
 // same URL as `bulkPreviewBatch`, so a test that wants it passes its own table.
 import bulkPreviewBatchNative from './fixtures/bulk-preview-batch-native.json';
+// The same combined route fed two persons who both call each other and send money
+// both ways: one shape several different existing detectors each have something to
+// say about, so the recording carries patterns of several types, the overlay's
+// ranked centralities and its detected communities. What the preview's own tables
+// read. It answers the same URL as `bulkPreviewBatch`, so a test that wants it
+// passes its own table.
+import bulkPreviewBatchRich from './fixtures/bulk-preview-batch-rich.json';
 // Phase 5 — the audit chain, recorded by `backend/scripts/phase5_audit_demo.py`.
 // The compromised recording is what the real ledger answered after one field of
 // one recorded event was changed in memory; the hashes in it are genuine.
@@ -212,6 +219,7 @@ export const fixtures = {
   bulkConfirmBatch,
   bulkPreviewBatchDuplicates,
   bulkPreviewBatchNative,
+  bulkPreviewBatchRich,
   auditVerify,
   auditVerifyCompromised,
 } as const;

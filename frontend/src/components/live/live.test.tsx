@@ -42,7 +42,7 @@ import {
   statTile,
 } from '@/test/helpers';
 import { AlertsPage } from '@/pages/AlertsPage';
-import { formatCount } from '@/utils/format';
+import { formatCount, formatInr, formatMetric } from '@/utils/format';
 
 import { CsvImport } from './CsvImport';
 import { UploadCsvButton } from './UploadCsvButton';
@@ -204,9 +204,14 @@ describe('CsvImport — a file is judged before any of it is written', () => {
     expect(screen.getByTestId('network-graph')).toBeInTheDocument();
 
     // The patterns come from the preview response itself — the overlay they were
-    // detected on exists nowhere else, so there is nothing to refetch.
+    // detected on exists nowhere else, so there is nothing to refetch. Grouped by
+    // type, the tab counts still add up to every pattern in the response.
     const patterns = preview.suspicious_patterns_preview.patterns;
-    expect(screen.getAllByTestId('pattern-row')).toHaveLength(patterns.length);
+    const tabs = within(screen.getByTestId('preview-patterns')).getAllByRole('tab');
+    expect(tabs.reduce((total, tab) => total + Number(tab.dataset.count), 0)).toBe(
+      patterns.length,
+    );
+    expect(screen.getAllByTestId('preview-pattern-row')).toHaveLength(1);
     expect(screen.getByText(patterns[0].entity_ids[0])).toBeInTheDocument();
 
     // Duplicates are stated as skipped, not offered as a decision.
@@ -256,8 +261,10 @@ describe('CsvImport — a file is judged before any of it is written', () => {
     ).toBeInTheDocument();
 
     // What is still listed as a pattern is a pattern the recomputation asserted.
-    const shown = screen.getAllByTestId('pattern-row');
-    expect(shown).toHaveLength(committed.new_pattern_ids.length);
+    const tabs = within(screen.getByTestId('preview-patterns')).getAllByRole('tab');
+    expect(tabs.reduce((total, tab) => total + Number(tab.dataset.count), 0)).toBe(
+      committed.new_pattern_ids.length,
+    );
     expect(committed.new_pattern_ids).toContain(
       preview.suspicious_patterns_preview.patterns[0].pattern_id,
     );
@@ -279,10 +286,12 @@ describe('CsvImport — a file is judged before any of it is written', () => {
       within(screen.getByTestId('csv-duplicate-rows')).getAllByTestId('csv-row'),
     ).toHaveLength(allDuplicates.counts.duplicate);
 
-    // Nothing was analysed, so nothing is claimed: no patterns, and the backend's
-    // own explanation of why there are none.
-    expect(screen.queryByTestId('pattern-row')).not.toBeInTheDocument();
-    expect(screen.getByText('No patterns detected')).toBeInTheDocument();
+    // Nothing was analysed, so nothing is claimed: no pattern row on any tab, the
+    // group's own empty state, and the backend's explanation of why there are none.
+    const grouped = within(screen.getByTestId('preview-patterns'));
+    expect(screen.queryByTestId('preview-pattern-row')).not.toBeInTheDocument();
+    expect(grouped.getAllByRole('tab').map((tab) => tab.dataset.count)).not.toContain('1');
+    expect(grouped.getByTestId('empty-state')).toHaveTextContent('None in this preview');
     expect(screen.getByTestId('csv-metrics-note')).toHaveTextContent(
       String(allDuplicates.metrics_preview.note),
     );
@@ -421,14 +430,17 @@ describe('CsvImport — All Types: several files judged as one import', () => {
     expect(crossFile[0].entity_ids).toEqual(['person:411', 'person:412']);
     expect(crossFile[0].detail.channels).toEqual(['CALL', 'TRANSACTION']);
 
-    const shown = screen.getAllByTestId('pattern-row');
-    expect(shown).toHaveLength(batchPreview.suspicious_patterns_preview.patterns.length);
-    const crossFileRow = shown.find((row) =>
-      row.textContent?.includes('Multi channel relationship'),
-    ) as HTMLElement;
-    expect(crossFileRow).toBeDefined();
+    // Grouped by type, every pattern of the response is still accounted for, and
+    // the pair is the one row on the multi-channel tab.
+    const tabs = within(screen.getByTestId('preview-patterns')).getAllByRole('tab');
+    expect(tabs.reduce((total, tab) => total + Number(tab.dataset.count), 0)).toBe(
+      batchPreview.suspicious_patterns_preview.patterns.length,
+    );
+    fireEvent.click(screen.getByTestId('preview-tab-multi'));
+    const shown = screen.getAllByTestId('preview-pattern-row');
+    expect(shown).toHaveLength(1);
     for (const entityId of crossFile[0].entity_ids) {
-      expect(within(crossFileRow).getByText(entityId)).toBeInTheDocument();
+      expect(within(shown[0]).getByText(entityId)).toBeInTheDocument();
     }
 
     // Each pattern is listed once. The backend deduplicates by its own
@@ -616,6 +628,176 @@ describe('CsvImport — All Types: several files judged as one import', () => {
     expect(screen.getByTestId('csv-confirm')).toHaveTextContent('Add to System');
     expect(screen.getByTestId('csv-reject')).toHaveTextContent('Reject');
     expect(within(statTile('Rows in file')).getByText(formatCount(preview.counts.total))).toBeInTheDocument();
+  });
+});
+
+/**
+ * The preview dashboard's own tables. Everything asserted below is read out of one
+ * recording — two persons who call each other and send money both ways, which is
+ * one shape several different existing detectors each have something to say about.
+ * Nothing here is computed in the browser, so every expected value is taken from
+ * the recording itself rather than written out by hand.
+ */
+const rich = fixtures.bulkPreviewBatchRich;
+const richPatterns = rich.suspicious_patterns_preview.patterns;
+const richPlayers = rich.metrics_preview.key_players;
+const richCommunities = rich.metrics_preview.communities.detected;
+
+/** How many patterns of these types the recording holds. */
+const countOf = (...types: string[]) =>
+  richPatterns.filter((pattern) => types.includes(pattern.pattern_type)).length;
+
+/** One pattern of a type, and its detector's own `detail` map. */
+function detailOf(type: string): Record<string, unknown> {
+  const found = richPatterns.find((pattern) => pattern.pattern_type === type);
+  if (!found) throw new Error(`the recording carries no ${type}`);
+  return found.detail as Record<string, unknown>;
+}
+
+const RICH_CALL_CSV =
+  'caller_id,callee_id,start_time,duration_sec,cell_tower_id\n461,462,2026-08-28T09:05:00,214,41\n462,461,2026-08-28T09:41:00,96,41\n';
+const RICH_TXN_CSV =
+  'sender_id,receiver_id,amount_inr,txn_time,mode,bank_ref\n461,462,48000,2026-08-28T10:02:00,UPI,REF-X1\n462,461,47000,2026-08-28T10:44:00,UPI,REF-X2\n';
+const RICH_FILES: Array<[string, string, string]> = [
+  ['call', RICH_CALL_CSV, 'calls-pair.csv'],
+  ['transaction', RICH_TXN_CSV, 'transfers-pair.csv'],
+];
+
+/** Preview the recording above, and wait for the dashboard. */
+async function previewRich() {
+  const installed = installFetch([{ match: '/api/v1/ingest/bulk/preview', body: rich }]);
+  renderWithRouter(<CsvImport onClose={() => {}} />);
+  uploadAll(RICH_FILES);
+  await screen.findByTestId('csv-preview');
+  return installed;
+}
+
+const tabCount = (key: string) =>
+  Number(screen.getByTestId(`preview-tab-${key}`).dataset.count);
+
+describe('CsvImport — the preview dashboard, in tables', () => {
+  it('groups the patterns by the detector’s own type, and counts every one', async () => {
+    await previewRich();
+
+    // One tab per group of Phase 4 pattern types, each carrying the number of
+    // patterns of that group the response holds — and together, all of them.
+    expect(tabCount('cycles')).toBe(countOf('TRANSACTION_CYCLE'));
+    expect(tabCount('multi')).toBe(countOf('MULTI_CHANNEL_RELATIONSHIP'));
+    expect(tabCount('comms')).toBe(countOf('COMMUNICATION_ANOMALY'));
+    expect(tabCount('txn')).toBe(
+      countOf('TRANSACTION_FAN_IN', 'TRANSACTION_FAN_OUT', 'TRANSACTION_CONCENTRATION'),
+    );
+    expect(tabCount('location')).toBe(countOf('LOCATION_COHORT', 'SHARED_LOCATION_PAIR'));
+    expect(tabCount('bridge')).toBe(countOf('BRIDGE_ENTITY'));
+
+    const tabs = within(screen.getByTestId('preview-patterns')).getAllByRole('tab');
+    expect(tabs.reduce((total, tab) => total + Number(tab.dataset.count), 0)).toBe(
+      richPatterns.length,
+    );
+    expect(richPatterns.length).toBe(rich.suspicious_patterns_preview.total);
+
+    // A group with nothing in it says so. No row is invented to fill the table.
+    for (const empty of ['location', 'bridge']) {
+      expect(tabCount(empty)).toBe(0);
+      fireEvent.click(screen.getByTestId(`preview-tab-${empty}`));
+      const shown = screen.getByTestId(`preview-panel-${empty}`);
+      expect(within(shown).getByTestId('empty-state')).toBeInTheDocument();
+      expect(screen.queryAllByTestId('preview-pattern-row')).toHaveLength(0);
+    }
+
+    // Still a preview: the labelling on the screen has not changed.
+    expect(screen.getByTestId('preview-badge')).toBeInTheDocument();
+    expect(screen.queryByTestId('live-badge')).not.toBeInTheDocument();
+  });
+
+  it('reads every column off the detector’s own detail', async () => {
+    await previewRich();
+
+    // Cycles — the path, its length, its value and the transaction records.
+    const cycle = detailOf('TRANSACTION_CYCLE');
+    const cycles = screen.getByTestId('preview-panel-cycles');
+    expect(within(cycles).getByText(String(cycle.cycle_path))).toBeInTheDocument();
+    expect(
+      within(cycles).getByText(formatInr(Number(cycle.total_amount_inr))),
+    ).toBeInTheDocument();
+    const legs = cycle.legs as Array<{ evidence_ids: string[] }>;
+    expect(cycles.textContent).toContain(legs[0].evidence_ids[0]);
+
+    // Multi-channel — both persons, the channel count, the relationship types.
+    fireEvent.click(screen.getByTestId('preview-tab-multi'));
+    const multi = screen.getByTestId('preview-panel-multi');
+    const pair = richPatterns.find((p) => p.pattern_type === 'MULTI_CHANNEL_RELATIONSHIP')!;
+    for (const entityId of pair.entity_ids) {
+      expect(within(multi).getByText(entityId)).toBeInTheDocument();
+    }
+    expect(within(multi).getByText(pair.relationship_types.join(', '))).toBeInTheDocument();
+    expect(
+      within(multi).getByText(formatCount(Number(detailOf('MULTI_CHANNEL_RELATIONSHIP').channel_count))),
+    ).toBeInTheDocument();
+
+    // Communication anomalies — the person, the peak day, the z-score measured
+    // against that person's own baseline.
+    fireEvent.click(screen.getByTestId('preview-tab-comms'));
+    const comms = screen.getByTestId('preview-panel-comms');
+    const anomaly = detailOf('COMMUNICATION_ANOMALY');
+    expect(within(comms).getByText(`person:${anomaly.person_id}`)).toBeInTheDocument();
+    expect(within(comms).getByText(String(anomaly.peak_date))).toBeInTheDocument();
+    expect(within(comms).getByText(formatMetric(Number(anomaly.z_score), 2))).toBeInTheDocument();
+
+    // Transaction anomalies — Phase 4 reports fan-in, fan-out and concentration
+    // per person, so the table names the hub and its counterparties. There is no
+    // per-transaction score in the response, and none is displayed as if there were.
+    fireEvent.click(screen.getByTestId('preview-tab-txn'));
+    const txn = screen.getByTestId('preview-panel-txn');
+    const fanIn = detailOf('TRANSACTION_FAN_IN');
+    expect(within(txn).getAllByTestId('preview-pattern-row')).toHaveLength(tabCount('txn'));
+    expect(within(txn).getByText('TRANSACTION_FAN_IN')).toBeInTheDocument();
+    expect(txn.textContent).toContain(String(fanIn.hub));
+    expect(txn.textContent).toContain((fanIn.counterparties as string[])[0]);
+    expect(within(txn).getAllByText(formatInr(Number(fanIn.total_amount_inr))).length).toBeGreaterThan(0);
+  });
+
+  it('ranks the overlay’s central persons and lists its communities', async () => {
+    await previewRich();
+
+    // Key players: the ranking of the same centralities the metrics come from.
+    const players = within(screen.getByTestId('preview-key-players'));
+    const playerRows = players.getAllByTestId('preview-key-player-row');
+    expect(playerRows).toHaveLength(richPlayers.length);
+    const first = richPlayers[0];
+    expect(within(playerRows[0]).getByText(first.entity_id.split(':')[1])).toBeInTheDocument();
+    expect(within(playerRows[0]).getByText(String(first.name))).toBeInTheDocument();
+    for (const metric of [first.degree_centrality, first.betweenness, first.pagerank]) {
+      expect(within(playerRows[0]).getByText(formatMetric(metric, 6))).toBeInTheDocument();
+    }
+    expect(
+      within(playerRows[0]).getByText(formatCount(first.community_id)),
+    ).toBeInTheDocument();
+    // Only a person this import actually touched is marked as one.
+    expect(screen.queryAllByText('In this import')).toHaveLength(
+      richPlayers.filter((player) => player.in_import).length,
+    );
+
+    // Communities: the detected memberships, sampled by the backend, with the
+    // real remainder stated rather than a padded list.
+    const communities = within(screen.getByTestId('preview-communities'));
+    const communityRows = communities.getAllByTestId('preview-community-row');
+    expect(communityRows).toHaveLength(richCommunities.length);
+    const one = richCommunities[0];
+    expect(within(communityRows[0]).getByText(formatCount(one.size))).toBeInTheDocument();
+    expect(communityRows[0].textContent).toContain(String(one.member_names[0]));
+    expect(communityRows[0].textContent).toContain(
+      `+${formatCount(one.size - one.members_sample.length)} more`,
+    );
+    expect(one.members_sample.length).toBeLessThan(one.size);
+
+    // The graph panel is still there, beside the tables, and still the overlay's.
+    expect(screen.getByTestId('network-graph')).toBeInTheDocument();
+    expect(
+      within(statTile('Graph entities')).getByText(
+        formatCount(rich.metrics_preview.graph.node_count),
+      ),
+    ).toBeInTheDocument();
   });
 });
 

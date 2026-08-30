@@ -1087,11 +1087,39 @@ export interface BulkCountsOut {
 export interface BulkMetricsPreview {
   graph?: GraphSummaryResponse['graph'];
   analytics?: GraphSummaryResponse['analytics'];
-  communities?: GraphSummaryResponse['communities'];
+  communities?: GraphSummaryResponse['communities'] & {
+    /** Each detected community, with a sample of its members and their labels. */
+    detected?: BulkCommunityOut[];
+  };
+  /** The overlay's most central persons, ranked by the existing centrality pass. */
+  key_players?: BulkKeyPlayerOut[];
   live_rows?: Record<string, number>;
   recompute_cost_ms?: Record<string, number>;
   priority_changes?: Record<string, unknown>[];
   note?: string;
+}
+
+/** One row of the preview's Key Players table — `GraphAnalytics.person_metrics`. */
+export interface BulkKeyPlayerOut {
+  entity_id: string;
+  name?: string | null;
+  degree?: number;
+  degree_centrality?: number;
+  weighted_degree?: number;
+  betweenness?: number;
+  pagerank?: number;
+  community_id?: number | null;
+  component_id?: number | null;
+  /** True when this import touched the person, so the ranking can be read. */
+  in_import?: boolean;
+}
+
+/** One row of the preview's Detected Communities table. */
+export interface BulkCommunityOut {
+  community_id: number;
+  size: number;
+  members_sample: string[];
+  member_names?: (string | null)[];
 }
 
 /** The affected nodes and their immediate neighbours, in the graph shape. */

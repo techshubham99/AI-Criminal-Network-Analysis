@@ -75,7 +75,7 @@
     {
       "row": 1,
       "verdict": "DUPLICATE",
-      "reason": "Identical record already accepted on 2026-08-29T20:50:06. No graph or intelligence change.",
+      "reason": "Identical record already accepted on 2026-08-29T22:59:12. No graph or intelligence change.",
       "summary": "caller person_id 301, callee person_id 302",
       "record_id": "1765554e125f2c81736eb179493b21360e99f7e82b22f8c65b92a101d6d282e7",
       "source_type": null
@@ -83,7 +83,7 @@
     {
       "row": 2,
       "verdict": "DUPLICATE",
-      "reason": "Identical record already accepted on 2026-08-29T20:50:06. No graph or intelligence change.",
+      "reason": "Identical record already accepted on 2026-08-29T22:59:12. No graph or intelligence change.",
       "summary": "caller person_id 303, callee person_id 304",
       "record_id": "586e89f34591e7fd2590aa4017430db4e3256746cca6d1b172ef9e4d7092e66c",
       "source_type": null

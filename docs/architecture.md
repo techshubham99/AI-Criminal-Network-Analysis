@@ -1219,3 +1219,62 @@ corpus is `NEW_VALID` the first time it is uploaded and `DUPLICATE` the second �
 per-file line is a summary and the row lists remain the full answer; and the two accepted spellings
 are the corpus's and the API's — an arbitrary third naming (`from_id`, `A_party`) is still a
 file-level `400` naming the columns it expected.
+
+## Y. As-built — the CSV preview dashboard, read as tables (addendum, 2026-08-30)
+
+**Scope.** Only the screen shown after *Analysing preview* completes, before *Add to System* /
+*Reject*. Search, the Investigation Workspace and every other page are untouched, and so is the
+`Affected network` panel, which still renders the same overlay graph beside the new tables.
+
+**What replaced what.** The flat list of narrative pattern cards (`PatternList`, still used
+elsewhere) is replaced on this screen by `frontend/src/components/live/PreviewTables.tsx`:
+`PreviewPatterns` (tabs), `KeyPlayers` and `DetectedCommunities`. Nothing is computed in the
+browser — every cell is a value the preview response already carried, and the tabs reuse the
+app's existing `.tab-bar` / `.tab-item` classes and `EntityTable`'s table idiom.
+
+**The tabs are Phase 4's own `pattern_type` values, spelled as the API spells them.** Six groups
+cover all nine: `cycles` ← `TRANSACTION_CYCLE`; `multi` ← `MULTI_CHANNEL_RELATIONSHIP`; `comms` ←
+`COMMUNICATION_ANOMALY`; `txn` ← `TRANSACTION_FAN_IN` / `TRANSACTION_FAN_OUT` /
+`TRANSACTION_CONCENTRATION`; `location` ← `LOCATION_COHORT` / `SHARED_LOCATION_PAIR`; `bridge` ←
+`BRIDGE_ENTITY`. A cycle is split from the other transaction types because a closed circuit and a
+volume threshold are different questions; nothing is renamed, and location and bridge keep tabs so
+the preview does not silently stop showing patterns it used to show. An `Other` tab appears only if
+a type outside that list ever arrives. A group with no rows shows an `EmptyState` carrying its own
+sentence — never a fabricated row. The screen opens on the first tab that has rows.
+
+**Two fields were added to the existing preview response, and only two.** The payload already
+carried projection stats, `communities.{count,modularity,adjusted_rand_index_vs_rings,ari_persons}`
+and per-person score *changes*; it carried no per-person centrality and no community membership, and
+neither is derivable from what it did carry. So `_analyse()` in `backend/app/ingest/bulk.py` now also
+writes `metrics_preview["key_players"]` — `result.analytics.top_persons("degree", KEY_PLAYERS=10)`,
+each row given its overlay `label` by the new `_label_of()` and an `in_import` flag for the persons
+this import touched — and `metrics_preview["communities"]["detected"]`, the `communities` list
+`communities_summary()` already returns, each with its sampled members' names. Both come from the
+**same** `GraphAnalytics` object the rest of the metrics come from: `top_persons` only ranks
+dictionaries `compute()` already filled, so this is a ranking and a summary of the one overlay, not a
+second computation and not a second graph. `metrics_preview` is `dict[str, Any]`, so no schema was
+restructured, no endpoint added and no Pydantic model changed. Members are sampled at ten by the
+backend and the client states the real remainder (`size − shown`), so *"+66 more"* means sixty-six.
+
+**One requested column does not exist, and was not invented.** Phase 4 reports fan-in, fan-out and
+concentration **per person** — `hub`, `counterparties`, `transaction_count`, `total_amount_inr`,
+`threshold` / `share` — so there is no per-`txn_id` z-score anywhere in `risk/detectors.py` for that
+tab to show. It shows those real fields instead. The z-score that does exist is the communication
+detector's, measured per person-day against that person's own baseline, and that is the tab that
+displays one.
+
+**Verified.** Live against the running app: an operator selecting the reciprocal call + transfer
+pair (persons 461/462) got six tabs reading `Transaction cycles (1) · Multi-channel pairs (1) ·
+Communication anomalies (1) · Transaction anomalies (3) · Location patterns (0) · Bridge entities
+(1)`; the cycle row `person:461 -> person:462 -> person:461 | 2 | ₹95,000 | transactions:1501,
+transactions:1502`; the fan-in row `TRANSACTION_FAN_IN | person:461 | 6 counterparties | 6 |
+₹19,17,176 | 5`; the communication row `person:461 | 2026-08-28 | 2 | 2.27`; Key players ten rows
+(`445 Ojas Kuruvilla 0.058116 / 0.007481 / 0.004729 / community 6`); Detected communities ten rows
+(`0 | 76 | ten names +66 more`); the `Location patterns` tab its empty state; the graph panel and the
+`Preview` badge unchanged; no console errors; *Reject All* discarded it and wrote nothing. Backend
+**582 passed** (581 from §X + **1**: the two new fields are the overlay's, ranked and sampled);
+frontend **478 tests / 30 files** (475 from §X + **3**: the grouping counts every pattern once, each
+table reads the detector's own `detail`, and the two new tables render the ranked centralities and
+the detected communities), typecheck and build clean. Eleven fixtures re-recorded through
+`phase6_2_bulk_demo.py --record`; its new section J is the recording these tables are tested
+against.

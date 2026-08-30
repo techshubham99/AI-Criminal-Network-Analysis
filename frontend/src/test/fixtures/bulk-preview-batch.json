@@ -75,12 +75,536 @@
       "count": 10,
       "modularity": 0.218499,
       "adjusted_rand_index_vs_rings": 0.019374,
-      "ari_persons": 142
+      "ari_persons": 142,
+      "detected": [
+        {
+          "community_id": 0,
+          "size": 76,
+          "members_sample": [
+            "person:109",
+            "person:114",
+            "person:115",
+            "person:116",
+            "person:12",
+            "person:122",
+            "person:127",
+            "person:128",
+            "person:130",
+            "person:154"
+          ],
+          "member_names": [
+            "Suhani Pillay",
+            "Suhani Chand",
+            "Sarthak Kalita",
+            "Kalpit Zachariah",
+            "Michael Dutta",
+            "Ishwar Kale",
+            "Pushti Bal",
+            "Pratyush Dhar",
+            "Nachiket Dugar",
+            "Kamya Chauhan"
+          ]
+        },
+        {
+          "community_id": 1,
+          "size": 74,
+          "members_sample": [
+            "person:1",
+            "person:100",
+            "person:101",
+            "person:11",
+            "person:112",
+            "person:124",
+            "person:135",
+            "person:142",
+            "person:146",
+            "person:151"
+          ],
+          "member_names": [
+            "Aryan Maharaj",
+            "Madhav Konda",
+            "Widisha Dhar",
+            "Priya Rastogi",
+            "Oeshi Chaudhary",
+            "Ekalinga Chand",
+            "Dhriti Sanghvi",
+            "Faraj Chana",
+            "Forum Chandra",
+            "Nirja Patla"
+          ]
+        },
+        {
+          "community_id": 2,
+          "size": 58,
+          "members_sample": [
+            "person:106",
+            "person:111",
+            "person:120",
+            "person:126",
+            "person:131",
+            "person:140",
+            "person:141",
+            "person:149",
+            "person:15",
+            "person:18"
+          ],
+          "member_names": [
+            "Bahadurjit Patla",
+            "Jack Chatterjee",
+            "Hritik Swaminathan",
+            "Mohammed Subramaniam",
+            "Anjali Kale",
+            "Matthew Sarraf",
+            "Yashica Borah",
+            "Harita Sunder",
+            "Ekiya Suresh",
+            "Umang Bhatt"
+          ]
+        },
+        {
+          "community_id": 3,
+          "size": 57,
+          "members_sample": [
+            "person:132",
+            "person:145",
+            "person:166",
+            "person:167",
+            "person:170",
+            "person:177",
+            "person:179",
+            "person:194",
+            "person:200",
+            "person:210"
+          ],
+          "member_names": [
+            "Chakradev Kannan",
+            "Kashish Mandal",
+            "Zehaan Bansal",
+            "Jhalak Sarkar",
+            "Sanya Basak",
+            "Jalsa Pillay",
+            "Kabir Gopal",
+            "Gauri Som",
+            "Dipta Ghose",
+            "Akshay Nazareth"
+          ]
+        },
+        {
+          "community_id": 4,
+          "size": 56,
+          "members_sample": [
+            "person:104",
+            "person:117",
+            "person:125",
+            "person:136",
+            "person:14",
+            "person:150",
+            "person:161",
+            "person:17",
+            "person:171",
+            "person:173"
+          ],
+          "member_names": [
+            "Chakrika Merchant",
+            "Ekiya Babu",
+            "Jason Roy",
+            "Janaki Chakrabarti",
+            "Xiti Gokhale",
+            "Gayathri Deep",
+            "Pushti Agarwal",
+            "Siddharth Zacharia",
+            "Azaan Dhar",
+            "Mitali Murthy"
+          ]
+        },
+        {
+          "community_id": 5,
+          "size": 47,
+          "members_sample": [
+            "person:102",
+            "person:108",
+            "person:113",
+            "person:13",
+            "person:133",
+            "person:134",
+            "person:139",
+            "person:153",
+            "person:163",
+            "person:169"
+          ],
+          "member_names": [
+            "Bhavna Dugar",
+            "Faqid Dhaliwal",
+            "Warinder Patil",
+            "Advay Contractor",
+            "Bimala Narang",
+            "Xiti Pandya",
+            "Faqid Goel",
+            "Yadavi Wable",
+            "Amol Parikh",
+            "Harshil Buch"
+          ]
+        },
+        {
+          "community_id": 6,
+          "size": 41,
+          "members_sample": [
+            "person:118",
+            "person:129",
+            "person:137",
+            "person:138",
+            "person:143",
+            "person:147",
+            "person:155",
+            "person:159",
+            "person:164",
+            "person:168"
+          ],
+          "member_names": [
+            "Devansh Soni",
+            "Oni Setty",
+            "Meghana Mukherjee",
+            "Ikshita Panchal",
+            "Ekanta Soni",
+            "Lohit Palla",
+            "Rajeshri Chand",
+            "Indrajit Mani",
+            "Chaitanya Pandey",
+            "Fitan Samra"
+          ]
+        },
+        {
+          "community_id": 7,
+          "size": 35,
+          "members_sample": [
+            "person:110",
+            "person:119",
+            "person:148",
+            "person:152",
+            "person:158",
+            "person:191",
+            "person:193",
+            "person:195",
+            "person:198",
+            "person:221"
+          ],
+          "member_names": [
+            "Timothy Bhatnagar",
+            "Caleb Verma",
+            "Joshua Vyas",
+            "Dayamai Singh",
+            "Abdul Buch",
+            "Chakradev Rattan",
+            "Jasmit Dhawan",
+            "Maya Mistry",
+            "Imaran Halder",
+            "Osha Prasad"
+          ]
+        },
+        {
+          "community_id": 8,
+          "size": 28,
+          "members_sample": [
+            "person:10",
+            "person:103",
+            "person:105",
+            "person:107",
+            "person:121",
+            "person:123",
+            "person:144",
+            "person:206",
+            "person:242",
+            "person:244"
+          ],
+          "member_names": [
+            "Xalak Randhawa",
+            "Tanmayi Mittal",
+            "Victor Pandey",
+            "Jasmit Wali",
+            "Anvi Nair",
+            "Ojasvi Chandran",
+            "Balveer Kota",
+            "Niharika Soni",
+            "Wridesh Handa",
+            "Krishna Soni"
+          ]
+        },
+        {
+          "community_id": 9,
+          "size": 28,
+          "members_sample": [
+            "person:175",
+            "person:19",
+            "person:201",
+            "person:207",
+            "person:214",
+            "person:222",
+            "person:247",
+            "person:261",
+            "person:266",
+            "person:284"
+          ],
+          "member_names": [
+            "Ethan Seth",
+            "Ekavir Bhargava",
+            "Yatin Mallick",
+            "Parth Sahni",
+            "Chakrika Pillai",
+            "Ijaya Dani",
+            "Garima Rajagopalan",
+            "Chavvi Khurana",
+            "Devika Oza",
+            "Yug Ramaswamy"
+          ]
+        }
+      ]
     },
+    "key_players": [
+      {
+        "entity_id": "person:445",
+        "degree": 29,
+        "degree_centrality": 0.058116,
+        "weighted_degree": 26.5,
+        "betweenness": 0.007492,
+        "pagerank": 0.004729,
+        "community_id": 4,
+        "component_id": 0,
+        "interpretation": {
+          "label": "high_network_importance",
+          "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+          "is_investigation_lead": true,
+          "basis": {
+            "degree_percentile": 100.0,
+            "pagerank_percentile": 100.0,
+            "betweenness_percentile": 99.6,
+            "top_percentile_threshold": 90.0
+          },
+          "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+        },
+        "name": "Ojas Kuruvilla",
+        "in_import": false
+      },
+      {
+        "entity_id": "person:62",
+        "degree": 29,
+        "degree_centrality": 0.058116,
+        "weighted_degree": 26.5,
+        "betweenness": 0.007498,
+        "pagerank": 0.003644,
+        "community_id": 8,
+        "component_id": 0,
+        "interpretation": {
+          "label": "high_network_importance",
+          "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+          "is_investigation_lead": true,
+          "basis": {
+            "degree_percentile": 100.0,
+            "pagerank_percentile": 97.0,
+            "betweenness_percentile": 99.8,
+            "top_percentile_threshold": 90.0
+          },
+          "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+        },
+        "name": "Deepa Chokshi",
+        "in_import": false
+      },
+      {
+        "entity_id": "person:91",
+        "degree": 28,
+        "degree_centrality": 0.056112,
+        "weighted_degree": 26.0,
+        "betweenness": 0.007583,
+        "pagerank": 0.001933,
+        "community_id": 5,
+        "component_id": 0,
+        "interpretation": {
+          "label": "high_network_importance",
+          "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+          "is_investigation_lead": true,
+          "basis": {
+            "degree_percentile": 99.6,
+            "pagerank_percentile": 50.6,
+            "betweenness_percentile": 100.0,
+            "top_percentile_threshold": 90.0
+          },
+          "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+        },
+        "name": "Yagnesh Shan",
+        "in_import": false
+      },
+      {
+        "entity_id": "person:141",
+        "degree": 27,
+        "degree_centrality": 0.054108,
+        "weighted_degree": 24.5,
+        "betweenness": 0.006364,
+        "pagerank": 0.002483,
+        "community_id": 2,
+        "component_id": 0,
+        "interpretation": {
+          "label": "high_network_importance",
+          "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+          "is_investigation_lead": true,
+          "basis": {
+            "degree_percentile": 99.4,
+            "pagerank_percentile": 78.0,
+            "betweenness_percentile": 97.8,
+            "top_percentile_threshold": 90.0
+          },
+          "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+        },
+        "name": "Yashica Borah",
+        "in_import": false
+      },
+      {
+        "entity_id": "person:242",
+        "degree": 27,
+        "degree_centrality": 0.054108,
+        "weighted_degree": 24.0,
+        "betweenness": 0.00677,
+        "pagerank": 0.002783,
+        "community_id": 8,
+        "component_id": 0,
+        "interpretation": {
+          "label": "high_network_importance",
+          "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+          "is_investigation_lead": true,
+          "basis": {
+            "degree_percentile": 99.4,
+            "pagerank_percentile": 86.6,
+            "betweenness_percentile": 99.2,
+            "top_percentile_threshold": 90.0
+          },
+          "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+        },
+        "name": "Wridesh Handa",
+        "in_import": false
+      },
+      {
+        "entity_id": "person:258",
+        "degree": 27,
+        "degree_centrality": 0.054108,
+        "weighted_degree": 25.5,
+        "betweenness": 0.006628,
+        "pagerank": 0.001835,
+        "community_id": 6,
+        "component_id": 0,
+        "interpretation": {
+          "label": "high_network_importance",
+          "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+          "is_investigation_lead": true,
+          "basis": {
+            "degree_percentile": 99.4,
+            "pagerank_percentile": 45.0,
+            "betweenness_percentile": 98.8,
+            "top_percentile_threshold": 90.0
+          },
+          "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+        },
+        "name": "Ekani Iyer",
+        "in_import": false
+      },
+      {
+        "entity_id": "person:422",
+        "degree": 27,
+        "degree_centrality": 0.054108,
+        "weighted_degree": 26.5,
+        "betweenness": 0.006689,
+        "pagerank": 0.004433,
+        "community_id": 1,
+        "component_id": 0,
+        "interpretation": {
+          "label": "high_network_importance",
+          "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+          "is_investigation_lead": true,
+          "basis": {
+            "degree_percentile": 99.4,
+            "pagerank_percentile": 99.8,
+            "betweenness_percentile": 99.0,
+            "top_percentile_threshold": 90.0
+          },
+          "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+        },
+        "name": "Diya Badal",
+        "in_import": false
+      },
+      {
+        "entity_id": "person:391",
+        "degree": 26,
+        "degree_centrality": 0.052104,
+        "weighted_degree": 25.0,
+        "betweenness": 0.006489,
+        "pagerank": 0.004274,
+        "community_id": 1,
+        "component_id": 0,
+        "interpretation": {
+          "label": "high_network_importance",
+          "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+          "is_investigation_lead": true,
+          "basis": {
+            "degree_percentile": 98.6,
+            "pagerank_percentile": 99.4,
+            "betweenness_percentile": 98.4,
+            "top_percentile_threshold": 90.0
+          },
+          "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+        },
+        "name": "Pratyush Raghavan",
+        "in_import": false
+      },
+      {
+        "entity_id": "person:417",
+        "degree": 26,
+        "degree_centrality": 0.052104,
+        "weighted_degree": 24.5,
+        "betweenness": 0.00621,
+        "pagerank": 0.003772,
+        "community_id": 3,
+        "component_id": 0,
+        "interpretation": {
+          "label": "high_network_importance",
+          "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+          "is_investigation_lead": true,
+          "basis": {
+            "degree_percentile": 98.6,
+            "pagerank_percentile": 97.8,
+            "betweenness_percentile": 97.6,
+            "top_percentile_threshold": 90.0
+          },
+          "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+        },
+        "name": "Lakshmi Comar",
+        "in_import": false
+      },
+      {
+        "entity_id": "person:423",
+        "degree": 26,
+        "degree_centrality": 0.052104,
+        "weighted_degree": 24.0,
+        "betweenness": 0.006402,
+        "pagerank": 0.00222,
+        "community_id": 1,
+        "component_id": 0,
+        "interpretation": {
+          "label": "high_network_importance",
+          "text": "High network importance: both highly connected and positioned as a bridge between otherwise separate groups in the observed data.",
+          "is_investigation_lead": true,
+          "basis": {
+            "degree_percentile": 98.6,
+            "pagerank_percentile": 67.4,
+            "betweenness_percentile": 98.0,
+            "top_percentile_threshold": 90.0
+          },
+          "disclaimer": "Describes structural position in the observed data only; it is NOT a determination of criminality or guilt."
+        },
+        "name": "Ishita Thakkar",
+        "in_import": false
+      }
+    ],
     "recompute_cost_ms": {
-      "analytics_ms": 1514.8,
-      "intelligence_ms": 132.9,
-      "total_ms": 1647.7
+      "analytics_ms": 1919.6,
+      "intelligence_ms": 113.6,
+      "total_ms": 2033.1
     },
     "priority_changes": [
       {

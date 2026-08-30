@@ -71,7 +71,9 @@ MAX_BYTES = 5 * 1024 * 1024
 PREVIEW_TTL_SEC = 1800.0
 # Immediate neighbours of the affected entities, per the preview contract.
 PREVIEW_DEPTH = 1
-
+# How many of the overlay's most central persons the preview lists. A ranking,
+# not a computation: the centralities are already in the analytics object.
+KEY_PLAYERS = 10
 # The six checkpoints, in the order they are reached.
 STAGES = (
     "received",
@@ -517,7 +519,36 @@ class BulkIngest:
                     "adjusted_rand_index"
                 ],
                 "ari_persons": communities["ground_truth_overlay"]["ari_persons"],
+                # Already computed by the summary above: the detected communities
+                # with a sample of each one's members. Carried through so the
+                # preview can list them rather than only count them, with each
+                # sampled member's own label beside its id.
+                "detected": [
+                    {
+                        **community,
+                        "member_names": [
+                            self._label_of(overlay, eid)
+                            for eid in community["members_sample"]
+                        ],
+                    }
+                    for community in communities["communities"]
+                ],
             }
+            # The most central persons of the overlay, from the SAME analytics
+            # object the metrics above come from — `top_persons` reads the
+            # centrality dictionaries `compute()` already filled, so this adds a
+            # ranking, not a second computation. A person this import touched is
+            # flagged, because a preview is about what the import would do.
+            touched_eids = {f"person:{pid}" for pid in touched}
+            metrics["key_players"] = [
+                {
+                    **player,
+                    "name": self._label_of(overlay, player["entity_id"]),
+                    "in_import": player["entity_id"] in touched_eids,
+                }
+                for player in result.analytics.top_persons("degree", KEY_PLAYERS)
+                if player
+            ]
             metrics["recompute_cost_ms"] = result.cost_ms
             metrics["priority_changes"] = list(result.priority_changes)
             # One entry per pattern id. The detectors already emit each id once;
@@ -542,6 +573,12 @@ class BulkIngest:
             patterns=patterns,
             graph_before=graph_before,
         )
+
+    @staticmethod
+    def _label_of(overlay: NetworkXGraphStore, entity_id: str) -> Optional[str]:
+        """A node's own label on the overlay, or None if it carries none."""
+        node = overlay.get_node(entity_id)
+        return node.label if node is not None else None
 
     # ==================================================================
     # confirm / reject
