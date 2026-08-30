@@ -146,7 +146,20 @@
       "Bash(awk '{ print length }' src/pages/PatternsPage.tsx src/pages/PersonPage.tsx)",
       "Bash(npx --no-install prettier --single-quote --print-width 100 --check src/pages/AlertsPage.tsx src/pages/EvidencePage.tsx src/components/ui/Button.tsx)",
       "Bash(npx --no-install prettier --single-quote --print-width 100 src/pages/AlertsPage.tsx)",
-      "Bash(npx --no-install prettier --single-quote --print-width 100 --write src/pages/LocationsPage.tsx src/pages/LocationsPage.test.tsx src/components/geo/IndiaMap.tsx src/components/geo/projection.ts src/components/geo/index.ts)"
+      "Bash(npx --no-install prettier --single-quote --print-width 100 --write src/pages/LocationsPage.tsx src/pages/LocationsPage.test.tsx src/components/geo/IndiaMap.tsx src/components/geo/projection.ts src/components/geo/index.ts)",
+      "Bash(curl -s -m 120 -w \"\\\\nHTTP %{http_code} in %{time_total}s\\\\n\" https://tracex-6457.onrender.com/health)",
+      "Bash(curl -s -D- -o /dev/null -m 60 -H \"Origin: https://tracex-murex.vercel.app\" \"https://tracex-6457.onrender.com/api/v1/graph/summary\")",
+      "Bash(curl -s -D- -o /dev/null -m 60 -X OPTIONS -H \"Origin: https://tracex-murex.vercel.app\" -H \"Access-Control-Request-Method: GET\" -H \"Access-Control-Request-Headers: accept\" \"https://tracex-6457.onrender.com/api/v1/graph/summary\")",
+      "Bash(CNA_LIVE_API_URL=https://tracex-6457.onrender.com npx vitest run --config vitest.live.config.ts)",
+      "Bash(curl -s -m 60 \"https://tracex-6457.onrender.com/api/v1/ingest/records?page=1&page_size=5\")",
+      "Bash(curl -s -m 90 \"https://tracex-6457.onrender.com/api/v1/ingest/records?page=1&page_size=50\" -o /tmp/recs.json)",
+      "Bash(PYTHONIOENCODING=utf-8 backend/.venv/Scripts/python.exe -c ' *)",
+      "Bash(timeout 22 curl -sN -m 20 -H \"Accept: text/event-stream\" \"https://tracex-6457.onrender.com/api/v1/ingest/stream\")",
+      "Bash(curl -s -m 90 \"https://tracex-6457.onrender.com/api/v1/ingest/records?page=1&page_size=50\" -o recs.tmp.json)",
+      "Bash(rm -f recs.tmp.json)",
+      "Bash(curl -sN -m 20 -H \"Accept: text/event-stream\" \"https://tracex-6457.onrender.com/api/v1/ingest/stream\" -o sse.tmp.txt)",
+      "Bash(rm -f sse.tmp.txt)",
+      "Bash(PYTHONIOENCODING=utf-8 ./.venv/Scripts/python.exe -m pytest tests -q -k \"config or settings or health or main or app\")"
     ],
     "defaultMode": "auto"
   }

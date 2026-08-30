@@ -50,12 +50,15 @@ class Settings(BaseSettings):
     # Optional enrichment (Phase 9) lives in a SEPARATE directory; originals untouched.
     enrichment_dir: Path = BACKEND_DIR / "data" / "enrichment"
 
-    # CORS for local frontend development (Vite: 5173, CRA: 3000)
+    # CORS: the local frontend dev servers (Vite: 5173, CRA: 3000) and the
+    # deployed frontend origin. A browser on any other origin is refused, so add
+    # one here or override the whole list with CNA_CORS_ORIGINS=a,b,c.
     cors_origins: list[str] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "https://tracex-murex.vercel.app",
     ]
 
     # Logging

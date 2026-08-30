@@ -36,7 +36,7 @@
  * `@/utils/entity`: responses always speak `entity_id`, path params always want
  * the integer.
  */
-import { post, request } from './client';
+import { HEALTH_URL, post, request } from './client';
 import type {
   BulkBatchIn,
   BulkBatchPreviewOut,
@@ -89,9 +89,9 @@ export interface Signalled {
 
 /* ---------------------------------------------------------------- system -- */
 
-/** `GET /health` — outside the /api/v1 prefix. */
+/** `GET /health` — outside the /api/v1 prefix, so it follows {@link HEALTH_URL}. */
 export const getHealth = (o: Signalled = {}) =>
-  request<HealthResponse>('/health', { absolute: true, signal: o.signal });
+  request<HealthResponse>(HEALTH_URL, { absolute: true, signal: o.signal });
 
 /** `GET /api/v1/data/summary` — dataset row counts and validation report. */
 export const getDataSummary = (o: Signalled = {}) =>

@@ -23,6 +23,9 @@ htmlcov/
 .env
 .env.*
 !.env.example
+# Tracked on purpose: it holds only the public deployed API base URL, which the
+# hosted build needs at build time. No secret belongs in it.
+!.env.production
 
 # Build files
 build/
